@@ -45,8 +45,9 @@ def scimagoproc():
                     rec['issn'+str(e+1)] = i[5:9]+'-'+i[9:13]
                 else:
                     rec['issn'+str(e+1)] = i[1:5]+'-'+i[5:10]
-            except IndexError:
-                None
+            except IndexError as e:
+                print(e)
+                pass
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
@@ -74,13 +75,15 @@ def scopusproc():
         try:
             if rec['print-issn']:
                 rec['issn1'] = rec['print-issn'][0:4] + '-' + rec['print-issn'][4:8]
-        except IndexError:
-            None
+        except IndexError as e:
+            print(e)
+            pass
         try:
             if rec['e-issn']:
                 rec['issn2'] = rec['e-issn'][0:4] + '-' + rec['e-issn'][4:8]
-        except IndexError:
-            None
+        except IndexError as e:
+            print(e)
+            pass
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
@@ -104,3 +107,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
