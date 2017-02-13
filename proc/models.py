@@ -11,16 +11,17 @@ class Scielo(DynamicDocument):
 
 
 class Scimago(DynamicDocument):
-	pass
+    pass
 
 
 class Wos(DynamicDocument):
-	pass
+    pass
 
 
 class Scopus(DynamicDocument):
-	pass
+    pass
 
 
 class Scopus_Discontinued(DynamicDocument):
-	pass
+    pass
+    
