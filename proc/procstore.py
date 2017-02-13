@@ -47,7 +47,7 @@ def scimagoproc():
                     rec['issn'+str(e+1)] = i[1:5]+'-'+i[5:10]
             except IndexError as e:
                 print(e)
-                pass
+                continue
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
@@ -107,4 +107,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
