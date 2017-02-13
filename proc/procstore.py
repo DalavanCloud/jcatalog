@@ -39,15 +39,14 @@ def scimagoproc():
  
         issns = rec['issn'].split(',') #ISSN normalization
 
-        for e,i in enumerate(issns):
+        for enum,issn in enumerate(issns):
             try:
-                if e == 0:
-                    rec['issn'+str(e+1)] = i[5:9]+'-'+i[9:13]
+                if enum == 0:
+                    rec['issn'+str(enum+1)] = issn[5:9]+'-'+issn[9:13]
                 else:
-                    rec['issn'+str(e+1)] = i[1:5]+'-'+i[5:10]
+                    rec['issn'+str(enum+1)] = issn[1:5]+'-'+issn[5:10]
             except IndexError as e:
                 print(e)
-                continue
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
@@ -72,18 +71,18 @@ def scopusproc():
 
     for i, rec in enumerate(scopusjson): #ISSN normalization
         print('\nrec:' + str(i))
+        
         try:
             if rec['print-issn']:
                 rec['issn1'] = rec['print-issn'][0:4] + '-' + rec['print-issn'][4:8]
         except IndexError as e:
             print(e)
-            pass
+
         try:
             if rec['e-issn']:
                 rec['issn2'] = rec['e-issn'][0:4] + '-' + rec['e-issn'][4:8]
         except IndexError as e:
             print(e)
-            pass
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
