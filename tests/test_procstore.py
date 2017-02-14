@@ -7,15 +7,22 @@ import pyexcel
 '''
 Loading SciELO CSV file data
 '''
-scielosheet = pyexcel.get_sheet(file_name='fixtures/scielo_journals.csv', name_columns_by_row=0)
-scielosheet.column.format('extraction date', str)
-scielojson = scielosheet.to_records()
+SCIELO_JOURNALS = 'fixtures/scielo_journals.csv'
 
 class ScieloLoadProcTest(unittest.TestCase):
 
+    def setUp(self):
+
+        scielo_sheet = pyexcel.get_sheet(file_name=SCIELO_JOURNALS, name_columns_by_row=0)
+
+        scielo_sheet.column.format('extraction date', str)
+
+        self.scielo_json = scielo_sheet.to_records()
+
+
     def test_scieloproc_study_unit(self):
 
-        result = scielojson[0]['study unit']
+        result = self.scielo_json[0]['study unit']
 
         expected = 'journal'
         
@@ -24,7 +31,7 @@ class ScieloLoadProcTest(unittest.TestCase):
 
     def test_scieloproc_type_objstudy_unit(self):
 
-        result = type(scielojson[0]['extraction date'])
+        result = type(self.scielo_json[0]['extraction date'])
         
         expected = str
         
@@ -34,14 +41,19 @@ class ScieloLoadProcTest(unittest.TestCase):
 '''
 Loading Scimago excel file data
 '''
-scimagosheet = pyexcel.get_sheet(file_name='fixtures/scimago_journals.xlsx', name_columns_by_row=0)
-scimagojson = scimagosheet.to_records()
+SCIMAGO_JOURNALS = 'fixtures/scimago_journals.xlsx'
 
 class ScimagoLoadProcTest(unittest.TestCase):
 
+    def setUp(self):
+
+        scimago_sheet = pyexcel.get_sheet(file_name=SCIMAGO_JOURNALS, name_columns_by_row=0)
+
+        self.scimago_json = scimago_sheet.to_records()
+
     def test_scimagoproc_print_issn(self):
 
-        result = scimagojson[0]['Type']
+        result = self.scimago_json[0]['Type']
 
         expected = 'journal'
         
@@ -51,16 +63,23 @@ class ScimagoLoadProcTest(unittest.TestCase):
 '''
 Loading Scopus excel file data
 '''
-scopussheet = pyexcel.get_sheet(file_name='fixtures/scopus_journals.xlsx', name_columns_by_row=0)
-scopussheet.column.format('Print-ISSN', str)
-scopussheet.column.format('E-ISSN', str)
-scopusjson = scopussheet.to_records()
+SCOPUS_JOURNALS = 'fixtures/scopus_journals.xlsx'
 
 class ScopusLoadProcTest(unittest.TestCase):
 
+    def setUp(self):
+
+        scopus_sheet = pyexcel.get_sheet(file_name=SCOPUS_JOURNALS, name_columns_by_row=0)
+
+        scopus_sheet.column.format('Print-ISSN', str)
+        
+        scopus_sheet.column.format('E-ISSN', str)
+
+        self.scopus_json = scopus_sheet.to_records()
+
     def test_scopusproc_print_issn(self):
 
-        result = scopusjson[0]['Print-ISSN']
+        result = self.scopus_json[0]['Print-ISSN']
 
         expected = '15343219'
         
