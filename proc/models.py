@@ -7,21 +7,21 @@ connect('journals-catalog')
 
 
 class Scielo(DynamicDocument):
-    pass
+	is_scielo = IntField(required=True)
+	issns = ListField()
 
 
 class Scimago(DynamicDocument):
-    pass
-
-
-class Wos(DynamicDocument):
-    pass
+	is_scimago = IntField(required=True)
 
 
 class Scopus(DynamicDocument):
-    pass
+	is_scopus = IntField(required=True)
 
 
 class Scopus_Discontinued(DynamicDocument):
     pass
-    
+
+
+class Wos(DynamicDocument):
+    pass    
