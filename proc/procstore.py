@@ -5,22 +5,32 @@ This script reads data from various sources to process and store in MongoDB.
 
 import models
 import pyexcel
+import keycorrection   
 
 
 def scieloproc():
-    scielosheet = pyexcel.get_sheet(file_name='data/scielo/journals.csv', name_columns_by_row=0)
-    scielosheet.column.format('extraction date', str)
-    scielojson = scielosheet.to_records()
+    scielo_sheet  = pyexcel.get_sheet(file_name='data/scielo/journals.csv', name_columns_by_row=0)
+     
+    scielo_sheet.column.format('extraction date', str)
     
+    #Key correction
+    for i, k in enumerate(keycorrection.scielo_columns_names):
+        scielo_sheet.colnames[i] = k
+    
+    scielo_json = scielo_sheet.to_records()
+
     models.Scielo.drop_collection()
 
-    for rec in scielojson:
-        for key in rec.keys(): #key adjustments - in test
-            rec[key.lower().replace(' ','_').replace("'","")] = rec.pop(key)
+    for rec in scielo_json:
 
+        rec['is_scielo'] = 1 #counter
+        
+        rec['issns'] = rec['issns'].split(';') #convert in list
+        
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
         mdata = models.Scielo(**rec)
+
         mdata.save()
 
     num_posts = models.Scielo.objects().count()
@@ -28,29 +38,28 @@ def scieloproc():
 
 
 def scimagoproc():
-    scimagosheet = pyexcel.get_sheet(file_name='data/scimago/scimago_Latin America_2015.xlsx', name_columns_by_row=0)
-    scimagojson = scimagosheet.to_records()
+    scimago_sheet = pyexcel.get_sheet(file_name='data/scimago/scimago_Latin America_2015.xlsx', name_columns_by_row=0)
+    
+    #Key correction
+    for i, k in enumerate(keycorrection.scimago_columns_names):
+        scimago_sheet.colnames[i] = k
+    
+    scimago_json = scimago_sheet.to_records()
     
     models.Scimago.drop_collection()
     
-    for rec in scimagojson: #key adjustments - in test
-        for key in rec.keys():
-            rec[key.lower().replace(' ','_').replace("'","")] = rec.pop(key)
- 
-        issns = rec['issn'].split(',') #ISSN normalization
+    for rec in scimago_json:
 
-        for enum,issn in enumerate(issns):
-            try:
-                if enum == 0:
-                    rec['issn'+str(enum+1)] = issn[5:9]+'-'+issn[9:13]
-                else:
-                    rec['issn'+str(enum+1)] = issn[1:5]+'-'+issn[5:10]
-            except IndexError as e:
-                print(e)
+        rec['is_scimago'] = 1 #counter
+        
+        issn_list = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
+
+        rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issn_list]
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
         mdata = models.Scimago(**rec)
+
         mdata.save()
 
     num_posts = models.Scimago.objects().count()
@@ -58,19 +67,20 @@ def scimagoproc():
 
 
 def scopusproc():
-    scopussheet = pyexcel.get_sheet(file_name='data/scopus/title_list_keys_ok.xlsx', name_columns_by_row=0)
-    scopussheet.column.format('Print-ISSN', str)
-    scopussheet.column.format('E-ISSN', str)
-    scopusjson = scopussheet.to_records()
+    scopus_sheet = pyexcel.get_sheet(file_name='data/scopus/title_list_keys_ok.xlsx', name_columns_by_row=0)
+    scopus_sheet.column.format('Print-ISSN', str)
+    scopus_sheet.column.format('E-ISSN', str)
+    scopus_json = scopus_sheet.to_records()
 
     models.Scopus.drop_collection()
 
-    for rec in scopusjson: #key adjustments - in test
-        for key in rec.keys():
+    for rec in scopus_json: 
+        rec['is_scopus'] = 1
+        for key in rec.keys(): #key adjustments - in test
             rec[key.lower().replace('\n\n','_').replace('\n','_').replace(':','').replace(' ','_').replace("'","")] = rec.pop(key)
 
-    for i, rec in enumerate(scopusjson): #ISSN normalization
-        print('\nrec:' + str(i))
+    for i, rec in enumerate(scopus_json): #ISSN normalization
+        #print('\nrec:' + str(i))
         
         try:
             if rec['print-issn']:
@@ -87,6 +97,7 @@ def scopusproc():
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
         mdata = models.Scopus(**rec)
+
         mdata.save()
 
     num_posts = models.Scopus.objects().count()
@@ -101,7 +112,7 @@ def main():
     scimagoproc()
 
     #Scopus - xlsx
-    scopusproc()
+    #scopusproc()
 
 
 if __name__ == "__main__":
