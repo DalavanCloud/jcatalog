@@ -1,5 +1,7 @@
 # coding: utf-8
 
+#SciELO
+
 scielo_collection_name = {      
     u'arg': u'Argentina',      
     u'bol': u'Bolivia',        
@@ -19,12 +21,6 @@ scielo_collection_name = {
     u'ven': u'Venezuela',            
 }
 
-
-scielo_cells = {
-    '0':'issn',
-    '1':'title',
-    '2':'publisher'
-}
 
 scielo_columns_names = ['extraction_date',
  'study_unit',
@@ -124,3 +120,26 @@ scielo_columns_names = ['extraction_date',
  'google_scholar_m5_2014',
  'google_scholar_m5_2013',
  'google_scholar_m5_2012']
+
+
+# Scimago
+
+scimago_columns_names = ['rank',
+ 'title',
+ 'type',
+ 'issn',
+ 'sjr',
+ 'sjr_best_quartile',
+ 'h_index',
+ 'total_doc_2015',
+ 'total_docs_3years',
+ 'total_refs',
+ 'total_cites_3years',
+ 'citable_docs_3years',
+ 'cites_by_doc_2years',
+ 'ref_bydoc',
+ 'country',
+ 'region',
+ 'year',
+ 'active']
+ 
