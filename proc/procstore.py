@@ -74,13 +74,16 @@ def scopusproc():
 
     models.Scopus.drop_collection()
 
-    for rec in scopus_json: 
-        rec['is_scopus'] = 1
+    for rec in scopus_json:
+
+        rec['is_scopus'] = 1 #counter
+
         for key in rec.keys(): #key adjustments - in test
             rec[key.lower().replace('\n\n','_').replace('\n','_').replace(':','').replace(' ','_').replace("'","")] = rec.pop(key)
 
     for i, rec in enumerate(scopus_json): #ISSN normalization
-        #print('\nrec:' + str(i))
+        
+        print('\nrec:' + str(i))
         
         try:
             if rec['print-issn']:
@@ -112,7 +115,7 @@ def main():
     scimagoproc()
 
     #Scopus - xlsx
-    #scopusproc()
+    scopusproc()
 
 
 if __name__ == "__main__":
