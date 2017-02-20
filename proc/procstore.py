@@ -113,6 +113,32 @@ def scopusproc():
     print('Registred %d posts in Scopus collection' % num_posts)
 
 
+def jcrproc():
+    jcr_sheet  = pyexcel.get_sheet(file_name='data/jcr/JournalHomeGrid.csv', name_columns_by_row=0)
+    
+    #Key correction
+    for i, k in enumerate(keycorrection.jcr_columns_names):
+        jcr_sheet.colnames[i] = k
+    
+    jcr_json = jcr_sheet.to_records()
+
+    models.Jcr.drop_collection()
+
+    for rec in jcr_json:
+
+        rec['is_jcr'] = 1 #counter
+        
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+
+        mdata = models.Jcr(**rec)
+
+        mdata.save()
+
+    num_posts = models.Jcr.objects().count()
+    msg = u'Registred %d posts in JCR collection' % num_posts
+    logger.info(msg)
+
+
 def main():
     #SciELO - csv
     scieloproc()
@@ -122,6 +148,9 @@ def main():
 
     #Scopus - xlsx
     #scopusproc()
+
+    #JCR - csv
+    jcrproc()
 
 
 if __name__ == "__main__":

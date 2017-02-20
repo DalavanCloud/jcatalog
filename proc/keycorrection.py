@@ -143,3 +143,25 @@ scimago_columns_names = ['rank',
  'year',
  'active']
  
+
+
+# JCR
+
+jcr_columns_names = ['rank',
+ 'full_journal_title',
+ 'jcr_abbreviated_title',
+ 'issn',
+ 'total_cites',
+ 'journal_impact_factor',
+ 'impact_factor_without_journal_self_cites',
+ '5year_impact_factor',
+ 'immediacy_index',
+ 'citable_items',
+ 'cited_half-life',
+ 'citing_half-life',
+ 'eigenfactor_score',
+ 'article_influence_score',
+ 'percentage_articles_in_citable_items',
+ 'empty',
+ 'average_journal_impact_factor_percentile',
+ 'normalized_eigenfactor']
