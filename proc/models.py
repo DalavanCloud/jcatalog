@@ -27,6 +27,6 @@ class Scopus_Discontinued(DynamicDocument):
     pass
 
 
-class Wos(DynamicDocument):
-    pass
-    
+class Jcr(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    is_jcr = IntField(required=True)
