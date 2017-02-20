@@ -6,7 +6,12 @@ This script reads data from various sources to process and store in MongoDB.
 import models
 import pyexcel
 import keycorrection   
+import logging
 
+
+logging.basicConfig(filename='logs/logs.txt',level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 def scieloproc():
     scielo_sheet  = pyexcel.get_sheet(file_name='data/scielo/journals.csv', name_columns_by_row=0)
@@ -34,7 +39,8 @@ def scieloproc():
         mdata.save()
 
     num_posts = models.Scielo.objects().count()
-    print('Registred %d posts in SciELO collection' % num_posts)
+    msg = u'Registred %d posts in SciELO collection' % num_posts
+    logger.info(msg)
 
 
 def scimagoproc():
@@ -115,7 +121,7 @@ def main():
     scimagoproc()
 
     #Scopus - xlsx
-    scopusproc()
+    #scopusproc()
 
 
 if __name__ == "__main__":
