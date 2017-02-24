@@ -3,6 +3,7 @@
 from mongoengine import *
 import datetime
 
+
 connect('journals-catalog')
 
 
@@ -30,3 +31,9 @@ class Scopus_Discontinued(DynamicDocument):
 class Jcr(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     is_jcr = IntField(required=True)
+
+
+class Cwts(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    is_cwts = IntField(required=True)
+    issn_list = ListField()
