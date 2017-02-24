@@ -170,7 +170,7 @@ def cwtsproc():
         mdata.save()
 
     num_posts = models.Cwts.objects().count()
-    msg = u'Registred %d posts in SciELO collection' % num_posts
+    msg = u'Registred %d posts in CWTS collection' % num_posts
     logger.info(msg)
     print(msg)
 
