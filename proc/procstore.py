@@ -120,7 +120,13 @@ def jcrproc():
     for i, k in enumerate(keycorrection.jcr_columns_names):
         jcr_sheet.colnames[i] = k
     
-    jcr_json = jcr_sheet.to_records()
+    jcr_json_dup = jcr_sheet.to_records()
+    
+    jcr_json = []
+
+    for rec in jcr_json_dup: #remove duplicates
+        if rec not in jcr_json:
+            jcr_json.append(rec)
 
     models.Jcr.drop_collection()
 
