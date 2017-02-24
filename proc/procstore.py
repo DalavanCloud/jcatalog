@@ -145,6 +145,37 @@ def jcrproc():
     logger.info(msg)
 
 
+def cwtsproc():
+    cwts_sheet = pyexcel.get_sheet(file_name='data/cwts/CWTS_Journal_Indicators_June_2016_r5b_extrato.xlsx', name_columns_by_row=0)
+    
+    #Key correction
+    for i, k in enumerate(keycorrection.cwts_columns_names):
+        print(i)
+        cwts_sheet.colnames[i] = k
+    
+    cwts_json = cwts_sheet.to_records()
+
+    models.Cwts.drop_collection()
+    
+    for rec in cwts_json:
+
+        print(rec['print_issn'])
+        
+        rec['is_cwts'] = 1 #counter
+        
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        
+        mdata = models.Cwts(**rec)
+
+        mdata.save()
+
+    num_posts = models.Cwts.objects().count()
+    msg = u'Registred %d posts in SciELO collection' % num_posts
+    logger.info(msg)
+    print(msg)
+
+
+
 def main():
     #SciELO - csv
     scieloproc()
@@ -153,10 +184,13 @@ def main():
     scimagoproc()
 
     #Scopus - xlsx
-    #scopusproc()
+    scopusproc()
 
     #JCR - csv
     jcrproc()
+
+    #CWTS - xlsx
+    cwtsproc()
 
 
 if __name__ == "__main__":
