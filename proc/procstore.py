@@ -65,7 +65,6 @@ def scimagoproc():
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
         mdata = models.Scimago(**rec)
-
         mdata.save()
 
     num_posts = models.Scimago.objects().count()
@@ -73,44 +72,44 @@ def scimagoproc():
 
 
 def scopusproc():
-    scopus_sheet = pyexcel.get_sheet(file_name='data/scopus/title_list_keys_ok.xlsx', name_columns_by_row=0)
-    scopus_sheet.column.format('Print-ISSN', str)
-    scopus_sheet.column.format('E-ISSN', str)
+    scopus_sheet = pyexcel.get_sheet(file_name='data/scopus/title_list.xlsx', name_columns_by_row=0)
+
+    #Key correction
+    for i, k in enumerate(keycorrection.scopus_columns_names):
+        scopus_sheet.colnames[i] = k
+    
+    scopus_sheet.column.format('print_issn', str)
+    scopus_sheet.column.format('e_issn', str)
     scopus_json = scopus_sheet.to_records()
 
     models.Scopus.drop_collection()
 
-    for rec in scopus_json:
-
-        rec['is_scopus'] = 1 #counter
-
-        for key in rec.keys(): #key adjustments - in test
-            rec[key.lower().replace('\n\n','_').replace('\n','_').replace(':','').replace(' ','_').replace("'","")] = rec.pop(key)
-
     for i, rec in enumerate(scopus_json): #ISSN normalization
-        
         print('\nrec:' + str(i))
         
+        rec['is_scopus'] = 1 #counter
+
         try:
-            if rec['print-issn']:
-                rec['issn1'] = rec['print-issn'][0:4] + '-' + rec['print-issn'][4:8]
+            if rec['print_issn']:
+                rec['issn1'] = rec['print_issn'][0:4] + '-' + rec['print_issn'][4:8]
         except IndexError as e:
             print(e)
 
         try:
-            if rec['e-issn']:
-                rec['issn2'] = rec['e-issn'][0:4] + '-' + rec['e-issn'][4:8]
+            if rec['e_issn']:
+                rec['issn2'] = rec['e_issn'][0:4] + '-' + rec['e_issn'][4:8]
         except IndexError as e:
             print(e)
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
         mdata = models.Scopus(**rec)
-
         mdata.save()
 
     num_posts = models.Scopus.objects().count()
-    print('Registred %d posts in Scopus collection' % num_posts)
+    msg = u'Registred %d posts in Scopus collection' % num_posts
+    logger.info(msg)
+    print(msg)
 
 
 def jcrproc():
@@ -137,7 +136,6 @@ def jcrproc():
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
         mdata = models.Jcr(**rec)
-
         mdata.save()
 
     num_posts = models.Jcr.objects().count()
@@ -158,7 +156,6 @@ def cwtsproc():
     models.Cwts.drop_collection()
     
     for rec in cwts_json:
-
         print(rec['print_issn'])
         
         rec['is_cwts'] = 1 #counter
@@ -166,7 +163,6 @@ def cwtsproc():
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
         mdata = models.Cwts(**rec)
-
         mdata.save()
 
     num_posts = models.Cwts.objects().count()
@@ -181,16 +177,16 @@ def main():
     scieloproc()
 
     #Scimago - xlsx
-    scimagoproc()
+    #scimagoproc()
 
     #Scopus - xlsx
     scopusproc()
 
     #JCR - csv
-    jcrproc()
+    #jcrproc()
 
     #CWTS - xlsx
-    cwtsproc()
+    #cwtsproc()
 
 
 if __name__ == "__main__":
