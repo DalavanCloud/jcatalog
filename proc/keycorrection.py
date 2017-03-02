@@ -1,7 +1,6 @@
 # coding: utf-8
 
-#SciELO
-
+#SciELO collections
 scielo_collection_name = {      
     u'arg': u'Argentina',      
     u'bol': u'Bolivia',        
@@ -22,6 +21,7 @@ scielo_collection_name = {
 }
 
 
+#SciELO
 scielo_columns_names = ['extraction_date',
  'study_unit',
  'collection',
@@ -123,7 +123,6 @@ scielo_columns_names = ['extraction_date',
 
 
 # Scimago
-
 scimago_columns_names = ['rank',
  'title',
  'type',
@@ -144,8 +143,7 @@ scimago_columns_names = ['rank',
  'active']
  
 
- # Scopus
- 
+# Scopus
 scopus_columns_names = ['sourcerecord_id',
  'source_title',
  'print_issn',
@@ -161,7 +159,7 @@ scopus_columns_names = ['sourcerecord_id',
  '2015_citescore',
  '2015_sjr',
  '2015_snip',
- 'medline-sourced_title',
+ 'medline_sourced_title',
  'open_acces_status',
  'articles_in_press_included',
  'added_to_list_since_october_2016',
@@ -174,12 +172,12 @@ scopus_columns_names = ['sourcerecord_id',
  'publishers_name',
  'publisher_imprints_grouped_to_main_publisher',
  'publishers_country',
- 'all_science_classification_codes_(asjc)',
- 'top_level:life_sciences',
- 'top_level:social_sciences',
- 'top_level:physical_sciences',
- 'top_level:health_sciences',
- '1000__general',
+ 'all_science_classification_codes_asjc',
+ 'top_level_life_sciences',
+ 'top_level_social_sciences',
+ 'top_level_physical_sciences',
+ 'top_level_health_sciences',
+ '1000_general',
  '1100_agricultural_and_biological_sciences',
  '1200_arts_and_humanities',
  '1300_biochemistry_genetics_and_molecular_biology',
@@ -209,7 +207,6 @@ scopus_columns_names = ['sourcerecord_id',
 
 
 # JCR
-
 jcr_columns_names = ['rank',
  'full_journal_title',
  'jcr_abbreviated_title',
@@ -229,7 +226,8 @@ jcr_columns_names = ['rank',
  'average_journal_impact_factor_percentile',
  'normalized_eigenfactor']
 
- #CWTS
+
+#CWTS
 cwts_columns_names = ['title_and_country_scimago',
  'source_title',
  'print_issn',
