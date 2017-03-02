@@ -1,7 +1,6 @@
 # coding: utf-8
 
-#SciELO
-
+#SciELO collections
 scielo_collection_name = {      
     u'arg': u'Argentina',      
     u'bol': u'Bolivia',        
@@ -22,6 +21,7 @@ scielo_collection_name = {
 }
 
 
+#SciELO
 scielo_columns_names = ['extraction_date',
  'study_unit',
  'collection',
@@ -123,7 +123,6 @@ scielo_columns_names = ['extraction_date',
 
 
 # Scimago
-
 scimago_columns_names = ['rank',
  'title',
  'type',
@@ -144,8 +143,7 @@ scimago_columns_names = ['rank',
  'active']
  
 
- # Scopus
- 
+# Scopus
 scopus_columns_names = ['sourcerecord_id',
  'source_title',
  'print_issn',
@@ -209,7 +207,6 @@ scopus_columns_names = ['sourcerecord_id',
 
 
 # JCR
-
 jcr_columns_names = ['rank',
  'full_journal_title',
  'jcr_abbreviated_title',
@@ -229,7 +226,8 @@ jcr_columns_names = ['rank',
  'average_journal_impact_factor_percentile',
  'normalized_eigenfactor']
 
- #CWTS
+
+#CWTS
 cwts_columns_names = ['title_and_country_scimago',
  'source_title',
  'print_issn',
