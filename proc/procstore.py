@@ -69,8 +69,10 @@ def scimagoproc():
         mdata = models.Scimago(**rec)
         mdata.save()
 
-    num_posts = models.Scimago.objects().count()
-    print('Registred %d posts in Scimago collection' % num_posts)
+    num_posts = models.Scielo.objects().count()
+    msg = u'Registred %d posts in Scimago collection' % num_posts
+    logger.info(msg)
+    print(msg)
 
 
 def scopusproc():
