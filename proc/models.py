@@ -9,6 +9,7 @@ connect('journals-catalog')
 
 class Scielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
+    extraction_date = DateTimeField()
     is_scielo = IntField(required=True)
     issn_list = ListField()
 
@@ -22,6 +23,7 @@ class Scimago(DynamicDocument):
 class Scopus(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     is_scopus = IntField(required=True)
+    issn_list = ListField()
 
 
 class Scopus_Discontinued(DynamicDocument):
@@ -31,6 +33,7 @@ class Scopus_Discontinued(DynamicDocument):
 class Jcr(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     is_jcr = IntField(required=True)
+    issn_list = ListField()
 
 
 class Cwts(DynamicDocument):
