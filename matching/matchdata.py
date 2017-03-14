@@ -6,10 +6,10 @@ import os
 import sys
 import logging
 
-PROJECT_PATH = os.path.abspath(os.path.dirname('../'))
+PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/matchlogs.txt',level=logging.INFO)
+logging.basicConfig(filename='logs/matchdata.info.txt',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -30,13 +30,17 @@ def main():
             coldb = models.Jcr.objects
             jcr = match_jcr(issn_scielo, coldb)
             if jcr is not None and jcr[0] == 1:
-                 print('ISSN SciELO %s is JCR: %s' % (issn_scielo, jcr[1]))
+                msg = u'ISSN SciELO %s is JCR: %s' % (issn_scielo, jcr[1])
+                logger.info(msg)
+                print(msg)
 
             #Scimago
             coldb = models.Scimago.objects
             scimago = match_jcr(issn_scielo, coldb)
             if scimago is not None and scimago[0] == 1:
-                 print('ISSN SciELO %s is Scimago: %s' % (issn_scielo, scimago[1]))
+                msg = u'ISSN SciELO %s is Scimago: %s' % (issn_scielo, scimago[1])
+                logger.info(msg)
+                print(msg)
 
 
 if __name__ == "__main__":

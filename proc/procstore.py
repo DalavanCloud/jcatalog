@@ -2,14 +2,17 @@
 '''
 This script reads data from various sources to process and store in MongoDB.
 '''
+import os 
+import sys
 import models
 import pyexcel
 import keycorrection
 import logging
 
+PROJECT_PATH = os.path.abspath(os.path.dirname(''))
+sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/logs.txt',level=logging.INFO)
-
+logging.basicConfig(filename='logs/procstore.info.txt',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -69,7 +72,7 @@ def scimagoproc():
         mdata = models.Scimago(**rec)
         mdata.save()
 
-    num_posts = models.Scielo.objects().count()
+    num_posts = models.Scimago.objects().count()
     msg = u'Registred %d posts in Scimago collection' % num_posts
     logger.info(msg)
     print(msg)
