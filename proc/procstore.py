@@ -8,6 +8,7 @@ import models
 import pyexcel
 import keycorrection
 import logging
+from transform import *
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -31,12 +32,24 @@ def scieloproc():
 
         rec['is_scielo'] = 1 #counter
         
-        rec['issns'] = rec['issns'].split(';') #convert in list
-        rec['issn_list'] = []
-        rec['issn_list'].append(rec['issn_scielo'])
-        for i in rec['issns']:
-            if i not in rec['issn_scielo']:
-                rec['issn_list'].append(i)
+        #convert issn int type to str type
+        if type(rec['issns']) != str: 
+            rec['issns'] = Issn().issn_hifen(rec['issns'])
+            msg = u'issn modificado: %s - %s' % (rec['issns'],rec['title_at_scielo'])
+            logger.info(msg)
+        
+        #convert in list
+        if type(rec['issns']) == str: 
+            rec['issns'] = rec['issns'].split(';') 
+            rec['issn_list'] = []
+            rec['issn_list'].append(rec['issn_scielo'])
+            for i in rec['issns']:
+                if i not in rec['issn_scielo']:
+                    rec['issn_list'].append(i)
+
+        #transform data in datetime type
+        rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
+        rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
