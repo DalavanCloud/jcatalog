@@ -12,7 +12,8 @@ class Scielo(DynamicDocument):
     extraction_date = DateTimeField()
     is_scielo = IntField(required=True)
     issn_list = ListField()
-
+    date_of_the_first_document = DateTimeField()
+    date_of_the_last_document = DateTimeField()
 
 class Scimago(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
