@@ -61,5 +61,5 @@ class Issn(object):
             r = ('%s-%s' % (i[:4],i[4:]))
             return r
         else:
-            msg = 'Issn nao foi modificado'
+            # Issn nao foi modificado - retorna issn
             return issn
