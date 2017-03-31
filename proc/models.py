@@ -10,20 +10,21 @@ connect('journals-catalog')
 class Scielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     extraction_date = DateTimeField()
-    is_scielo = IntField(required=True)
+    is_scielo = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
     date_of_the_first_document = DateTimeField()
     date_of_the_last_document = DateTimeField()
 
+
 class Scimago(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
-    is_scimago = IntField(required=True)
+    is_scimago = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
 
 
 class Scopus(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
-    is_scopus = IntField(required=True)
+    is_scopus = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
 
 
@@ -33,11 +34,20 @@ class Scopus_Discontinued(DynamicDocument):
 
 class Jcr(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
-    is_jcr = IntField(required=True)
+    is_jcr = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
 
 
 class Cwts(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
-    is_cwts = IntField(required=True)
+    updated_at = DateTimeField()
+    is_cwts = IntField(required=True, min_value=1, default=1)
+    is_scielo = IntField(required=True, min_value=0, default=0)
+    is_scimago = IntField(required=True, min_value=0, default=0)
     issn_list = ListField()
+    title_scielo = StringField()
+    country_scielo = StringField()
+    collection_scielo = StringField()
+    status_current_scielo = StringField()
+    title_scimago = StringField()
+    coutry_scimago = StringField()

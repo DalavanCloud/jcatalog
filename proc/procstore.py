@@ -31,9 +31,9 @@ def scieloproc():
 
     for rec in scielo_json:
 
-        rec['is_scielo'] = 1 #counter
-
         rec['country'] = collections_scielo.country[rec['collection']]
+
+        rec['title_at_scielo_country'] = '%s-%s' % (rec['title_at_scielo'], rec['country'])
 
         #convert issn int type to str type
         if type(rec['issns']) != str: 
@@ -79,7 +79,7 @@ def scimagoproc():
     
     for rec in scimago_json:
 
-        rec['is_scimago'] = 1 #counter
+        rec['title_country'] = '%s-%s' % (rec['title'],rec['country'])
         
         issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
         rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issns]
@@ -111,8 +111,6 @@ def scopusproc():
     for i, rec in enumerate(scopus_json): #ISSN normalization
         #print('\nrec:' + str(i))
         
-        rec['is_scopus'] = 1 #counter
-
         rec['issn_list']=[]
         if rec['print_issn']:
             rec['issn_list'].append(rec['print_issn'][0:4] + '-' + rec['print_issn'][4:8])
@@ -148,8 +146,6 @@ def jcrproc():
     models.Jcr.drop_collection()
 
     for rec in jcr_json:
-
-        rec['is_jcr'] = 1 #counter
         
         rec['issn_list']=[rec['issn']]
 
@@ -176,8 +172,6 @@ def cwtsproc():
     models.Cwts.drop_collection()
     
     for rec in cwts_json:
-        rec['is_cwts'] = 1 #counter
-        rec['is_scielo'] = 0
 
         rec['issn_list']=[]
         if rec['print_issn'] and len(rec['print_issn']) > 2:
