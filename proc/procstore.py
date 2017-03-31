@@ -7,6 +7,7 @@ import sys
 import models
 import pyexcel
 import keycorrection
+import collections_scielo
 import logging
 from transform import *
 
@@ -31,7 +32,9 @@ def scieloproc():
     for rec in scielo_json:
 
         rec['is_scielo'] = 1 #counter
-        
+
+        rec['country'] = collections_scielo.country[rec['collection']]
+
         #convert issn int type to str type
         if type(rec['issns']) != str: 
             rec['issns'] = Issn().issn_hifen(rec['issns'])
@@ -55,6 +58,7 @@ def scieloproc():
 
         mdata = models.Scielo(**rec)
         mdata.save()
+
 
     num_posts = models.Scielo.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
@@ -172,8 +176,8 @@ def cwtsproc():
     models.Cwts.drop_collection()
     
     for rec in cwts_json:
-        
         rec['is_cwts'] = 1 #counter
+        rec['is_scielo'] = 0
 
         rec['issn_list']=[]
         if rec['print_issn'] and len(rec['print_issn']) > 2:
