@@ -5,7 +5,6 @@ This script perform data matching from SciELO journals with other sources.
 import os
 import sys
 import logging
-import json
 import datetime
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
@@ -55,11 +54,11 @@ def matchscielo():
 
 def matchscimago():
     for doc in models.Cwts.objects():
+        #print(doc.issn_list)
         #etapa 1 - match com ISSN
         if doc.is_scimago == 0:
             for issn in doc.issn_list:
                 try:
-                    print(issn)
                     docsmago = models.Scimago.objects.get(issn_list=issn)
                     doc.modify(
                         is_scimago = 1,
@@ -73,7 +72,6 @@ def matchscimago():
         #etapa 2 - match com titulo
         if doc.is_scimago == 0:
             try:
-                print(issn)
                 docsmago = models.Scimago.objects.get(title=doc.title_and_country_scimago)
                 doc.modify(
                     is_scimago = 1,
