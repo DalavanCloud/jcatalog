@@ -13,13 +13,11 @@ sys.path.append(PROJECT_PATH)
 logging.basicConfig(filename='logs/cwts.info.txt',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 from proc import models
 
-
 def matchscielo():
-    #Match SciELO
     for doc in models.Cwts.objects():
+        print(doc.issn_list)
         #etapa 1 - match com ISSN
         if doc.is_scielo == 0:
             for issn in doc.issn_list:
@@ -32,7 +30,10 @@ def matchscielo():
                         title_scielo = docsci.title_at_scielo,
                         updated_at = datetime.datetime.now)
                     doc.save()
-                    print('ISSN:%s : is title SciELO: %s' % (issn, doc.source_title))
+
+                    msg = 'ISSN:%s : is title SciELO: %s' % (issn, doc.source_title)
+                    logger.info(msg)
+                    print(msg)
                 except models.Scielo.DoesNotExist:
                     pass
         
@@ -47,17 +48,20 @@ def matchscielo():
                     title_scielo = docsci.title_at_scielo,
                     updated_at = datetime.datetime.now)
                 doc.save()
-                print('title:%s : is title SciELO: %s' % (doc.source_title, docsci.title_at_scielo))
+
+                msg = 'title:%s : is title SciELO: %s' % (doc.source_title, docsci.title_at_scielo)
+                logger.info(msg)
+                print(msg)
             except models.Scielo.DoesNotExist:
                 pass
 
 
 def matchscimago():
     for doc in models.Cwts.objects():
-        #print(doc.issn_list)
-        #etapa 1 - match com ISSN
-        if doc.is_scimago == 0:
-            for issn in doc.issn_list:
+        print(doc.issn_list)
+        for issn in doc.issn_list:
+            #etapa 1 - match com ISSN
+            if doc.is_scimago == 0:
                 try:
                     docsmago = models.Scimago.objects(issn_list=issn)
                     if docsmago.count() > 0:
@@ -70,21 +74,21 @@ def matchscimago():
                 except models.Scimago.DoesNotExist:
                     pass
         
-        #etapa 2 - match com titulo
-        if doc.is_scimago == 0:
-            try:
-                docsmago = models.Scimago.objects.get(title_country=doc.title_and_country_scimago)
-                doc.modify(
-                    is_scimago = 1,
-                    title_scimago = docsmago.title,
-                    updated_at = datetime.datetime.now)
-                doc.save()
-                print('title-country: %s : is title Scimago-country: %s' % (doc.title_and_country_scimago, docsmago.title_country))
-            except models.Scimago.DoesNotExist:
-                pass
+            #etapa 2 - match com titulo
+            if doc.is_scimago == 0:
+                try:
+                    docsmago = models.Scimago.objects.get(title_country=doc.title_and_country_scimago)
+                    doc.modify(
+                        is_scimago = 1,
+                        title_scimago = docsmago.title,
+                        updated_at = datetime.datetime.now)
+                    doc.save()
+                    print('title-country: %s : is title Scimago-country: %s' % (doc.title_and_country_scimago, docsmago.title_country))
+                except models.Scimago.DoesNotExist:
+                    pass
 
 def main():
-    matchscielo()
+    #matchscielo()
     matchscimago()
 
 if __name__ == "__main__":
