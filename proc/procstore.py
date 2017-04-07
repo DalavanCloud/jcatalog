@@ -67,7 +67,7 @@ def scieloproc():
 
 
 def scimagoproc():
-    scimago_sheet = pyexcel.get_sheet(file_name='data/scimago/scimago_Latin America_2015.xlsx', name_columns_by_row=0)
+    scimago_sheet = pyexcel.get_sheet(file_name='data/scimago/scimago_all_r5_conso.xlsx', name_columns_by_row=0)
     
     #Key correction
     for i, k in enumerate(keycorrection.scimago_columns_names):
@@ -81,8 +81,15 @@ def scimagoproc():
 
         rec['title_country'] = '%s-%s' % (rec['title'],rec['country'])
         
-        issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
-        rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issns]
+        #issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
+        #rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issns]
+        rec['issn_list'] = []
+        if rec['issn1']:
+            rec['issn_list'].append(rec['issn1'])
+        if rec['issn2']:
+            rec['issn_list'].append(rec['issn2'])
+        if rec['issn3']:
+            rec['issn_list'].append(rec['issn3'])
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
@@ -161,7 +168,7 @@ def jcrproc():
 
 
 def cwtsproc():
-    cwts_sheet = pyexcel.get_sheet(file_name='data/cwts/CWTS_Journal_Indicators_June_2016_r5b_extrato.xlsx', name_columns_by_row=0)
+    cwts_sheet = pyexcel.get_sheet(file_name='data/cwts/CWTS_Journal_Indicators_June_2016_r5c_extrato.xlsx', name_columns_by_row=0)
     
     #Key correction
     for i, k in enumerate(keycorrection.cwts_columns_names):
@@ -192,16 +199,16 @@ def cwtsproc():
 
 def main():
     #SciELO - csv
-    scieloproc()
+    #scieloproc()
 
     #Scimago - xlsx
     scimagoproc()
 
     #Scopus - xlsx
-    scopusproc()
+    #scopusproc()
 
     #JCR - csv
-    jcrproc()
+    #jcrproc()
 
     #CWTS - xlsx
     cwtsproc()
