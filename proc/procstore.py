@@ -199,16 +199,16 @@ def cwtsproc():
 
 def main():
     #SciELO - csv
-    #scieloproc()
+    scieloproc()
 
     #Scimago - xlsx
     scimagoproc()
 
     #Scopus - xlsx
-    #scopusproc()
+    scopusproc()
 
     #JCR - csv
-    #jcrproc()
+    jcrproc()
 
     #CWTS - xlsx
     cwtsproc()
