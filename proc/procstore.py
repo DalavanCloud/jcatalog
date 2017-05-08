@@ -59,7 +59,6 @@ def scieloproc():
         mdata = models.Scielo(**rec)
         mdata.save()
 
-
     num_posts = models.Scielo.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
     logger.info(msg)
@@ -224,24 +223,54 @@ def doajproc():
     print(msg)
 
 
+def submissions():# Add OJS and ScholarOne
+    submiss_sheet = pyexcel.get_sheet(file_name='data/submiss/sistemas_submissao_scielo_brasil.xlsx', name_columns_by_row=0)
+
+    #Key correction
+    for i, k in enumerate(keycorrection.submission_scielo_brasil_columns_names):
+        submiss_sheet.colnames[i] = k
+
+    submiss_json = submiss_sheet.to_records()
+
+    models.Submissions.drop_collection()
+
+    for rec in submiss_json:
+
+        rec['issn_list']=[]
+        rec['issn_list'].append(rec['issn_scielo'])
+        
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        
+        mdata = models.Submissions(**rec)
+        mdata.save()
+
+    num_posts = models.Submissions.objects().count()
+    msg = u'Registred %d posts in Submissions collection' % num_posts
+    logger.info(msg)
+    print(msg)
+
+
 def main():
     #SciELO - csv
     scieloproc()
 
-    # #Scimago - xlsx
-    # scimagoproc()
+    #Scimago - xlsx
+    scimagoproc()
 
-    # #Scopus - xlsx
-    # scopusproc()
+    #Scopus - xlsx
+    scopusproc()
 
-    # #JCR - csv
-    # jcrproc()
+    #JCR - csv
+    jcrproc()
 
-    # #CWTS - xlsx
-    # cwtsproc()
+    #CWTS - xlsx
+    cwtsproc()
 
     # DOAJ - xlsx
     doajproc()
+
+    # Submissions - xlsx
+    submissions()
 
 
 if __name__ == "__main__":
