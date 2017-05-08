@@ -58,3 +58,13 @@ class Doaj(DynamicDocument):
     updated_at = DateTimeField()
     is_doaj = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
+
+
+class Submissions(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
+    scholarone = IntField(required=True, min_value=0, default=0)
+    ojs_scielo = IntField(required=True, min_value=0, default=0)
+    ojs_outro = IntField(required=True, min_value=0, default=0)
+    outro = IntField(required=True, min_value=0, default=0)
