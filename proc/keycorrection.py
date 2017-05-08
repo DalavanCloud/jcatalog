@@ -576,3 +576,22 @@ cwts_columns_names = ['title_and_country_scimago',
  '2015_snip_upper_bound',
  '2015_perc_self_cit',
  '2015_active']
+
+
+doaj_columns_names = ['colecao',
+ 'titulo',
+ 'issn',
+ 'link_doaj',
+ 'ultimo_ano_no_doaj',
+ 'licenca_no_doaj',
+ 'licenca_scielo',
+ 'disponivel_doaj',
+ 'atualizado_no_doaj',
+ 'data_de_conferencia',
+ 'plataforma',
+ 'selo_doaj',
+ 'ti_envia_dados',
+ 'enviado_formulario_pelo_editor',
+ 'data_de_confirmacão_de_envio',
+ 'observacoes']
+ 
