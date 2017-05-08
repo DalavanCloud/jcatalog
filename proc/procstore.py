@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def scieloproc():
-    scielo_sheet  = pyexcel.get_sheet(file_name='data/scielo/journals.csv', name_columns_by_row=0)
+    scielo_sheet  = pyexcel.get_sheet(file_name='data/scielo/journals_scl.csv', name_columns_by_row=0)
     
     #Key correction
     for i, k in enumerate(keycorrection.scielo_columns_names):
@@ -197,21 +197,51 @@ def cwtsproc():
     print(msg)
 
 
+def doajproc():
+    doaj_sheet = pyexcel.get_sheet(file_name='data/doaj/controle_DOAJ.xlsx', name_columns_by_row=0)
+    
+    #Key correction
+    for i, k in enumerate(keycorrection.doaj_columns_names):
+        doaj_sheet.colnames[i] = k
+    
+    doaj_json = doaj_sheet.to_records()
+
+    models.Doaj.drop_collection()
+    
+    for rec in doaj_json:
+
+        rec['issn_list']=[]
+        rec['issn_list'].append(rec['issn'])
+        
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        
+        mdata = models.Doaj(**rec)
+        mdata.save()
+
+    num_posts = models.Doaj.objects().count()
+    msg = u'Registred %d posts in DOAJ collection' % num_posts
+    logger.info(msg)
+    print(msg)
+
+
 def main():
     #SciELO - csv
     scieloproc()
 
-    #Scimago - xlsx
-    scimagoproc()
+    # #Scimago - xlsx
+    # scimagoproc()
 
-    #Scopus - xlsx
-    scopusproc()
+    # #Scopus - xlsx
+    # scopusproc()
 
-    #JCR - csv
-    jcrproc()
+    # #JCR - csv
+    # jcrproc()
 
-    #CWTS - xlsx
-    cwtsproc()
+    # #CWTS - xlsx
+    # cwtsproc()
+
+    # DOAJ - xlsx
+    doajproc()
 
 
 if __name__ == "__main__":

@@ -51,3 +51,10 @@ class Cwts(DynamicDocument):
     status_current_scielo = StringField()
     title_scimago = StringField()
     coutry_scimago = StringField()
+
+
+class Doaj(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    is_doaj = IntField(required=True, min_value=1, default=1)
+    issn_list = ListField()
