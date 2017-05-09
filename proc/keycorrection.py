@@ -100,7 +100,7 @@ scielo_columns_names = ['extraction_date',
  'google_scholar_m5_2013',
  'google_scholar_m5_2012']
 
-submission_scielo_brasil_columns_names = ['titulos_revistas_na_base_scielo',
+submission_scielo_brasil_columns_names = ['titulo',
  'data_inclusao_scielo',
  'issn_scielo',
  'scholarone',
@@ -601,5 +601,5 @@ doaj_columns_names = ['colecao',
  'selo_doaj',
  'ti_envia_dados',
  'enviado_formulario_pelo_editor',
- 'data_de_confirmacão_de_envio',
+ 'data_de_confirmacao_de_envio',
  'observacoes']
