@@ -134,7 +134,7 @@ def scopusproc():
     print(msg)
 
 
-def jcrproc():
+def wosproc():
     jcr_sheet  = pyexcel.get_sheet(file_name='data/jcr/JournalHomeGrid.csv', name_columns_by_row=0)
     
     #Key correction
@@ -149,7 +149,7 @@ def jcrproc():
         if rec not in jcr_json:
             jcr_json.append(rec)
 
-    models.Jcr.drop_collection()
+    models.Wos.drop_collection()
 
     for rec in jcr_json:
         
@@ -157,11 +157,11 @@ def jcrproc():
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
-        mdata = models.Jcr(**rec)
+        mdata = models.Wos(**rec)
         mdata.save()
 
-    num_posts = models.Jcr.objects().count()
-    msg = u'Registred %d posts in JCR collection' % num_posts
+    num_posts = models.Wos.objects().count()
+    msg = u'Registred %d posts in WOS collection' % num_posts
     logger.info(msg)
     print(msg)
 
@@ -251,19 +251,19 @@ def submissions():# Add OJS and ScholarOne
 
 
 def main():
-    #SciELO - csv
+    # SciELO - csv
     scieloproc()
 
-    #Scimago - xlsx
+    # Scimago - xlsx
     scimagoproc()
 
-    #Scopus - xlsx
+    # Scopus - xlsx
     scopusproc()
 
-    #JCR - csv
-    jcrproc()
+    # WOS - csv
+    wosproc()
 
-    #CWTS - xlsx
+    # CWTS - xlsx
     cwtsproc()
 
     # DOAJ - xlsx
