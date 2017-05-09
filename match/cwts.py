@@ -88,8 +88,8 @@ def matchscimago():
                     pass
 
 def main():
-    #matchscielo()
-    matchscimago()
+    matchscielo()
+    #matchscimago()
 
 if __name__ == "__main__":
     main()
