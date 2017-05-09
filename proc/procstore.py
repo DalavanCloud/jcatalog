@@ -117,6 +117,8 @@ def scopusproc():
     for i, rec in enumerate(scopus_json): #ISSN normalization
         #print('\nrec:' + str(i))
         
+        rec['title_country'] = '%s-%s' % (rec['source_title'],rec['publishers_country'])
+
         rec['issn_list']=[]
         if rec['print_issn']:
             rec['issn_list'].append(rec['print_issn'][0:4] + '-' + rec['print_issn'][4:8])
@@ -154,6 +156,8 @@ def wosproc():
     for rec in jcr_json:
         
         rec['issn_list']=[rec['issn']]
+
+        rec['title_country'] = '%s-Brazil' % (rec['full_journal_title'])
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
@@ -257,14 +261,14 @@ def main():
     # Scimago - xlsx
     scimagoproc()
 
-    # Scopus - xlsx
+    # # Scopus - xlsx
     scopusproc()
 
     # WOS - csv
     wosproc()
 
-    # CWTS - xlsx
-    cwtsproc()
+    # # CWTS - xlsx
+    # cwtsproc()
 
     # DOAJ - xlsx
     doajproc()
