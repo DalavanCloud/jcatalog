@@ -10,7 +10,7 @@ import datetime
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/matchdata.info.txt',level=logging.INFO)
+logging.basicConfig(filename='logs/matchscielo.info.txt',level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from proc import models
@@ -142,7 +142,6 @@ def main():
     match_wos()
     match_scimago()
     match_scopus()
-
 
 
 if __name__ == "__main__":
