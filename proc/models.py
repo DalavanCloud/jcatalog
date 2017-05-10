@@ -24,6 +24,7 @@ class Scielo(DynamicDocument):
 
 class Scimago(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
     issn_list = ListField()
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=1, default=1)
@@ -33,6 +34,7 @@ class Scimago(DynamicDocument):
 
 class Scopus(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
     issn_list = ListField()
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
@@ -42,6 +44,7 @@ class Scopus(DynamicDocument):
 
 class Wos(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
     issn_list = ListField()
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)

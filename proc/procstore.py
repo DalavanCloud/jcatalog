@@ -157,6 +157,7 @@ def wosproc():
         
         rec['issn_list']=[rec['issn']]
 
+        rec['country'] = 'Brazil'
         rec['title_country'] = '%s-Brazil' % (rec['full_journal_title'])
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
@@ -261,14 +262,14 @@ def main():
     # Scimago - xlsx
     scimagoproc()
 
-    # # Scopus - xlsx
+    # Scopus - xlsx
     scopusproc()
 
     # WOS - csv
     wosproc()
 
-    # # CWTS - xlsx
-    # cwtsproc()
+    # CWTS - xlsx
+    cwtsproc()
 
     # DOAJ - xlsx
     doajproc()
