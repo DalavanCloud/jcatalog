@@ -1,4 +1,3 @@
-
 # coding: utf-8
 
 import xlsxwriter
@@ -11,24 +10,28 @@ def jcatalog():
     
     # Cria a pasta Excel e adiciona um planilha.
     workbook = xlsxwriter.Workbook('journals_catalog.xlsx')
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet('SciELO Brazil')
 
     # Add a bold format to use to highlight cells.
     bold = workbook.add_format({'bold': True})
     red = workbook.add_format({'font_color': 'red'})
 
     # Header
-    headers = ['SciELO','Scopus','WoS', 'SciELO, Scopus e WoS',
-    'issn_scielo',
-    'issns',
-    'Título Scielo', 
-    'Status na Scielo', 
+    headers = ['SciELO or Scopus or WoS'
+    'SciELO',
+    'Scopus',
+    'WoS', 
+    'SciELO, Scopus e WoS',
+    'SciELO issn',
+    'SciELO issns',
+    'Title at SciELO', 
+    'Status at SciELO', 
     'ScholarOne', 
     'OJS', 
-    'Acesso Submission', 
+    'Submission access', 
     'google_scholar_h5_2016',
     'google_scholar_m5_2016',
-    'Título Scopus', 
+    'Scopus title', 
     'Scopus publisher', 
     'WoS Impact Factor',
     'WoS 5 year Impact Factor',
@@ -47,6 +50,12 @@ def jcatalog():
     for doc in scielodocs:
 
         col = 0
+        
+        if doc.is_scielo == 1 or doc.is_scopus == 1 or doc.is_wos == 1:
+            worksheet.write(row, col, 1)
+        else:
+            worksheet.write(row, col, 0)
+        col += 1
 
         worksheet.write(row, col, doc.is_scielo); col += 1
         worksheet.write(row, col, doc.is_scopus); col += 1
@@ -60,10 +69,16 @@ def jcatalog():
 
         worksheet.write(row, col, doc.issn_scielo); col += 1
         
+        # issns       
         issns = []
         for i in doc.issns:
-            issns.append(i)
-        worksheet.write(row, col, str(issns).replace('[','').replace(']','')); col += 1
+            if issns:
+                issns = issns + ',' + i
+            else:
+                issns = i
+        if issns:
+            worksheet.write(row, col, issns)
+        col += 1
         
         worksheet.write(row, col, doc.title_at_scielo); col += 1
         worksheet.write(row, col, doc.title_current_status); col += 1
@@ -91,22 +106,25 @@ def jcatalog():
 
         # Scopus
         if doc.is_scopus == 1:
-            for issn in doc.issn_list:
-                try:
-                    worksheet.write(row, col, models.Scopus.objects.get(issn_list=issn).source_title)
-                except:
-                    pass
-            col += 1     
-            for issn in doc.issn_list:  
-                try:
-                    worksheet.write(row, col, models.Scopus.objects.get(issn_list=issn).publishers_name)
-                except:
-                    pass
+            try:
+                docscopus = models.Scopus.objects(id=str(doc.scopus_id))[0]
+
+                if hasattr(docscopus, 'source_title'):
+                    worksheet.write(row, col, docscopus.source_title)
+                col += 1
+
+                if hasattr(docscopus, 'publishers_name'):
+                    worksheet.write(row, col, docscopus.publishers_name)
+                col += 1
+
+            except:
+                pass
         else:
-            col += 2
+            col += 2 # (Se não é Scopus, força o avanço de 2 colunas)
+
 
         # WOS
-        col = 15
+        col = 16
         ind = workbook.add_format({'num_format': '#.###'})
         if doc.is_wos == 1:
             try:
@@ -125,9 +143,9 @@ def jcatalog():
 
     # WOS completo
 
-    worksheet2 = workbook.add_worksheet('WoS')
+    worksheet2 = workbook.add_worksheet('WoS_completo')
     
-    headers_wos = keycorrection.jcr_columns_names
+    headers_wos = keycorrection.wos_columns_names
     
     col = 0
     for h in headers_wos:
@@ -148,7 +166,51 @@ def jcatalog():
                 col +=1
         row += 1
 
-    # grava planilha Excel
+
+    # Outras fontes
+
+    list_titles = []
+    
+    # Scimago = 140
+    worksheet3 = workbook.add_worksheet('Scimago')
+    row = 0
+    #for doc in models.Scimago.objects.filter(country='Brazil', is_scielo=0, is_wos=0, is_scopus=1):
+    for doc in models.Scimago.objects.filter(country='Brazil', is_scielo=0):
+        worksheet3.write(row, 0, doc.title)
+        list_titles.append(doc.title.lower())
+        row += 1
+    print(models.Scimago.objects.filter(country='Brazil', is_scielo=0).count())
+
+    # Scopus = 187
+    worksheet4 = workbook.add_worksheet('Scopus')
+    row = 0
+    #for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0, is_wos=0, is_scimago=1):
+    for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0):
+        worksheet4.write(row, 0, doc.source_title)
+        list_titles.append(doc.source_title.lower())
+        row += 1
+    print(models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0).count())
+
+    # Wos = 22
+    worksheet5 = workbook.add_worksheet('Wos')
+    row = 0
+    for doc in models.Wos.objects.filter(is_scielo=0):
+        worksheet5.write(row, 0, doc.full_journal_title)
+        list_titles.append(doc.full_journal_title.lower())
+        row += 1
+    print(models.Wos.objects.filter(is_scielo=0).count())
+    
+    # Lista unificada de títulos
+    worksheet6 = workbook.add_worksheet('Titulos Unificados')
+    row = 0
+    # new_list = list(set(list_titles))
+    # sorted(new_list)
+    for l in sorted(set(list_titles)):
+        worksheet6.write(row, 0, l)
+        row += 1
+
+
+    # Grava planilha Excel
     try:
         workbook.close()
     except IOError as e:
