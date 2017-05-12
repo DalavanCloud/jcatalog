@@ -121,21 +121,11 @@ def jcatalog():
         row += 1
 
     print('número da última linha: %s' % row)
-
-
-    expenses = (
-     ['Rent', 1000],
-     ['Gas',   100],
-     ['Food',  300],
-     ['Gym',    50]
-     )
-     
     
 
-    #teste WOS completo
+    # WOS completo
 
     worksheet2 = workbook.add_worksheet('WoS')
-    
     
     headers_wos = keycorrection.jcr_columns_names
     
@@ -144,7 +134,6 @@ def jcatalog():
         worksheet2.write(0, col, h, red)
         col += 1
 
-
     # Start from the first cell below the headers.
     row = 1
     
@@ -152,15 +141,12 @@ def jcatalog():
     for doc in models.Wos.objects():
         col = 0
         for h in headers_wos:
-            #print(h)
             if h in doc:
                 worksheet2.write(row, col, operator.attrgetter(h)(doc))
                 col += 1
             else:
                 col +=1
         row += 1
-
-    # fim do teste
 
     # grava planilha Excel
     try:

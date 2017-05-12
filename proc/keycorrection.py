@@ -389,7 +389,7 @@ scopus_columns_names = ['sourcerecord_id',
 
 
 # WOS
-jcr_columns_names = ['rank',
+wos_columns_names = ['rank',
  'full_journal_title',
  'jcr_abbreviated_title',
  'issn',

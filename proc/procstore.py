@@ -137,23 +137,23 @@ def scopusproc():
 
 
 def wosproc():
-    jcr_sheet  = pyexcel.get_sheet(file_name='data/jcr/JournalHomeGrid.csv', name_columns_by_row=0)
+    wos_sheet  = pyexcel.get_sheet(file_name='data/wos/JournalHomeGrid.csv', name_columns_by_row=0)
     
     #Key correction
-    for i, k in enumerate(keycorrection.jcr_columns_names):
-        jcr_sheet.colnames[i] = k
+    for i, k in enumerate(keycorrection.wos_columns_names):
+        wos_sheet.colnames[i] = k
     
-    jcr_json_dup = jcr_sheet.to_records()
+    wos_json_dup = wos_sheet.to_records()
     
-    jcr_json = []
+    wos_json = []
 
-    for rec in jcr_json_dup: #remove duplicates
-        if rec not in jcr_json:
-            jcr_json.append(rec)
+    for rec in wos_json_dup: #remove duplicates
+        if rec not in wos_json:
+            wos_json.append(rec)
 
     models.Wos.drop_collection()
 
-    for rec in jcr_json:
+    for rec in wos_json:
         
         rec['issn_list']=[rec['issn']]
 
@@ -256,26 +256,26 @@ def submissions():# Add OJS and ScholarOne
 
 
 def main():
-    # # SciELO - csv
+    # SciELO - csv
     scieloproc()
 
-    # # Scimago - xlsx
-    # scimagoproc()
+    # Scimago - xlsx
+    scimagoproc()
 
-    # # Scopus - xlsx
-    # scopusproc()
+    # Scopus - xlsx
+    scopusproc()
 
-    # # WOS - csv
+    # WOS - csv
     wosproc()
 
-    # # CWTS - xlsx
-    # cwtsproc()
+    # CWTS - xlsx
+    cwtsproc()
 
     # # DOAJ - xlsx
-    # doajproc()
+    doajproc()
 
-    # # Submissions - xlsx
-    # submissions()
+    # Submissions - xlsx
+    submissions()
 
 
 if __name__ == "__main__":

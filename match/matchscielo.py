@@ -6,12 +6,11 @@ import os
 import sys
 import logging
 import datetime
-import json
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/matchscielo.info.txt',level=logging.INFO)
+logging.basicConfig(filename = 'logs/matchscielo.info.txt',level = logging.INFO)
 logger = logging.getLogger(__name__)
 
 from proc import models
@@ -21,7 +20,7 @@ def submissions(): # Adds submissions data in the SciELO collection
     for doc in models.Submissions.objects():
         for issn in doc.issn_list:
             try:
-                docsci = models.Scielo.objects.get(issn_list=issn)
+                docsci = models.Scielo.objects.get(issn_list = issn)
                 docsci.modify(
                     scholarone = doc.scholarone,
                     ojs_scielo = doc.ojs_scielo,
@@ -80,6 +79,7 @@ def match_scimago():
                     docmago = models.Scimago.objects.get(issn_list = issn)
                     doc.modify(
                         is_scimago = 1,
+                        scimago_id = str(docmago.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in SciELO Collection
 
@@ -95,6 +95,7 @@ def match_scimago():
                 docmago = models.Scimago.objects.get(title_country__iexact = doc.title_at_scielo_country)
                 doc.modify(
                     is_scimago = 1,
+                    scimago_id = str(docmago.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in SciELO Collection
 
@@ -114,6 +115,7 @@ def match_scopus():
                     docscopus = models.Scopus.objects.get(issn_list = issn)
                     doc.modify(
                         is_scopus = 1,
+                        scopus_id = str(docscopus.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in SciELO Collection
 
@@ -129,6 +131,7 @@ def match_scopus():
                 docscopus = models.Scopus.objects.get(title_country__iexact = doc.title_at_scielo_country)
                 doc.modify(
                     is_scopus = 1,
+                    scopus_id = str(docscopus.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in SciELO Collection
 
@@ -140,12 +143,20 @@ def match_scopus():
                 pass
 
 
+def stats():
+    print('SciELO total records: %s' % (models.Scielo.objects.count()))
+    print('SciELO    is_scimago: %s' % (models.Scielo.objects.filter(is_scimago = 1).count()))
+    print('SciELO     is_scopus: %s' % (models.Scielo.objects.filter(is_scopus = 1).count()))
+    print('SciELO        is_wos: %s' % (models.Scielo.objects.filter(is_wos = 1).count()))
+
+
 def main():
     submissions()
     match_wos()
     match_scimago()
     match_scopus()
 
+    stats()
 
 if __name__ == "__main__":
     main()
