@@ -6,6 +6,7 @@ import os
 import sys
 import logging
 import datetime
+import json
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -43,6 +44,7 @@ def match_wos():
                     docwos = models.Wos.objects.get(issn_list = issn)
                     doc.modify(
                         is_wos = 1,
+                        wos_id = str(docwos.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in SciELO Collection
 
@@ -58,6 +60,7 @@ def match_wos():
                 docwos = models.Wos.objects.get(title_country__iexact = doc.title_at_scielo_country)
                 doc.modify(
                     is_wos = 1,
+                    wos_id = str(docwos.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in SciELO Collection
 
@@ -66,7 +69,7 @@ def match_wos():
                 print(msg)
 
             except models.Wos.DoesNotExist:
-                pass
+               pass
 
 
 def match_scimago():

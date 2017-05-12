@@ -120,8 +120,8 @@ def match_scopus():
 
 def main():
     match_scielo()
-    match_scimago()
-    match_scopus()
+    #match_scimago()
+    #match_scopus()
 
 
 if __name__ == "__main__":

@@ -256,26 +256,26 @@ def submissions():# Add OJS and ScholarOne
 
 
 def main():
-    # SciELO - csv
+    # # SciELO - csv
     scieloproc()
 
-    # Scimago - xlsx
-    scimagoproc()
+    # # Scimago - xlsx
+    # scimagoproc()
 
-    # Scopus - xlsx
-    scopusproc()
+    # # Scopus - xlsx
+    # scopusproc()
 
-    # WOS - csv
+    # # WOS - csv
     wosproc()
 
-    # CWTS - xlsx
-    cwtsproc()
+    # # CWTS - xlsx
+    # cwtsproc()
 
-    # DOAJ - xlsx
-    doajproc()
+    # # DOAJ - xlsx
+    # doajproc()
 
-    # Submissions - xlsx
-    submissions()
+    # # Submissions - xlsx
+    # submissions()
 
 
 if __name__ == "__main__":
