@@ -388,7 +388,7 @@ scopus_columns_names = ['sourcerecord_id',
  '3600_health_professions']
 
 
-# JCR
+# WOS
 jcr_columns_names = ['rank',
  'full_journal_title',
  'jcr_abbreviated_title',
@@ -396,7 +396,7 @@ jcr_columns_names = ['rank',
  'total_cites',
  'journal_impact_factor',
  'impact_factor_without_journal_self_cites',
- '5year_impact_factor',
+ 'five_year_impact_factor',
  'immediacy_index',
  'citable_items',
  'cited_half-life',

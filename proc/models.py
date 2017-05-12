@@ -6,6 +6,14 @@ import datetime
 
 connect('journals-catalog')
 
+# class References(DynamicDocument):
+#     scielo_ref = ReferenceField('Scielo', required=False, reverse_delete_rule=CASCADE)
+    
+#     meta = {'allow_inheritance': True}
+
+
+
+
 
 class Scielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
@@ -20,6 +28,7 @@ class Scielo(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    wos_id = StringField()
 
 
 class Scimago(DynamicDocument):
