@@ -10,7 +10,7 @@ import datetime
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/matchscimago.info.txt',level=logging.INFO)
+logging.basicConfig(filename = 'logs/matchscimago.info.txt',level = logging.INFO)
 logger = logging.getLogger(__name__)
 
 from proc import models
@@ -24,6 +24,7 @@ def match_scielo():
                     docsci = models.Scielo.objects.get(issn_list = issn)
                     doc.modify(
                         is_scielo = 1,
+                        scielo_id = str(docsci.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in Scimago Collection
 
@@ -39,6 +40,7 @@ def match_scielo():
                 docsci = models.Scielo.objects.get(title_at_scielo_country__iexact = doc.title_country)
                 doc.modify(
                     is_scielo = 1,
+                    scielo_id = str(docsci.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in Scimago Collection
 
@@ -55,9 +57,10 @@ def match_wos():
         if doc.is_wos == 0:
             for issn in doc.issn_list:
                 try:
-                    docmago = models.Wos.objects.get(issn_list = issn)
+                    docwos = models.Wos.objects.get(issn_list = issn)
                     doc.modify(
                         is_wos = 1,
+                        wos_id = str(docwos.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in Scimago Collection
 
@@ -70,9 +73,10 @@ def match_wos():
 
         if doc.is_wos == 0:
             try:
-                docmago = models.Wos.objects.get(title_country__iexact = doc.title_country)
+                docwos = models.Wos.objects.get(title_country__iexact = doc.title_country)
                 doc.modify(
                     is_wos = 1,
+                    wos_id = str(docwos.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in Scimago Collection
 
@@ -92,6 +96,7 @@ def match_scopus():
                     docscopus = models.Scopus.objects.get(issn_list = issn)
                     doc.modify(
                         is_scopus = 1,
+                        scopus_id = str(docscopus.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in Scimago Collection
 
@@ -100,12 +105,14 @@ def match_scopus():
                     print(msg)
 
                 except models.Scopus.MultipleObjectsReturned:
+                    docscopus = models.Scopus.objects.filter(issn_list = issn)
                     doc.modify(
                         is_scopus = 1,
+                        scopus_id = str(docscopus[0].id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in Scimago Collection
 
-                    msg = 'ISSN DUPLICADO: %s' % (issn)
+                    msg = 'ISSN DUPLICADO: %s em Scopus' % (issn)
                     logger.info(msg)
                     print(msg)
                     pass
@@ -118,6 +125,7 @@ def match_scopus():
                 docscopus = models.Scopus.objects.get(title_country__iexact = doc.title_country)
                 doc.modify(
                     is_scopus = 1,
+                    scopus_id = str(docscopus.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in Scimago Collection
 
@@ -126,12 +134,14 @@ def match_scopus():
                 print(msg)
 
             except models.Scopus.MultipleObjectsReturned:
+                docscopus = models.Scopus.objects.filter(title_country__iexact = doc.title_country)
                 doc.modify(
                     is_scopus = 1,
+                    scopus_id = str(docscopus[0].id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in Scimago Collection
 
-                msg = 'ISSN DUPLICADO: %s' % (issn)
+                msg = 'TITULO DUPLICADO: %s em Scopus' % (doc.title_country)
                 logger.info(msg)
                 print(msg)
                 pass
@@ -140,7 +150,6 @@ def match_scopus():
                 pass
 
 def stats():
-
     print('Scimago total records: %s' % (models.Scimago.objects.count()))
     print('Scimago     is_scielo: %s' % (models.Scimago.objects.filter(is_scielo = 1).count()))
     print('Scimago     is_scopus: %s' % (models.Scimago.objects.filter(is_scopus = 1).count()))

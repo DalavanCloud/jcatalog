@@ -10,7 +10,7 @@ import datetime
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/matchwos.info.txt',level=logging.INFO)
+logging.basicConfig(filename = 'logs/matchwos.info.txt',level = logging.INFO)
 logger = logging.getLogger(__name__)
 
 from proc import models
@@ -24,6 +24,7 @@ def match_scielo():
                     docsci = models.Scielo.objects.get(issn_list = issn)
                     doc.modify(
                         is_scielo = 1,
+                        scielo_id = str(docsci.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in WOS Collection
 
@@ -39,6 +40,7 @@ def match_scielo():
                 docsci = models.Scielo.objects.get(title_at_scielo_country__iexact = doc.title_country)
                 doc.modify(
                     is_scielo = 1,
+                    scielo_id = str(docsci.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in WOS Collection
 
@@ -58,6 +60,7 @@ def match_scimago():
                     docmago = models.Scimago.objects.get(issn_list = issn)
                     doc.modify(
                         is_scimago = 1,
+                        scimago_id = str(docmago.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in WOS Collection
 
@@ -73,6 +76,7 @@ def match_scimago():
                 docmago = models.Scimago.objects.get(title_country__iexact = doc.title_country)
                 doc.modify(
                     is_scimago = 1,
+                    scimago_id = str(docmago.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in WOS Collection
 
@@ -92,6 +96,7 @@ def match_scopus():
                     docscopus = models.Scopus.objects.get(issn_list = issn)
                     doc.modify(
                         is_scopus = 1,
+                        scopus_id = str(docscopus.id),
                         updated_at = datetime.datetime.now)
                     doc.save() # save in WOS Collection
 
@@ -107,6 +112,7 @@ def match_scopus():
                 docscopus = models.Scopus.objects.get(title_country__iexact = doc.title_country)
                 doc.modify(
                     is_scopus = 1,
+                    scopus_id = str(docscopus.id),
                     updated_at = datetime.datetime.now)
                 doc.save() # save in WOS Collection
 
@@ -117,12 +123,20 @@ def match_scopus():
             except models.Scopus.DoesNotExist:
                 pass
 
+def stats():
+    print('WoS total records: %s' % (models.Wos.objects.count()))
+    print('WoS     is_scielo: %s' % (models.Wos.objects.filter(is_scielo = 1).count()))
+    print('WoS    is_scimago: %s' % (models.Wos.objects.filter(is_scimago = 1).count()))
+    print('WoS     is_scopus: %s' % (models.Wos.objects.filter(is_scopus = 1).count()))
+
+
 
 def main():
     match_scielo()
-    #match_scimago()
-    #match_scopus()
+    match_scimago()
+    match_scopus()
 
+    stats()
 
 if __name__ == "__main__":
     main()
