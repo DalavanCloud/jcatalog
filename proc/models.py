@@ -83,3 +83,9 @@ class Submissions(DynamicDocument):
     ojs_scielo = IntField(required=True, min_value=0, default=0)
     ojs_outro = IntField(required=True, min_value=0, default=0)
     outro = IntField(required=True, min_value=0, default=0)
+
+
+class Noscielo(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
