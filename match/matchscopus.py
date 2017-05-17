@@ -159,8 +159,6 @@ def match_scimago():
             except models.Scimago.DoesNotExist:
                 pass
 
-    #docscopus.close()
-
 
 def stats():
 

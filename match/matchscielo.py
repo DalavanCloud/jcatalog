@@ -155,9 +155,9 @@ def stats():
 
 def main():
     submissions()
-    # match_wos()
-    # match_scimago()
-    # match_scopus()
+    match_wos()
+    match_scimago()
+    match_scopus()
 
     stats()
 
