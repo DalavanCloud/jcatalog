@@ -137,7 +137,7 @@ def scopusproc():
 
 
 def wosproc():
-    wos_sheet  = pyexcel.get_sheet(file_name='data/wos/JournalHomeGrid.csv', name_columns_by_row=0)
+    wos_sheet  = pyexcel.get_sheet(file_name='data/wos/JournalHomeGrid.xlsx', name_columns_by_row=0)
     
     #Key correction
     for i, k in enumerate(keycorrection.wos_columns_names):
@@ -265,13 +265,13 @@ def main():
     # Scopus - xlsx
     scopusproc()
 
-    # WOS - csv
+    # # WOS - csv
     wosproc()
 
     # CWTS - xlsx
     cwtsproc()
 
-    # # DOAJ - xlsx
+    # DOAJ - xlsx
     doajproc()
 
     # Submissions - xlsx
