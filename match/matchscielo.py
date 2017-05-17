@@ -24,6 +24,9 @@ def submissions(): # Adds submissions data in the SciELO collection
                 docsci.modify(
                     scholarone = doc.scholarone,
                     ojs_scielo = doc.ojs_scielo,
+                    ojs_outro = doc.ojs_outro,
+                    outro = doc.outro,
+                    submission_access = doc.endereco_acesso,
                     updated_at = datetime.datetime.now)
                 docsci.save() # save in SciELO Collection
 
