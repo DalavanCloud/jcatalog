@@ -14,8 +14,10 @@ def jcatalog():
     # Header
     col = 0
     
+    wrap = workbook.add_format({'text_wrap': True})
+
     for h in headers.scielo_headers:
-        worksheet.write(0, col, h)
+        worksheet.write(0, col, h, wrap)
         col += 1
 
     # SciELO
