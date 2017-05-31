@@ -10,7 +10,7 @@ import datetime
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename = 'logs/matchscielo.info.txt',level = logging.INFO)
+logging.basicConfig(filename='logs/matchscielo.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from proc import models

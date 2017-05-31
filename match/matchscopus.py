@@ -2,14 +2,10 @@
 '''
 This script perform data matching from Scopus journals with other sources.
 '''
-
 import os
 import sys
 import logging
 import datetime
-
-from mongoengine import *
-
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -17,15 +13,14 @@ sys.path.append(PROJECT_PATH)
 logging.basicConfig(filename='logs/matchscopus.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 from proc import models
 
 
 def match_scielo():
 
-    docscopus = models.Scopus.objects().batch_size(5)
+    docs = models.Scopus.objects().batch_size(5)
 
-    for doc in docscopus: # for each document in Scopus
+    for doc in docs: # for each document in Scopus
         
         flag = 0
         
@@ -124,9 +119,9 @@ def match_scielo():
 
 def match_wos():
 
-    docscopus = models.Scopus.objects().batch_size(5)
+    docs = models.Scopus.objects().batch_size(5)
 
-    for doc in docscopus: # for each document in Scopus
+    for doc in docs: # for each document in Scopus
         
         flag = 0
         
@@ -225,9 +220,9 @@ def match_wos():
 
 def match_scimago():
 
-    docscopus = models.Scopus.objects().batch_size(5)
+    docs = models.Scopus.objects().batch_size(5)
 
-    for doc in docscopus: # for each document in Scopus
+    for doc in docs: # for each document in Scopus
         
         flag = 0
         
@@ -326,7 +321,6 @@ def match_scimago():
 
 
 def stats():
-
     print('Scopus total records: %s' % (models.Scopus.objects.count()))
     print('Scopus     is_scielo: %s' % (models.Scopus.objects.filter(is_scielo=1).count()))
     print('Scopus    is_scimago: %s' % (models.Scopus.objects.filter(is_scimago=1).count()))
