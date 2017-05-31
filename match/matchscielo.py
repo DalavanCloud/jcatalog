@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 from proc import models
 
-# SCIELO
+
 def submissions(): # Adds submissions data in the SciELO collection
     for doc in models.Submissions.objects():
         for issn in doc.issn_list:
