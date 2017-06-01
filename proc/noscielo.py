@@ -3,10 +3,10 @@
 import models
 
 
-models.Noscielo2.drop_collection()
+models.Noscielo.drop_collection()
 
 
-# 1) Scopus - first load in Noscielo2
+# 1) Scopus - first load in Noscielo
 print('Scopus Not SciELO: %s' % models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0, source_type='Journal').count()) #185
 
 
@@ -27,11 +27,11 @@ for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0
         noscielo['wos_id'] = doc.wos_id
         noscielo['is_wos'] = doc.is_wos
     
-    mdata = models.Noscielo2(**noscielo)
+    mdata = models.Noscielo(**noscielo)
     mdata.save()
 
 
-# 2) Scimago - load of Scimago in Noscielo2
+# 2) Scimago - load of Scimago in Noscielo
 print('Scimago Not SciELO: %s' % models.Scimago.objects.filter(country='Brazil', is_scielo=0).count()) #140
 
 docs = models.Scimago.objects.filter(country='Brazil', is_scielo=0)
@@ -52,11 +52,11 @@ for doc in docs:
             noscielo['wos_id'] = doc.wos_id
             noscielo['is_wos'] = 1
         
-        mdata = models.Noscielo2(**noscielo)
+        mdata = models.Noscielo(**noscielo)
         mdata.save()
 
 
-# 3) WoS - load of WoS in Noscielo2
+# 3) WoS - load of WoS in Noscielo
 print('Wos Not SciELO: %s' % models.Wos.objects.filter(is_scielo=0).count()) #22
 
 docs = models.Wos.objects.filter(country='Brazil', is_scielo=0)
@@ -73,12 +73,12 @@ for doc in docs:
         noscielo['wos_id'] = str(doc.id)
         noscielo['is_wos'] = doc.is_wos
         
-        mdata = models.Noscielo2(**noscielo)
+        mdata = models.Noscielo(**noscielo)
         mdata.save()
 
 
 # 4) Complete whith 0 documents that do not have the attribute 'is_wos'
-for doc in models.Noscielo2.objects():
+for doc in models.Noscielo.objects():
     if not hasattr(doc, 'is_wos'):
         doc.modify(is_wos=0)
         doc.save()
