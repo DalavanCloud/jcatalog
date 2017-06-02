@@ -32,7 +32,7 @@ for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0
 
 
 # 2) Scimago - load of Scimago in Noscielo
-print('Scimago Not SciELO: %s' % models.Scimago.objects.filter(country='Brazil', is_scielo=0).count()) #140
+print('Scimago Not SciELO: %s' % models.Scimago.objects.filter(country='Brazil', is_scielo=0).count()) #141
 
 docs = models.Scimago.objects.filter(country='Brazil', is_scielo=0)
 
@@ -50,7 +50,7 @@ for doc in docs:
         
         if hasattr(doc, 'wos_id'):
             noscielo['wos_id'] = doc.wos_id
-            noscielo['is_wos'] = 1
+            noscielo['is_wos'] = doc.is_wos
         
         mdata = models.Noscielo(**noscielo)
         mdata.save()
@@ -79,6 +79,12 @@ for doc in docs:
 
 # 4) Complete whith 0 documents that do not have the attribute 'is_wos'
 for doc in models.Noscielo.objects():
+    
+    if not hasattr(doc, 'is_scimago'):
+        doc.modify(is_scimago=0)
+        doc.save()
+
     if not hasattr(doc, 'is_wos'):
         doc.modify(is_wos=0)
         doc.save()
+        
