@@ -1,13 +1,20 @@
 # coding: utf-8
-
+'''
+This script filters journals not present in the SciELO collection from other sources.
+'''
+import os
+import sys
 import models
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(''))
+sys.path.append(PROJECT_PATH)
 
 
 models.Noscielo.drop_collection()
 
 
 # 1) Scopus - first load in Noscielo
-print('Scopus Not SciELO: %s' % models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0, source_type='Journal').count()) #185
+print('Scopus Not SciELO: %s' % models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0, source_type='Journal').count())
 
 
 for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0, source_type='Journal'):
@@ -32,7 +39,7 @@ for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0
 
 
 # 2) Scimago - load of Scimago in Noscielo
-print('Scimago Not SciELO: %s' % models.Scimago.objects.filter(country='Brazil', is_scielo=0).count()) #141
+print('Scimago Not SciELO: %s' % models.Scimago.objects.filter(country='Brazil', is_scielo=0).count())
 
 docs = models.Scimago.objects.filter(country='Brazil', is_scielo=0)
 
@@ -57,7 +64,7 @@ for doc in docs:
 
 
 # 3) WoS - load of WoS in Noscielo
-print('Wos Not SciELO: %s' % models.Wos.objects.filter(is_scielo=0).count()) #22
+print('Wos Not SciELO: %s' % models.Wos.objects.filter(is_scielo=0).count())
 
 docs = models.Wos.objects.filter(country='Brazil', is_scielo=0)
 
@@ -77,7 +84,7 @@ for doc in docs:
         mdata.save()
 
 
-# 4) Complete whith 0 documents that do not have the attribute 'is_wos'
+# 4) Complete with 0 documents that do not have the attribute 'is_wos'
 for doc in models.Noscielo.objects():
     
     if not hasattr(doc, 'is_scimago'):
