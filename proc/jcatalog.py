@@ -5,11 +5,12 @@ import headers
 import models
 import sys
 
+
 def jcatalog():
     
-    # Cria a pasta Excel e adiciona um planilha.
+    # Cria a pasta Excel e adiciona uma planilha.
     workbook = xlsxwriter.Workbook('journals_catalog.xlsx')
-    worksheet = workbook.add_worksheet('SciELO Brazil')
+    worksheet = workbook.add_worksheet('SciELO Journals Catalog')
 
     # Header
     col = 0
@@ -20,6 +21,10 @@ def jcatalog():
         worksheet.write(0, col, h, wrap)
         col += 1
 
+    # Extraction date - get date from SciELO collection
+    extraction_date = models.Scielo.objects.first().extraction_date
+    format_date = workbook.add_format({'num_format': 'dd/mm/yyyy'})
+
     # SciELO
     row = 1
     scielodocs = models.Scielo.objects()
@@ -28,7 +33,7 @@ def jcatalog():
 
         col = 0
 
-        worksheet.write(row, col, doc.extraction_date.strftime('%d/%m/%Y'))
+        worksheet.write_datetime(row, col, extraction_date, format_date)
         col += 1
 
         # SciELO ou Scopus ou WoS
@@ -205,6 +210,19 @@ def jcatalog():
             worksheet.write(row, col, 0)
         col += 1
 
+        #Years
+        if hasattr(doc, 'inclusion_year_at_scielo'):
+            worksheet.write(row, col, doc.inclusion_year_at_scielo)
+        else:
+            worksheet.write(row, col, '')
+        col += 1
+
+        if hasattr(doc, 'stopping_year_at_scielo'):
+            worksheet.write(row, col, doc.stopping_year_at_scielo)
+        else:
+            worksheet.write(row, col, '')
+        col += 1
+
 
         # Submissions
         worksheet.write(row, col, doc.scholarone)
@@ -234,7 +252,7 @@ def jcatalog():
         
 
         # Scopus
-        col = 34
+        col = 36
         if doc.is_scopus == 1:
             try:
                 docscopus = models.Scopus.objects(id=str(doc.scopus_id))[0]
@@ -418,7 +436,7 @@ def jcatalog():
 
 
         #Scimago
-        col = 78
+        col = 80
         if doc.is_scimago == 1:
             try:
                 docsmago = models.Scimago.objects(id=str(doc.scimago_id))[0]
@@ -562,7 +580,7 @@ def jcatalog():
                 pass
         
         # WOS
-        col = 112
+        col = 114
         #ind = workbook.add_format({'num_format': '0.000'})
         if doc.is_wos == 1:
             try:

@@ -30,6 +30,8 @@ scielo_headers = ['extraction date',
  'SciELO title is human sciences',
  'SciELO title is linguistics, letters and arts',
  'SciELO title is multidisciplinary',
+ 'SciELO inclusion year',
+ 'SciELO stopping year',
  #[Sistema de Submissão 1 ou 0]
  'ScholarOne',
  'OJS',
