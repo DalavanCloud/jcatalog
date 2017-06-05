@@ -5,11 +5,12 @@ import headers
 import models
 import sys
 
+
 def jcatalog():
     
-    # Cria a pasta Excel e adiciona um planilha.
+    # Cria a pasta Excel e adiciona uma planilha
     workbook = xlsxwriter.Workbook('journals_catalog_noscielo.xlsx')
-    worksheet = workbook.add_worksheet('Journals not SciELO')
+    worksheet = workbook.add_worksheet('Journals absent at SciELO')
 
     # Header
     col = 0
@@ -20,6 +21,10 @@ def jcatalog():
         worksheet.write(0, col, h, wrap)
         col += 1
 
+    # Extraction date - get date from SciELO collection
+    extraction_date = models.Scielo.objects.first().extraction_date
+    format_date = workbook.add_format({'num_format': 'dd/mm/yyyy'})
+
     # Noscielo
     row = 1
     docs = models.Noscielo.objects()
@@ -28,7 +33,7 @@ def jcatalog():
 
         col = 0
 
-        #worksheet.write(row, col, doc.extraction_date.strftime('%d/%m/%Y'))
+        worksheet.write_datetime(row, col, extraction_date, format_date)
         col += 1
 
         # SciELO ou Scopus ou WoS
@@ -132,7 +137,7 @@ def jcatalog():
         Da coluna 17 a 33 - somente SciELO
         '''
 
-        col = 34
+        col = 36
         # Scopus
         if hasattr(doc, 'is_scopus'):
             if doc.is_scopus == 1:
@@ -317,7 +322,7 @@ def jcatalog():
                     pass
 
         #Scimago
-        col = 78
+        col = 80
         if hasattr(doc, 'is_scimago'):
 
             if doc.is_scimago == 1:
@@ -463,7 +468,7 @@ def jcatalog():
                     pass
             
         # WOS
-        col = 112
+        col = 114
         #ind = workbook.add_format({'num_format': '0.000'})
         if hasattr(doc, 'is_wos'):
 
