@@ -89,3 +89,11 @@ class Noscielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
+
+
+class Doajapi(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    is_doaj = IntField(required=True, min_value=1, default=1)
+    issn_list = ListField()
+    
