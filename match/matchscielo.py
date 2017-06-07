@@ -37,6 +37,34 @@ def submissions(): # Adds submissions data in the SciELO collection
             except models.Scielo.DoesNotExist:
                 pass
 
+def doaj():
+
+    docs = models.Scielo.objects()
+
+    for doc in docs: # for each document in Scielo
+        
+        flag = 0
+
+        for issn in doc.issn_list:
+
+            if flag == 0:
+                query_doaj = models.Doajapi.objects.filter(issn_list = issn)
+                
+                if len(query_doaj) == 1:
+                    doc.modify(
+                        is_doaj = 1,
+                        doaj_id=str(query_doaj[0].id),
+                        updated_at=datetime.datetime.now)
+                    doc.save()  # save in Scielo Collection
+
+                    msg = 'ISSN Scielo: %s is DOAJ' % (issn)
+                    logger.info(msg)
+                    print(msg)
+                    
+                    flag = 1
+                    
+                    break
+
 
 def match_wos():
 
@@ -348,14 +376,16 @@ def stats():
     print('SciELO    is_scimago: %s' % (models.Scielo.objects.filter(is_scimago = 1).count()))
     print('SciELO     is_scopus: %s' % (models.Scielo.objects.filter(is_scopus = 1).count()))
     print('SciELO        is_wos: %s' % (models.Scielo.objects.filter(is_wos = 1).count()))
+    print('SciELO       is_doaj: %s' % (models.Scielo.objects.filter(is_doaj = 1).count()))
 
 
 def main():
     submissions()
+    doaj()
     match_wos()
     match_scimago()
     match_scopus()
-
+    
     stats()
 
 

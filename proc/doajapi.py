@@ -12,7 +12,7 @@ import requests
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(filename='logs/doajapi.info.txt',level=logging.INFO)
+logging.basicConfig(filename='logs/doajapi.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -35,10 +35,15 @@ for doc in models.Scielo.objects():
                 docdoaj['issn_list'] = [issn]
                 mdata = models.Doajapi(**docdoaj)
                 mdata.save()
+                
                 flag = 1
+                
                 msg = 'ISSN: %s found' % (issn)
                 logger.info(msg)
                 print(msg)
+
+                break
+
             else:
                 msg = 'ISSN: %s not found' % (issn)
                 logger.info(msg)

@@ -94,4 +94,20 @@ for doc in models.Noscielo.objects():
     if not hasattr(doc, 'is_wos'):
         doc.modify(is_wos=0)
         doc.save()
-        
+
+
+# 5) Check if is DOAJ
+for doc in models.Noscielo.objects():
+
+    for issn in doc.issn_list:
+       
+        query_doaj = models.Doajapi.objects.filter(issn_list=issn)
+
+        if len(query_doaj) == 1:
+            print(query_doaj.issn_list)
+            doc.modify( 
+                is_doaj = 1,
+                doaj_id=str(query_doaj[0].id))
+            doc.save()  # save in Noscielo Collection
+            
+            break

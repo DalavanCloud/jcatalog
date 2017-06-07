@@ -20,6 +20,7 @@ class Scielo(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    is_doaj = IntField(required=True, min_value=0, default=0)
 
 
 class Scimago(DynamicDocument):
