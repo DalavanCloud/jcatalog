@@ -603,3 +603,9 @@ doaj_columns_names = ['colecao',
  'enviado_formulario_pelo_editor',
  'data_de_confirmacao_de_envio',
  'observacoes']
+
+
+capes_columns_names = ['issn', 
+'title', 
+'area_avaliacao', 
+'estrato']

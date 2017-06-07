@@ -255,6 +255,33 @@ def submissions():# Add OJS and ScholarOne
     print(msg)
 
 
+def capes():
+    capes_sheet = pyexcel.get_sheet(file_name='data/capes/classificações_publicadas_todas_as_areas_avaliacao1495226039817.csv', name_columns_by_row=0, encoding='iso-8859-1', delimiter='\t')
+
+    #Key correction
+    for i, k in enumerate(keycorrection.capes_columns_names):
+        capes_sheet.colnames[i] = k
+
+    capes_json = capes_sheet.to_records()
+
+    models.Capes.drop_collection()
+
+    for rec in capes_json:
+
+        rec['issn_list']=[]
+        rec['issn_list'].append(rec['issn'])
+        
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        
+        mdata = models.Capes(**rec)
+        mdata.save()
+
+    num_posts = models.Capes.objects().count()
+    msg = u'Registred %d posts in Capes collection' % num_posts
+    logger.info(msg)
+    print(msg)
+
+
 def main():
     # SciELO - csv
     scieloproc()
@@ -277,6 +304,8 @@ def main():
     # Submissions - xlsx
     submissions()
 
+    # Capes - Qualis - xls(csv delimiter = \t)
+    capes()
 
 if __name__ == "__main__":
     main()
