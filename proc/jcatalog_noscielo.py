@@ -134,11 +134,24 @@ def jcatalog():
         col += 1
 
         '''
-        Da coluna 17 a 33 - somente SciELO
+        Da coluna 17 a 35 - somente SciELO
         '''
 
+        # DOAJ
         col = 36
+        if hasattr(doc, 'is_doaj'):
+            doaj = models.Doajapi.objects(id=str(doc.doaj_id))[0]
+            worksheet.write_number(row, col, 1)
+            col += 1
+            worksheet.write(row, col, doaj.results[0]['bibjson']['title'])
+            col += 1
+        else:
+            worksheet.write_number(row, 36, 0)
+            col += 1
+
+
         # Scopus
+        col = 38
         if hasattr(doc, 'is_scopus'):
             if doc.is_scopus == 1:
                 try:
@@ -322,7 +335,7 @@ def jcatalog():
                     pass
 
         #Scimago
-        col = 80
+        col = 82
         if hasattr(doc, 'is_scimago'):
 
             if doc.is_scimago == 1:
@@ -468,7 +481,7 @@ def jcatalog():
                     pass
             
         # WOS
-        col = 114
+        col = 116
         #ind = workbook.add_format({'num_format': '0.000'})
         if hasattr(doc, 'is_wos'):
 

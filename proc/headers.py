@@ -39,6 +39,9 @@ scielo_headers = ['extraction date',
 # [Dados de Google]
  'SciELO google scholar h5 2016',
  'SciELO google scholar m5 2016',
+ #[Dados de DOAJ]
+ 'DOAJ',
+ 'DOAJ title',
  #[Dados de Scopus]
  'Scopus title',
  'Scopus Publisher Main',
