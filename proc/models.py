@@ -69,13 +69,6 @@ class Cwts(DynamicDocument):
     coutry_scimago = StringField()
 
 
-class Doaj(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    is_doaj = IntField(required=True, min_value=1, default=1)
-    issn_list = ListField()
-
-
 class Submissions(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
@@ -86,9 +79,10 @@ class Submissions(DynamicDocument):
     outro = IntField(required=True, min_value=0, default=0)
 
 
-class Noscielo(DynamicDocument):
+class Doaj(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
+    is_doaj = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
 
 
@@ -98,3 +92,14 @@ class Doajapi(DynamicDocument):
     is_doaj = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
     
+
+class Capes(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
+
+
+class Noscielo(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
