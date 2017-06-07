@@ -271,7 +271,7 @@ def capes():
         rec['issn_list']=[]
         rec['issn_list'].append(rec['issn'])
         
-        #rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
         mdata = models.Capes(**rec)
         mdata.save()
@@ -283,23 +283,23 @@ def capes():
 
 
 def main():
-    # # SciELO - csv
-    # scieloproc()
+    # SciELO - csv
+    scieloproc()
 
-    # # Scimago - xlsx
-    # scimagoproc()
+    # Scimago - xlsx
+    scimagoproc()
 
-    # # Scopus - xlsx
-    # scopusproc()
+    # Scopus - xlsx
+    scopusproc()
 
-    # # # WOS - csv
-    # wosproc()
+    # # WOS - csv
+    wosproc()
 
-    # # CWTS - xlsx
-    # cwtsproc()
+    # CWTS - xlsx
+    cwtsproc()
 
-    # # DOAJ - xlsx
-    # doajproc()
+    # DOAJ - xlsx
+    doajproc()
 
     # Submissions - xlsx
     submissions()
