@@ -6,7 +6,7 @@ scielo_columns_names = ['extraction_date',
  'collection',
  'issn_scielo',
  'issns',
- 'title_at_scielo',
+ 'title',
  'title_thematic_areas',
  'title_is_agricultural_sciences',
  'title_is_applied_social_sciences',
@@ -100,7 +100,7 @@ scielo_columns_names = ['extraction_date',
  'google_scholar_m5_2013',
  'google_scholar_m5_2012']
 
-submission_scielo_brasil_columns_names = ['titulo',
+submission_scielo_brasil_columns_names = ['title',
  'data_inclusao_scielo',
  'issn_scielo',
  'scholarone',
@@ -327,7 +327,7 @@ scimago_columns_names = ['issn1',
 
 # Scopus
 scopus_columns_names = ['sourcerecord_id',
- 'source_title',
+ 'title',
  'print_issn',
  'e_issn',
  'coverage',
@@ -390,7 +390,7 @@ scopus_columns_names = ['sourcerecord_id',
 
 # WOS
 wos_columns_names = ['rank',
- 'full_journal_title',
+ 'title',
  'jcr_abbreviated_title',
  'issn',
  'total_cites',
@@ -411,7 +411,7 @@ wos_columns_names = ['rank',
 
 #CWTS
 cwts_columns_names = ['title_and_country_scimago',
- 'source_title',
+ 'title',
  'print_issn',
  'electronic_issn',
  'asjc_field_ids',
@@ -588,7 +588,7 @@ cwts_columns_names = ['title_and_country_scimago',
 
 
 doaj_columns_names = ['colecao',
- 'titulo',
+ 'title',
  'issn',
  'link_doaj',
  'ultimo_ano_no_doaj',

@@ -48,7 +48,7 @@ def doaj():
         for issn in doc.issn_list:
 
             if flag == 0:
-                query_doaj = models.Doajapi.objects.filter(issn_list = issn)
+                query_doaj = models.Doajapi.objects.filter(issn_list=issn)
                 
                 if len(query_doaj) == 1:
                     doc.modify(
@@ -66,6 +66,33 @@ def doaj():
                     break
 
 
+def capes():
+
+    docs = models.Scielo.objects()
+
+    for doc in docs: # for each document in Scielo
+        
+        flag = 0
+
+        for issn in doc.issn_list:
+
+            if flag == 0:
+                query_capes = models.Capes.objects.filter(issn_list=issn)
+                
+                if len(query_capes) == 1:
+                    doc.modify(
+                        is_capes = 1,
+                        capes_id=str(query_capes[0].id),
+                        updated_at=datetime.datetime.now)
+                    doc.save()  # save in Scielo Collection
+
+                    msg = 'ISSN Scielo: %s is Capes' % (issn)
+                    logger.info(msg)
+                    print(msg)
+                    
+                    flag = 1
+                    
+                    break
 def match_wos():
 
     docs = models.Scielo.objects()
@@ -84,7 +111,7 @@ def match_wos():
                     query_issn_wos = models.Wos.objects.filter(issn_list=issn)
 
                     # 1.1) If query retured only 1 document (by ISSN)             
-                    if len(query_issn_wos) == 1 and flag == 0:  
+                    if len(query_issn_wos) == 1 and flag == 0:
                         doc.modify(
                             is_wos=1,
                             wos_id=str(query_issn_wos[0].id),
@@ -102,7 +129,7 @@ def match_wos():
                     # 1.2) If query by ISSN returned more than 1 document, try query by ISSN and similar title
                     if len(query_issn_wos) > 1 and flag == 0:
 
-                        query_issn_title_wos = models.Wos.objects.filter(issn_list=issn, full_journal_title__iexact=doc.title_at_scielo)
+                        query_issn_title_wos = models.Wos.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_wos) == 1:
                             doc.modify(
@@ -111,7 +138,7 @@ def match_wos():
                                 updated_at=datetime.datetime.now)
                             doc.save()  # save in Scielo Collection
 
-                            msg = 'ISSN and title Scielo: %s : %s is Wos' % (issn, doc.title_at_scielo)
+                            msg = 'ISSN and title Scielo: %s : %s is Wos' % (issn, doc.title)
                             logger.info(msg)
                             print(msg)
                             
@@ -143,16 +170,16 @@ def match_wos():
             # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
             if flag == 0:
 
-                query_title_pais_wos = models.Wos.objects.filter(title_country__iexact=doc.title_at_scielo_country)
+                query_title_pais_wos = models.Wos.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_wos):
+                if len(query_title_pais_wos) == 1:
                     doc.modify(
                         is_wos=1,
                         wos_id=str(query_title_pais_wos[0].id),
                         updated_at=datetime.datetime.now)
                     doc.save()  # save in Scielo Collection
 
-                    msg = 'Title and country Scielo: %s is Wos' % (doc.title_at_scielo_country)
+                    msg = 'Title and country Scielo: %s is Wos' % (doc.title_country)
                     logger.info(msg)
                     print(msg)
                     
@@ -161,7 +188,7 @@ def match_wos():
             # 3) If flag is still zero, filter didn't find documents
             if flag == 0:
 
-                msg = 'Not found in Wos %s : %s' % (doc.issn_list, doc.title_at_scielo)
+                msg = 'Not found in Wos %s : %s' % (doc.issn_list, doc.title)
                 logger.info(msg)
                 print(msg)
                 
@@ -203,7 +230,7 @@ def match_scimago():
                     # 1.2) If query returned more than 1 document, try by ISSN and similar title
                     if len(query_issn_scimago) > 1 and flag == 0:
 
-                        query_issn_title_scimago = models.Scimago.objects.filter(issn_list=issn, title__iexact=doc.title_at_scielo)
+                        query_issn_title_scimago = models.Scimago.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_scimago) == 1:
                             doc.modify(
@@ -212,7 +239,7 @@ def match_scimago():
                                 updated_at=datetime.datetime.now)
                             doc.save()  # save in Scielo Collection
 
-                            msg = 'ISSN and title Scielo: %s : %s is Scimago' % (issn, doc.source_title)
+                            msg = 'ISSN and title Scielo: %s : %s is Scimago' % (issn, doc.title)
                             logger.info(msg)
                             print(msg)
                             
@@ -244,16 +271,16 @@ def match_scimago():
             # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
             if flag == 0:
 
-                query_title_pais_scimago = models.Scimago.objects.filter(title_country__iexact=doc.title_at_scielo_country)
+                query_title_pais_scimago = models.Scimago.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_scimago):
+                if len(query_title_pais_scimago) == 1:
                     doc.modify(
                         is_scimago=1,
                         scimago_id=str(query_title_pais_scimago[0].id),
                         updated_at=datetime.datetime.now)
                     doc.save()  # save in Scielo Collection
 
-                    msg = 'Title and country Scielo: %s is Scimago' % (doc.title_at_scielo_country)
+                    msg = 'Title and country Scielo: %s is Scimago' % (doc.title_country)
                     logger.info(msg)
                     print(msg)
                     
@@ -262,7 +289,7 @@ def match_scimago():
             # 3) If flag is still zero, filter didn't find documents
             if flag == 0:
 
-                msg = 'Not found in Scimago  %s : %s' % (doc.issn_list, doc.title_at_scielo)
+                msg = 'Not found in Scimago  %s : %s' % (doc.issn_list, doc.title)
                 logger.info(msg)
                 print(msg)
                 
@@ -305,7 +332,7 @@ def match_scopus():
                     # 1.2) If query returned more than 1 document, try by ISSN and similar title
                     if len(query_issn_scopus) > 1 and flag == 0:
 
-                        query_issn_title_scopus = models.Scopus.objects.filter(issn_list=issn, source_title__iexact=doc.title_at_scielo)
+                        query_issn_title_scopus = models.Scopus.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_scopus) == 1:
                             doc.modify(
@@ -314,7 +341,7 @@ def match_scopus():
                                 updated_at=datetime.datetime.now)
                             doc.save()  # save in Scielo Collection
 
-                            msg = 'ISSN and title Scielo: %s : %s is Scopus' % (issn, doc.source_title)
+                            msg = 'ISSN and title Scielo: %s : %s is Scopus' % (issn, doc.title)
                             logger.info(msg)
                             print(msg)
                             
@@ -346,16 +373,16 @@ def match_scopus():
             # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
             if flag == 0:
 
-                query_title_pais_scopus = models.Scopus.objects.filter(title_country__iexact=doc.title_at_scielo_country)
+                query_title_pais_scopus = models.Scopus.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_scopus):
+                if len(query_title_pais_scopus) == 1:
                     doc.modify(
                         is_scopus=1,
                         scopus_id=str(query_title_pais_scopus[0].id),
                         updated_at=datetime.datetime.now)
                     doc.save()  # save in Scielo Collection
 
-                    msg = 'Title and country Scielo: %s is Scopus' % (doc.title_at_scielo_country)
+                    msg = 'Title and country Scielo: %s is Scopus' % (doc.title_country)
                     logger.info(msg)
                     print(msg)
                     
@@ -364,7 +391,7 @@ def match_scopus():
             # 3) If flag is still zero, filter didn't find documents
             if flag == 0:
 
-                msg = 'Not found in Scopus  %s : %s' % (doc.issn_list, doc.title_at_scielo)
+                msg = 'Not found in Scopus  %s : %s' % (doc.issn_list, doc.title)
                 logger.info(msg)
                 print(msg)
                 
@@ -373,19 +400,22 @@ def match_scopus():
 
 def stats():
     print('SciELO total records: %s' % (models.Scielo.objects.count()))
-    print('SciELO    is_scimago: %s' % (models.Scielo.objects.filter(is_scimago = 1).count()))
-    print('SciELO     is_scopus: %s' % (models.Scielo.objects.filter(is_scopus = 1).count()))
-    print('SciELO        is_wos: %s' % (models.Scielo.objects.filter(is_wos = 1).count()))
+
     print('SciELO       is_doaj: %s' % (models.Scielo.objects.filter(is_doaj = 1).count()))
+    print('SciELO      is_capes: %s' % (models.Scielo.objects.filter(is_capes = 1).count()))
+    print('SciELO        is_wos: %s' % (models.Scielo.objects.filter(is_wos = 1).count()))
+    print('SciELO     is_scopus: %s' % (models.Scielo.objects.filter(is_scopus = 1).count()))
+    print('SciELO    is_scimago: %s' % (models.Scielo.objects.filter(is_scimago = 1).count()))
 
 
 def main():
     submissions()
     doaj()
+    capes()
     match_wos()
     match_scimago()
     match_scopus()
-    
+
     stats()
 
 

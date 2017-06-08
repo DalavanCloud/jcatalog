@@ -52,7 +52,7 @@ def match_scielo():
                     # 1.2) If query by ISSN returned more than 1 document, try query by ISSN and similar title
                     if len(query_issn_scielo) > 1 and flag == 0:
 
-                        query_issn_title_scielo = models.Scielo.objects.filter(issn_list=issn, title_at_scielo__iexact=doc.title)
+                        query_issn_title_scielo = models.Scielo.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_scielo) == 1:
                             doc.modify(
@@ -93,9 +93,9 @@ def match_scielo():
             # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
             if flag == 0:
 
-                query_title_pais_scielo = models.Scielo.objects.filter(title_at_scielo_country__iexact=doc.title_country)
+                query_title_pais_scielo = models.Scielo.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_scielo):
+                if len(query_title_pais_scielo) == 1:
                     doc.modify(
                         is_scielo=1,
                         scielo_id=str(query_title_pais_scielo[0].id),
@@ -154,7 +154,7 @@ def match_wos():
                     # 1.2) If query by ISSN returned more than 1 document, try query by ISSN and similar title
                     if len(query_issn_wos) > 1 and flag == 0:
 
-                        query_issn_title_wos = models.Wos.objects.filter(issn_list=issn, full_journal_title__iexact=doc.title)
+                        query_issn_title_wos = models.Wos.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_wos) == 1:
                             doc.modify(
@@ -197,7 +197,7 @@ def match_wos():
 
                 query_title_pais_wos = models.Wos.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_wos):
+                if len(query_title_pais_wos) == 1:
                     doc.modify(
                         is_wos=1,
                         wos_id=str(query_title_pais_wos[0].id),
@@ -256,7 +256,7 @@ def match_scopus():
                     # 1.2) If query returned more than 1 document, try by ISSN and similar title
                     if len(query_issn_scopus) > 1 and flag == 0:
 
-                        query_issn_title_scopus = models.Scopus.objects.filter(issn_list=issn, source_title__iexact=doc.title)
+                        query_issn_title_scopus = models.Scopus.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title_scopus) == 1:
                             doc.modify(
@@ -299,7 +299,7 @@ def match_scopus():
 
                 query_title_pais_scopus = models.Scopus.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais_scopus):
+                if len(query_title_pais_scopus) == 1:
                     doc.modify(
                         is_scopus=1,
                         scopus_id=str(query_title_pais_scopus[0].id),
