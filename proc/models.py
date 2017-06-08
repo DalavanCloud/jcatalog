@@ -21,6 +21,7 @@ class Scielo(DynamicDocument):
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
     is_doaj = IntField(required=True, min_value=0, default=0)
+    is_capes = IntField(required=True, min_value=0, default=0)
 
 
 class Scimago(DynamicDocument):
@@ -82,14 +83,12 @@ class Submissions(DynamicDocument):
 class Doaj(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
-    is_doaj = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
 
 
 class Doajapi(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
-    is_doaj = IntField(required=True, min_value=1, default=1)
     issn_list = ListField()
     
 

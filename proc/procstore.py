@@ -33,12 +33,12 @@ def scieloproc():
 
         rec['country'] = collections_scielo.country[rec['collection']]
 
-        rec['title_at_scielo_country'] = '%s-%s' % (rec['title_at_scielo'], rec['country'])
+        rec['title_country'] = '%s-%s' % (rec['title'], rec['country'])
 
         #convert issn int type to str type
         if type(rec['issns']) != str: 
             rec['issns'] = Issn().issn_hifen(rec['issns'])
-            msg = u'issn modificado: %s - %s' % (rec['issns'],rec['title_at_scielo'])
+            msg = u'issn modificado: %s - %s' % (rec['issns'],rec['title'])
             logger.info(msg)
         
         #convert in list
@@ -117,7 +117,7 @@ def scopusproc():
     for i, rec in enumerate(scopus_json): #ISSN normalization
         #print('\nrec:' + str(i))
         
-        rec['title_country'] = '%s-%s' % (rec['source_title'],rec['publishers_country'])
+        rec['title_country'] = '%s-%s' % (rec['title'],rec['publishers_country'])
 
         rec['issn_list']=[]
         if rec['print_issn']:
@@ -158,7 +158,7 @@ def wosproc():
         rec['issn_list']=[rec['issn']]
 
         rec['country'] = 'Brazil'
-        rec['title_country'] = '%s-Brazil' % (rec['full_journal_title'])
+        rec['title_country'] = '%s-Brazil' % (rec['title'])
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
