@@ -22,7 +22,7 @@ for doc in models.Scopus.objects.filter(publishers_country='Brazil', is_scielo=0
     noscielo = {}
 
     noscielo['issn_list'] = doc.issn_list
-    noscielo['title'] = doc.source_title
+    noscielo['title'] = doc.title
     noscielo['scopus_id'] = str(doc.id)
     noscielo['is_scopus'] = doc.is_scopus
     
