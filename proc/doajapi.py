@@ -33,6 +33,7 @@ for doc in models.Scielo.objects():
             
             if docdoaj['total'] > 0:
                 docdoaj['issn_list'] = [issn]
+                docdoaj['scielo_id'] = str(doc.id)
                 mdata = models.Doajapi(**docdoaj)
                 mdata.save()
                 
