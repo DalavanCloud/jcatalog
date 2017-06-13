@@ -10,6 +10,7 @@ import keycorrection
 import collections_scielo
 import logging
 from transform import *
+from accent_remover import *
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -33,7 +34,7 @@ def scieloproc():
 
         rec['country'] = collections_scielo.country[rec['collection']]
 
-        rec['title_country'] = '%s-%s' % (rec['title'], rec['country'])
+        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
 
         #convert issn int type to str type
         if type(rec['issns']) != str: 
@@ -78,7 +79,7 @@ def scimagoproc():
     
     for rec in scimago_json:
 
-        rec['title_country'] = '%s-%s' % (rec['title'],rec['country'])
+        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
         
         #issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
         #rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issns]
@@ -117,7 +118,7 @@ def scopusproc():
     for i, rec in enumerate(scopus_json): #ISSN normalization
         #print('\nrec:' + str(i))
         
-        rec['title_country'] = '%s-%s' % (rec['title'],rec['publishers_country'])
+        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['publishers_country'].lower())
 
         rec['issn_list']=[]
         if rec['print_issn']:
@@ -158,7 +159,7 @@ def wosproc():
         rec['issn_list']=[rec['issn']]
 
         rec['country'] = 'Brazil'
-        rec['title_country'] = '%s-Brazil' % (rec['title'])
+        rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
 
@@ -183,6 +184,8 @@ def cwtsproc():
     models.Cwts.drop_collection()
     
     for rec in cwts_json:
+
+        rec['title_country'] = '%s' % (accent_remover(rec['title_and_country_scimago']).lower())
 
         rec['issn_list']=[]
         if rec['print_issn'] and len(rec['print_issn']) > 2:
@@ -268,6 +271,8 @@ def capes():
 
     for rec in capes_json:
 
+        rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
+        
         rec['issn_list']=[]
         rec['issn_list'].append(rec['issn'])
         
