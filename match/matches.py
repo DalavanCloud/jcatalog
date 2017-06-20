@@ -137,61 +137,28 @@ def match(dbcol1, dbcol2):
 
 
 def main():
-    # dbcol1 = DataSet1 - name of DB collection 1
-    # dbcol2 = DataSet2 - name of DB collection 2
+
     # match(DataSet1, DataSet2)
 
-
     #SciELO
-    dbcol1 = models.Scielo
-    
-    dbcol2 = models.Wos
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scopus
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scimago
-    match(dbcol1, dbcol2)
-
+    match(models.Scielo, models.Wos)
+    match(models.Scielo, models.Scopus)
+    match(models.Scielo, models.Scimago)
 
     # WoS
-    dbcol1 = models.Wos
-    
-    dbcol2 = models.Scielo
-    match(dbcol1, dbcol2)
+    match(models.Wos, models.Scielo)
+    match(models.Wos, models.Scopus)
+    match(models.Wos, models.Scimago)
 
-    dbcol2 = models.Scopus
-    match(dbcol1, dbcol2)
+    # Scopus 
+    match(models.Scopus, models.Wos)
+    match(models.Scopus, models.Scielo)
+    match(models.Scopus, models.Scimago)
 
-    dbcol2 = models.Scimago
-    match(dbcol1, dbcol2)
-
-
-    # Scopus
-    dbcol1 = models.Scopus
-    
-    dbcol2 = models.Wos
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scielo
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scimago
-    match(dbcol1, dbcol2)
-
-
-    # Scimago
-    dbcol1 = models.Scimago
-    
-    dbcol2 = models.Wos
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scielo
-    match(dbcol1, dbcol2)
-
-    dbcol2 = models.Scopus
-    match(dbcol1, dbcol2)
+    # Scimago    
+    match(models.Scimago, models.Wos)
+    match(models.Scimago, models.Scielo)
+    match(models.Scimago, models.Scopus)
 
 
 if __name__ == "__main__":
