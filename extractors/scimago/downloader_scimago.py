@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
 This script downloads all Scimago data in XLS format.
-Also adds the columns 'Region'; 'Country'; 'Year' and 'Activate (1)'.
+Also adds the columns 'Region'; 'Year' and 'Activate (1)'.
 '''
 
 import os
@@ -19,7 +19,7 @@ logging.basicConfig(filename='logs/extractors.scimago.info.txt',level=logging.IN
 logger = logging.getLogger(__name__)
 
 
-regions = ['Africa',
+regions = ['Africa', 
     'Asiatic Region', 
     'Eastern Europe', 
     'Latin America', 
@@ -42,13 +42,13 @@ for reg in regions:
 
     while (initial_year <= last_year):
 
-        url = 'http://www.scimagojr.com/journalrank.php?year='+ str(initial_year) + '&country='+ reg +'&type=j&out=xls'
+        url = 'http://www.scimagojr.com/journalrank.php?year='+ str(initial_year) + '&country='+ reg.replace(' ', '%20') +'&type=j&out=xls'
 
         filename = wget.download(url)
 
-        os.rename(filename, 'scimago_' + reg + '_' + str(initial_year) + '.xlsx')
+        os.rename(filename, 'scimago_' + reg.replace(' ', '_') + '_' + str(initial_year) + '.xlsx')
         
-        newfile = 'scimago_' + reg + '_' + str(initial_year) + '.xlsx'
+        newfile = 'scimago_' + reg.replace(' ', '_') + '_' + str(initial_year) + '.xlsx'
 
         msg = '|%s|%s|%s' % (reg, str(initial_year), newfile)
         logger.info(msg)
