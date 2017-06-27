@@ -10,5 +10,6 @@ This script collects and store data from various external sources to compose the
 
 - pyexcel==0.5.0
 - pyexcel-xlsx==0.4.0
-- xlsxwriter==0.9.6
+- xlsxwriter==0.9.7
 - mongoengine==0.13.0
+- wget==3.2
