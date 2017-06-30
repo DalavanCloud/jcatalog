@@ -111,6 +111,22 @@ submission_scielo_brasil_columns_names = ['title',
 
 
 # Scimago
+scimagoall_columns_names = ['rank',
+ 'title',
+ 'type',
+ 'issn',
+ 'sjr',
+ 'sjr_best_quartile',
+ 'h_index',
+ 'total_docs',
+ 'total_docs_3years',
+ 'total_refs',
+ 'total_cites_3years',
+ 'citable_docs_3years',
+ 'cites_by_doc_2years',
+ 'ref_by_doc',
+ 'country']
+
 scimago_columns_names_short = ['rank',
  'title',
  'type',
@@ -125,7 +141,7 @@ scimago_columns_names_short = ['rank',
  'citable_docs_3years',
  'cites_by_doc_2years',
  'ref_bydoc',
- 'country',
+ 'country'
  'region',
  'year',
  'active']
