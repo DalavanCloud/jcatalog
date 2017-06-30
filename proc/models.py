@@ -102,3 +102,13 @@ class Noscielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
+
+
+class Scimagoall(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
+    is_scielo = IntField(required=True, min_value=0, default=0)
+    is_scimago = IntField(required=True, min_value=1, default=1)
+    is_scopus = IntField(required=True, min_value=0, default=0)
+    is_wos = IntField(required=True, min_value=0, default=0)
