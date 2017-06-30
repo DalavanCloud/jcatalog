@@ -141,7 +141,7 @@ scimago_columns_names_short = ['rank',
  'citable_docs_3years',
  'cites_by_doc_2years',
  'ref_bydoc',
- 'country'
+ 'country',
  'region',
  'year',
  'active']
