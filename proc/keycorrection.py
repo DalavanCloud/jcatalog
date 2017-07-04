@@ -403,6 +403,28 @@ scopus_columns_names = ['sourcerecord_id',
  'i3500_dentistry',
  'i3600_health_professions']
 
+scopuscitscore_columns_names = ['scopus_sourceid',
+ 'title',
+ 'citescore',
+ 'percentile',
+ 'citation_count',
+ 'scholarly_output',
+ 'percent_cited',
+ 'snip',
+ 'sjr',
+ 'rank',
+ 'rank_out_of',
+ 'publisher',
+ 'type',
+ 'openaccess',
+ 'scopus_asjc_code_(sub-subject_area)',
+ 'scopus_sub-subject_area',
+ 'quartile',
+ 'top_10_(citescore_percentile)',
+ 'url',
+ 'print_issn',
+ 'eissn']
+
 
 # WOS
 wos_columns_names = ['rank',
