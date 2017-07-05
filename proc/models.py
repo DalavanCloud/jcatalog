@@ -22,6 +22,13 @@ class Scielo(DynamicDocument):
     is_wos = IntField(required=True, min_value=0, default=0)
     is_doaj = IntField(required=True, min_value=0, default=0)
     is_capes = IntField(required=True, min_value=0, default=0)
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Scimago(DynamicDocument):
@@ -32,6 +39,13 @@ class Scimago(DynamicDocument):
     is_scimago = IntField(required=True, min_value=1, default=1)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Scopus(DynamicDocument):
@@ -42,6 +56,13 @@ class Scopus(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=1, default=1)
     is_wos = IntField(required=True, min_value=0, default=0)
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Wos(DynamicDocument):
@@ -52,6 +73,13 @@ class Wos(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=1, default=1)
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Cwts(DynamicDocument):
@@ -68,6 +96,13 @@ class Cwts(DynamicDocument):
     status_current_scielo = StringField()
     title_scimago = StringField()
     coutry_scimago = StringField()
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Submissions(DynamicDocument):
@@ -112,9 +147,23 @@ class Scimagoall(DynamicDocument):
     is_scimago = IntField(required=True, min_value=1, default=1)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
 
 
 class Scopuscitescore(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
+    #Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
