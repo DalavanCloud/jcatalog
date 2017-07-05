@@ -9,7 +9,7 @@ import pyexcel
 import keycorrection
 import logging
 from accent_remover import *
-
+import datetime
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -22,16 +22,16 @@ filelist.sort()
 
 models.Scimagoall.drop_collection()
 
-
 for f in filelist:
 
     year = f[-9:-5]
     region = f[8:-10]
 
-    print('\n%s %s %s' % (year, region, f))
+    print('ini: ' + str(datetime.datetime.now()))
+    print('%s %s %s' % (year, region, f))
 
     scimago_sheet = pyexcel.get_sheet(file_name='data/scimago/xlsx/'+f, name_columns_by_row=0)
-
+   
     #Key correction
     for i, k in enumerate(keycorrection.scimagoall_columns_names):
         scimago_sheet.colnames[i] = k
@@ -39,7 +39,6 @@ for f in filelist:
     scimago_json = scimago_sheet.to_records()
 
     for rec in scimago_json:
-        flag = 0
 
         rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
         
@@ -48,7 +47,9 @@ for f in filelist:
 
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
         
-        #verifica antes se existe no BD e atualiza ou cria
+        #verifica antes se existe no BD cria ou atualiza
+        flag = 0
+
         for issn in rec['issn_list']:
 
             query = models.Scimagoall.objects.filter(issn_list = issn)
@@ -79,6 +80,8 @@ for f in filelist:
 
             if len(query) == 1 and flag == 0:
 
+                data = {}
+
                 for k in ['sjr', 
                     'sjr_best_quartile', 
                     'h_index', 
@@ -91,18 +94,18 @@ for f in filelist:
                     'ref_by_doc']:
 
                     if k in rec:
-                        data = {k + '_' + str(year) : rec[k]}
+                        data[k + '_' + str(year)] = rec[k]
                     else:
-                        data = {k + '_' + str(year) : 0}
+                        data[k + '_' + str(year)] = 0
 
-                    query[0].modify(**data)
-                    query[0].save()
-
+                query[0].modify(**data)
+                query[0].save()
                 flag = 1
                 break
-
 
     num_posts = models.Scimagoall.objects().count()
     msg = u'Registred %d posts in Scimago collection' % num_posts
     logger.info(msg)
     print(msg)
+    
+    print('fim:'+str(datetime.datetime.now())+'\n')
