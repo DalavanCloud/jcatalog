@@ -33,7 +33,9 @@ def scopusproc(file_name, keys):
     sheet_json = sheet.to_records()
 
     for rec in sheet_json:
-        print(rec['sourcerecord_id'])
+
+        if type(rec['sourcerecord_id']) == str:
+            rec['sourcerecord_id'] = int(rec['sourcerecord_id'])
 
         #rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
         
