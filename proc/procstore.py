@@ -37,13 +37,13 @@ def scieloproc():
         rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
 
         #convert issn int type to str type
-        if type(rec['issns']) != str: 
+        if type(rec['issns']) != str:
             rec['issns'] = Issn().issn_hifen(rec['issns'])
             msg = u'issn modificado: %s - %s' % (rec['issns'],rec['title'])
             logger.info(msg)
         
         #convert in list
-        if type(rec['issns']) == str: 
+        if type(rec['issns']) == str:
             rec['issns'] = rec['issns'].split(';') 
             rec['issn_list'] = []
             rec['issn_list'].append(rec['issn_scielo'])
@@ -62,77 +62,6 @@ def scieloproc():
 
     num_posts = models.Scielo.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
-    logger.info(msg)
-    print(msg)
-
-
-def scimagoproc():
-    scimago_sheet = pyexcel.get_sheet(file_name='data/scimago/scimago_all_r5_conso.xlsx', name_columns_by_row=0)
-    
-    #Key correction
-    for i, k in enumerate(keycorrection.scimago_columns_names):
-        scimago_sheet.colnames[i] = k
-    
-    scimago_json = scimago_sheet.to_records()
-    
-    models.Scimago.drop_collection()
-    
-    for rec in scimago_json:
-
-        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
-        
-        #issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
-        #rec['issn_list'] = [i[0:4] + '-' + i[4:8] for i in issns]
-        rec['issn_list'] = []
-        if rec['issn1']:
-            rec['issn_list'].append(rec['issn1'])
-        if rec['issn2']:
-            rec['issn_list'].append(rec['issn2'])
-        if rec['issn3']:
-            rec['issn_list'].append(rec['issn3'])
-
-        rec = { k : v for k,v in rec.items() if v} #remove empty keys
-        
-        mdata = models.Scimago(**rec)
-        mdata.save()
-
-    num_posts = models.Scimago.objects().count()
-    msg = u'Registred %d posts in Scimago collection' % num_posts
-    logger.info(msg)
-    print(msg)
-
-
-def scopusproc():
-    scopus_sheet = pyexcel.get_sheet(file_name='data/scopus/title_list.xlsx', name_columns_by_row=0)
-
-    #Key correction
-    for i, k in enumerate(keycorrection.scopus_columns_names):
-        scopus_sheet.colnames[i] = k
-    
-    scopus_sheet.column.format('print_issn', str)
-    scopus_sheet.column.format('e_issn', str)
-    scopus_json = scopus_sheet.to_records()
-
-    models.Scopus.drop_collection()
-
-    for i, rec in enumerate(scopus_json): #ISSN normalization
-        #print('\nrec:' + str(i))
-        
-        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['publishers_country'].lower())
-
-        rec['issn_list']=[]
-        if rec['print_issn']:
-            rec['issn_list'].append(rec['print_issn'][0:4] + '-' + rec['print_issn'][4:8])
-        if rec['e_issn']:
-            rec['issn_list'].append(rec['e_issn'][0:4] + '-' + rec['e_issn'][4:8])
-
-        rec = { k : v for k,v in rec.items() if v} #remove empty keys
-
-        mdata = models.Scopus(**rec)
-        mdata.save()
-
-    num_posts = models.Scopus.objects().count()
-    msg = u'Registred %d posts in Scopus collection' % num_posts
     logger.info(msg)
     print(msg)
 
@@ -156,7 +85,7 @@ def wosproc():
 
     for rec in wos_json:
         
-        rec['issn_list']=[rec['issn']]
+        rec['issn_list'] = [rec['issn']]
 
         rec['country'] = 'Brazil'
         rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
@@ -187,7 +116,7 @@ def cwtsproc():
 
         rec['title_country'] = '%s' % (accent_remover(rec['title_and_country_scimago']).lower())
 
-        rec['issn_list']=[]
+        rec['issn_list'] = []
         if rec['print_issn'] and len(rec['print_issn']) > 2:
             rec['issn_list'].append(rec['print_issn'])
         if rec['electronic_issn'] and len(rec['electronic_issn']) > 2:
@@ -217,7 +146,7 @@ def doajproc():
     
     for rec in doaj_json:
 
-        rec['issn_list']=[]
+        rec['issn_list'] = []
         rec['issn_list'].append(rec['issn'])
         
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
@@ -244,7 +173,7 @@ def submissions():# Add OJS and ScholarOne
 
     for rec in submiss_json:
 
-        rec['issn_list']=[]
+        rec['issn_list'] = []
         rec['issn_list'].append(rec['issn_scielo'])
         
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
@@ -273,7 +202,7 @@ def capes():
 
         rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
         
-        rec['issn_list']=[]
+        rec['issn_list'] = []
         rec['issn_list'].append(rec['issn'])
         
         rec = { k : v for k,v in rec.items() if v} #remove empty keys
@@ -290,12 +219,6 @@ def capes():
 def main():
     # SciELO - csv
     scieloproc()
-
-    # Scimago - xlsx
-    scimagoproc()
-
-    # Scopus - xlsx
-    scopusproc()
 
     # # WOS - csv
     wosproc()
