@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 filelist = [f for f in os.listdir('data/scimago/xlsx')]
 filelist.sort()
 
-models.Scimagoall.drop_collection()
+models.Scimago.drop_collection()
 
 for f in filelist:
 
@@ -52,7 +52,7 @@ for f in filelist:
 
         for issn in rec['issn_list']:
 
-            query = models.Scimagoall.objects.filter(issn_list = issn)
+            query = models.Scimago.objects.filter(issn_list = issn)
                       
             if len(query) == 0 and flag == 0:
 
@@ -103,7 +103,7 @@ for f in filelist:
                 flag = 1
                 break
 
-    num_posts = models.Scimagoall.objects().count()
+    num_posts = models.Scimago.objects().count()
     msg = u'Registred %d posts in Scimago collection' % num_posts
     logger.info(msg)
     print(msg)
