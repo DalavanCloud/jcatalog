@@ -60,7 +60,8 @@ class Scopus(DynamicDocument):
     meta = {
         'indexes': [
             'issn_list',
-            'title_country'
+            'title_country',
+            'sourcerecord_id'
         ]
     }
 
