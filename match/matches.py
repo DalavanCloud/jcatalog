@@ -108,22 +108,23 @@ def match(dbcol1, dbcol2):
             # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
             if flag == 0:
 
-                query_title_pais = dbcol2.objects.filter(title_country__iexact=doc.title_country)
+                if 'title_contry' in doc:
+                    query_title_pais = dbcol2.objects.filter(title_country__iexact=doc.title_country)
 
-                if len(query_title_pais) == 1: #
+                    if len(query_title_pais) == 1: #
 
-                    data_modify = {
-                        'is_' + col : 1,
-                        col + '_id' : str(query_title_pais[0].id),
-                        'updated_at': datetime.datetime.now}
-                    doc.modify(**data_modify)
-                    doc.save()  # save in dbcol1 collection
+                        data_modify = {
+                            'is_' + col : 1,
+                            col + '_id' : str(query_title_pais[0].id),
+                            'updated_at': datetime.datetime.now}
+                        doc.modify(**data_modify)
+                        doc.save()  # save in dbcol1 collection
 
-                    msg = '%s : title and country : %s is %s' % (db1, doc.title_country, db2)
-                    logger.info(msg)
-                    print(msg)
+                        msg = '%s : title and country : %s is %s' % (db1, doc.title_country, db2)
+                        logger.info(msg)
+                        print(msg)
 
-                    flag = 1
+                        flag = 1
 
 
             # 3) If flag is still zero, filter didn't find documents
@@ -140,17 +141,17 @@ def main():
 
     # match(DataSet1, DataSet2)
 
-    #SciELO
+    # #SciELO
     match(models.Scielo, models.Wos)
     match(models.Scielo, models.Scopus)
     match(models.Scielo, models.Scimago)
 
-    # WoS
+    # # WoS
     match(models.Wos, models.Scielo)
     match(models.Wos, models.Scopus)
     match(models.Wos, models.Scimago)
 
-    # Scopus 
+    # # Scopus 
     match(models.Scopus, models.Wos)
     match(models.Scopus, models.Scielo)
     match(models.Scopus, models.Scimago)
