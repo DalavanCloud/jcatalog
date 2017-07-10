@@ -12,3 +12,5 @@ tools/
 logs/
 
 *.xlsx
+
+*.csv
