@@ -1,14 +1,14 @@
 # coding: utf-8
 
 '''
-This script perform data matching between two journals Data Sets of various sources.
+This script perform data matching between two journals Data Sets
+of various sources.
 '''
 
 import os
 import sys
 import logging
 import datetime
-
 from mongoengine import *
 
 
@@ -18,105 +18,151 @@ sys.path.append(PROJECT_PATH)
 logging.basicConfig(filename='logs/matches.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 from proc import models
 
 
-def match(dbcol1, dbcol2):
+def match(dbcol1, dbcol2, country=None):
 
     db1 = dbcol1._class_name
     db2 = dbcol2._class_name
 
-    col = dbcol2._class_name.lower() # DataSet2 - name of DB collection 2. e.g.: 'wos'
+    # DataSet2 - name of DB collection 2. e.g.: 'wos'
+    col = dbcol2._class_name.lower()
 
-    for doc in dbcol1.objects().batch_size(5): # for each document in dbcol1
-        
+    # for each document in dbcol1
+    for doc in dbcol1.objects().batch_size(5):
+
         flag = 0
 
-        if eval('doc.is_' + col + ' == 0'): # e.g.: if doc.is_scielo == 0
-            
+        # e.g.: if doc.is_scielo == 0
+        if eval('doc.is_' + col + ' == 0'):
+
             # 1) Try match for each ISSN from the issn_list
             for issn in doc.issn_list:
 
                 if flag == 0:
 
+                    query_issn = ''
+
                     query_issn = dbcol2.objects.filter(issn_list=issn)
 
-                    # 1.1) If query retured only 1 document (by ISSN)             
+                    # 1.1) If query retured only 1 document (by ISSN)
                     if len(query_issn) == 1 and flag == 0:
-                        
+
+                        countrycol = ''
+
+                        if 'country' in query_issn[0]:
+                            if country == 1:
+                                countrycol = query_issn[0].country
+                        else:
+                            countrycol = ''
+
                         data_modify = {
-                            'is_' + col : 1,
-                            col + '_id' : str(query_issn[0].id),
-                            'updated_at': datetime.datetime.now}
-                        
+                            'is_' + col: 1,
+                            col + '_id': str(query_issn[0].id),
+                            'updated_at': datetime.datetime.now,
+                            'country_' + col: countrycol}
+
                         doc.modify(**data_modify)
                         doc.save()  # save in dbcol1 collection
 
                         msg = '%s : ISSN %s is %s' % (db1, issn, db2)
                         logger.info(msg)
                         print(msg)
-                        
                         flag = 1
-                        
+
                         break
 
-                    # 1.2) If query returned more than 1 document, try by ISSN and similar title
+                    '''
+                    1.2) If query returned more than 1 document, try by
+                    ISSN and similar title
+                    '''
                     if len(query_issn) > 1 and flag == 0:
+
+                        query_issn_title = ''
 
                         query_issn_title = dbcol2.objects.filter(issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title) == 1:
 
+                            countrycol = ''
+                            if 'country' in query_issn[0]:
+                                if country == 1:
+                                    countrycol = query_issn[0].country
+                            else:
+                                countrycol = ''
+
                             data_modify = {
-                                'is_' + col : 1,
-                                col + '_id' : str(query_issn_title[0].id),
-                                'updated_at': datetime.datetime.now}
+                                'is_' + col: 1,
+                                col + '_id': str(query_issn_title[0].id),
+                                'updated_at': datetime.datetime.now,
+                                'country_' + col: countrycol}
                             doc.modify(**data_modify)
                             doc.save()  # save in dbcol1 collection
 
                             msg = '%s : ISSN and title : %s : %s is %s' % (db1, issn, doc.title, db2)
                             logger.info(msg)
                             print(msg)
-                            
+
                             flag = 1
-                            
+
                             break
 
-                        else:  # 1.2.1) If query by ISSN and similar title is 0 or more than 1, get the document with more indicators from query by ISSN (query_issn_scopus)
-                            
+                        '''
+                        1.2.1) If query by ISSN and similar title is 0 or more
+                        than 1, get the document with more indicators from
+                        query by ISSN (query_issn_scopus)
+                        '''
+                        if len(query_issn_title) > 1 and flag == 0:
+
                             knum = {}
 
                             for i, d in enumerate(query_issn):
                                 knum[str(d.id)] = len([k for k in query_issn[i]])
 
+                            countrycol = ''
+                            if 'country' in query_issn[0]:
+                                if country == 1:
+                                    countrycol = query_issn[0].country
+                            else:
+                                countrycol = ''
+
                                 data_modify = {
-                                    'is_' + col : 1,
-                                    col + '_id' : max(knum, key=knum.get),
-                                    'updated_at': datetime.datetime.now}
+                                    'is_' + col: 1,
+                                    col + '_id': max(knum, key=knum.get),
+                                    'updated_at': datetime.datetime.now,
+                                    'country_' + col: countrycol}
                                 doc.modify(**data_modify)
                                 doc.save()  # save in dbcol1 collection
 
                             msg = '%s : ISSN %s is %s with %s fields)' % (db1, issn, db2, str(max(knum, key=knum.get)))
                             logger.info(msg)
                             print(msg)
-                            
+
                             flag = 1
-                            
+
                             break
 
-            # 2) If flag is still zero, no match by ISSN. Try by similarity of title and country
+            # 2) If flag is still zero, try by similarity of title and country
             if flag == 0:
 
-                if 'title_contry' in doc:
+                if 'title_country' in doc:
                     query_title_pais = dbcol2.objects.filter(title_country__iexact=doc.title_country)
 
-                    if len(query_title_pais) == 1: #
+                    if len(query_title_pais) == 1:
+
+                        countrycol = ''
+                        if 'country' in query_title_pais[0]:
+                            if country == 1:
+                                countrycol = query_title_pais[0].country
+                            else:
+                                countrycol = ''
 
                         data_modify = {
-                            'is_' + col : 1,
-                            col + '_id' : str(query_title_pais[0].id),
-                            'updated_at': datetime.datetime.now}
+                            'is_' + col: 1,
+                            col + '_id': str(query_title_pais[0].id),
+                            'updated_at': datetime.datetime.now,
+                            'country_' + col: countrycol}
                         doc.modify(**data_modify)
                         doc.save()  # save in dbcol1 collection
 
@@ -125,7 +171,6 @@ def match(dbcol1, dbcol2):
                         print(msg)
 
                         flag = 1
-
 
             # 3) If flag is still zero, filter didn't find documents
             if flag == 0:
@@ -139,27 +184,30 @@ def match(dbcol1, dbcol2):
 
 def main():
 
-    # match(DataSet1, DataSet2)
+    '''
+    match(DataSet1, DataSet2)
+    '''
 
-    # #SciELO
-    match(models.Scielo, models.Wos)
-    match(models.Scielo, models.Scopus)
-    match(models.Scielo, models.Scimago)
+    # SciELO
 
-    # # WoS
-    match(models.Wos, models.Scielo)
-    match(models.Wos, models.Scopus)
-    match(models.Wos, models.Scimago)
+    match(models.Scielo, models.Wos, 1)
+    match(models.Scielo, models.Scopus, 1)
+    match(models.Scielo, models.Scimago, 1)
 
-    # # Scopus 
-    match(models.Scopus, models.Wos)
-    match(models.Scopus, models.Scielo)
-    match(models.Scopus, models.Scimago)
+    # WoS
+    match(models.Wos, models.Scielo, 1)
+    match(models.Wos, models.Scopus, 1)
+    match(models.Wos, models.Scimago, 1)
 
-    # Scimago    
-    match(models.Scimago, models.Wos)
-    match(models.Scimago, models.Scielo)
-    match(models.Scimago, models.Scopus)
+    # Scopus
+    match(models.Scopus, models.Wos, 1)
+    match(models.Scopus, models.Scielo, 1)
+    match(models.Scopus, models.Scimago, 1)
+
+    # Scimago
+    match(models.Scimago, models.Wos, 1)
+    match(models.Scimago, models.Scielo, 1)
+    match(models.Scimago, models.Scopus, 1)
 
 
 if __name__ == "__main__":
