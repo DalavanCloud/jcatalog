@@ -42,7 +42,7 @@ for reg in regions:
 
     while (initial_year <= last_year):
 
-        url = 'http://www.scimagojr.com/journalrank.php?year='+ str(initial_year) + '&country='+ reg.replace(' ', '%20') +'&type=j&out=xls'
+        url = 'http://www.scimagojr.com/journalrank.php?year='+ str(initial_year) + '&country='+ reg.replace(' ', '%20') +'&out=xls'
 
         filename = wget.download(url)
 

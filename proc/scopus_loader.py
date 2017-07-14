@@ -37,7 +37,7 @@ def scopusproc(file_name, keys):
         if type(rec['sourcerecord_id']) == str:
             rec['sourcerecord_id'] = int(rec['sourcerecord_id'])
 
-        #rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
+        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['publishers_country'].lower())
         
         rec['issn_list'] = []
 

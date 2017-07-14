@@ -40,6 +40,8 @@ for f in filelist:
 
     for rec in scimago_json:
 
+        rec['region'] = region.replace('_', ' ')
+
         rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
         
         issns = rec['issn'].replace('ISSN ','').replace(' ', '').split(',')
@@ -73,7 +75,7 @@ for f in filelist:
                     else:
                         rec['%s_%s' % (k, str(year))] = 0
 
-                mdata = models.Scimagoall(**rec)
+                mdata = models.Scimago(**rec)
                 mdata.save()
                 flag = 1
                 break
