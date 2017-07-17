@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 # CSV header
 header = [
-    'year',
     'issn_scielo',
+    'year',
     'total_cites',
     'journal_impact_factor',
     'impact_factor_without_journal_self_cites',
@@ -93,8 +93,8 @@ with open('scielo_jcr_indicators.csv', 'w') as csv_utf:
 
             # CSV content
             content = [
-                u'2016',
                 doc.issn_scielo or u'',
+                u'2016',
                 total_cites or u'',
                 journal_impact_factor or u'',
                 impact_factor_without_journal_self_cites or u'',
