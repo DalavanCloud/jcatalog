@@ -6,7 +6,6 @@ import sys
 import os
 import logging
 
-import alba
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
@@ -14,8 +13,8 @@ sys.path.append(PROJECT_PATH)
 logging.basicConfig(
     filename='logs/jcr_export_indicators.info.txt',
     level=logging.INFO)
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 # CSV header
 header = [
@@ -78,7 +77,7 @@ with open('scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
                 citing_half_life = docwos.citing_half_life
 
             if hasattr(docwos, 'eigenfactor_score'):
-                 eigenfactor_score = docwos.eigenfactor_score
+                eigenfactor_score = docwos.eigenfactor_score
 
             if hasattr(docwos, 'article_influence_score'):
                 article_influence_score = docwos.article_influence_score
