@@ -13,13 +13,13 @@ sys.path.append(PROJECT_PATH)
 logging.basicConfig(
     filename='logs/jcr_export_indicators.info.txt',
     level=logging.INFO)
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 # CSV header
 header = [
-    'year',
     'issn_scielo',
+    'year',
     'total_cites',
     'journal_impact_factor',
     'impact_factor_without_journal_self_cites',
@@ -28,14 +28,14 @@ header = [
     'citable_items',
     'cited_half_life',
     'citing_half_life',
-    # 'eigenfactor_score',
+    'eigenfactor_score',
     'article_influence_score',
     'percentage_articles_in_citable_items',
     'average_journal_impact_factor_percentile',
     'normalized_eigenfactor']
 
 # Creatge the CSV file
-with open('scielo_jcr_indicators.csv', 'w') as csv_utf:
+with open('scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
     spamwriter_utf = csv.writer(csv_utf, delimiter='\t')
 
     # Write the reader
@@ -76,8 +76,8 @@ with open('scielo_jcr_indicators.csv', 'w') as csv_utf:
             if hasattr(docwos, 'citing_half_life'):
                 citing_half_life = docwos.citing_half_life
 
-            # if hasattr(docwos, 'eigenfactor_score'):
-            #     eigenfactor_score = docwos.eigenfactor_score
+            if hasattr(docwos, 'eigenfactor_score'):
+                eigenfactor_score = docwos.eigenfactor_score
 
             if hasattr(docwos, 'article_influence_score'):
                 article_influence_score = docwos.article_influence_score
@@ -93,8 +93,8 @@ with open('scielo_jcr_indicators.csv', 'w') as csv_utf:
 
             # CSV content
             content = [
-                u'2016',
                 doc.issn_scielo or u'',
+                u'2016',
                 total_cites or u'',
                 journal_impact_factor or u'',
                 impact_factor_without_journal_self_cites or u'',
@@ -103,7 +103,7 @@ with open('scielo_jcr_indicators.csv', 'w') as csv_utf:
                 citable_items or u'',
                 cited_half_life or u'',
                 citing_half_life or u'',
-                # eigenfactor_score or u'',
+                eigenfactor_score or u'',
                 article_influence_score or u'',
                 percentage_articles_in_citable_items or u'',
                 average_journal_impact_factor_percentile or u'',
