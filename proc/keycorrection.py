@@ -491,7 +491,8 @@ scopuscitscore_columns_names = ['scopus_sourceid',
 
 
 # WOS
-wos_columns_names = ['rank',
+wos_columns_names = [
+ 'rank',
  'title',
  'jcr_abbreviated_title',
  'issn',
@@ -508,7 +509,8 @@ wos_columns_names = ['rank',
  'percentage_articles_in_citable_items',
  'empty',
  'average_journal_impact_factor_percentile',
- 'normalized_eigenfactor']
+ 'normalized_eigenfactor',
+ 'country']
 
 
 #CWTS

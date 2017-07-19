@@ -66,41 +66,6 @@ def scieloproc():
     print(msg)
 
 
-def wosproc():
-    wos_sheet  = pyexcel.get_sheet(file_name='data/wos/JournalHomeGrid.xlsx', name_columns_by_row=0)
-    
-    #Key correction
-    for i, k in enumerate(keycorrection.wos_columns_names):
-        wos_sheet.colnames[i] = k
-    
-    wos_json_dup = wos_sheet.to_records()
-    
-    wos_json = []
-
-    for rec in wos_json_dup: #remove duplicates
-        if rec not in wos_json:
-            wos_json.append(rec)
-
-    models.Wos.drop_collection()
-
-    for rec in wos_json:
-        
-        rec['issn_list'] = [rec['issn']]
-
-        rec['country'] = 'Brazil'
-        rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
-
-        rec = { k : v for k,v in rec.items() if v} #remove empty keys
-
-        mdata = models.Wos(**rec)
-        mdata.save()
-
-    num_posts = models.Wos.objects().count()
-    msg = u'Registred %d posts in WOS collection' % num_posts
-    logger.info(msg)
-    print(msg)
-
-
 def cwtsproc():
     cwts_sheet = pyexcel.get_sheet(file_name='data/cwts/CWTS_Journal_Indicators_June_2016_r5c_extrato.xlsx', name_columns_by_row=0)
     
