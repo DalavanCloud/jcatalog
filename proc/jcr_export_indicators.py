@@ -16,6 +16,26 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+
+def formatindicator(indicator):
+
+    data = indicator
+
+    if indicator == 0:
+        data = '0'
+
+    if type(indicator) == str:
+        if indicator == 'Not Available':
+            data = None
+        else:
+            data = indicator
+
+    if type(indicator) == float:
+        data = indicator
+
+    return data
+
+
 # CSV header
 header = [
     'issn_scielo',
@@ -35,7 +55,8 @@ header = [
     'normalized_eigenfactor']
 
 # Creatge the CSV file
-with open('scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
+with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
+
     spamwriter_utf = csv.writer(csv_utf, delimiter='\t')
 
     # Write the reader
@@ -54,42 +75,47 @@ with open('scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
                 total_cites = docwos.total_cites
 
             if hasattr(docwos, 'journal_impact_factor'):
-                journal_impact_factor = docwos.journal_impact_factor
+                journal_impact_factor = formatindicator(
+                    docwos.journal_impact_factor)
 
             if hasattr(docwos, 'impact_factor_without_journal_self_cites'):
-                impact_factor_without_journal_self_cites = docwos.impact_factor_without_journal_self_cites
+                impact_factor_without_journal_self_cites = formatindicator(
+                    docwos.impact_factor_without_journal_self_cites)
 
             if hasattr(docwos, 'five_year_impact_factor'):
-                five_year_impact_factor = docwos.five_year_impact_factor
+                five_year_impact_factor = formatindicator(
+                    docwos.five_year_impact_factor)
 
             if hasattr(docwos, 'immediacy_index'):
-                immediacy_index = docwos.immediacy_index
-            else:
-                immediacy_index = '0'
+                immediacy_index = formatindicator(docwos.immediacy_index)
 
             if hasattr(docwos, 'citable_items'):
-                citable_items = docwos.citable_items
+                citable_items = formatindicator(docwos.citable_items)
 
             if hasattr(docwos, 'cited_half_life'):
-                cited_half_life = docwos.cited_half_life
+                cited_half_life = formatindicator(docwos.cited_half_life)
 
             if hasattr(docwos, 'citing_half_life'):
-                citing_half_life = docwos.citing_half_life
+                citing_half_life = formatindicator(docwos.citing_half_life)
 
             if hasattr(docwos, 'eigenfactor_score'):
-                eigenfactor_score = docwos.eigenfactor_score
+                eigenfactor_score = formatindicator(docwos.eigenfactor_score)
 
             if hasattr(docwos, 'article_influence_score'):
-                article_influence_score = docwos.article_influence_score
+                article_influence_score = formatindicator(
+                    docwos.article_influence_score)
 
             if hasattr(docwos, 'percentage_articles_in_citable_items'):
-                percentage_articles_in_citable_items = docwos.percentage_articles_in_citable_items
+                percentage_articles_in_citable_items = formatindicator(
+                    docwos.percentage_articles_in_citable_items)
 
             if hasattr(docwos, 'average_journal_impact_factor_percentile'):
-                average_journal_impact_factor_percentile = docwos.average_journal_impact_factor_percentile
+                average_journal_impact_factor_percentile = formatindicator(
+                    docwos.average_journal_impact_factor_percentile)
 
             if hasattr(docwos, 'normalized_eigenfactor'):
-                normalized_eigenfactor = docwos.normalized_eigenfactor
+                normalized_eigenfactor = formatindicator(
+                    docwos.normalized_eigenfactor)
 
             # CSV content
             content = [

@@ -7,6 +7,7 @@ __pycache__/
 data/
 docs/
 tools/
+output/
 
 # Logs
 logs/
