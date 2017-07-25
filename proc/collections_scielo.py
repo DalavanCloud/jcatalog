@@ -1,8 +1,7 @@
 # coding: utf-8
 
-#SciELO collections
-country = {      
-    'arg': 'Argentina',      
+collection = {
+    'arg': 'Argentina',
     'bol': 'Bolivia',
     'chl': 'Chile',
     'col': 'Colombia',
@@ -20,4 +19,21 @@ country = {
     'sza': 'South Africa',
     'ury': 'Uruguay',
     'ven': 'Venezuela'
-}
+    }
+
+country = {
+    'arg': 'Argentina',
+    'bol': 'Bolivia',
+    'chl': 'Chile',
+    'col': 'Colombia',
+    'cri': 'Costa Rica',
+    'cub': 'Cuba',
+    'esp': 'Spain',
+    'mex': 'Mexico',
+    'per': 'Peru',
+    'prt': 'Portugal',
+    'scl': 'Brazil',
+    'sza': 'South Africa',
+    'ury': 'Uruguay',
+    'ven': 'Venezuela'
+    }
