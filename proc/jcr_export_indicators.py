@@ -57,7 +57,7 @@ header = [
     'normalized_eigenfactor']
 
 # Creatge the CSV file
-with open('output/scielo_jcr_indicators4.csv', 'w', encoding='utf-8') as csv_utf:
+with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
 
     spamwriter_utf = csv.writer(csv_utf, delimiter='\t')
 
