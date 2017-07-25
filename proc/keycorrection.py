@@ -1,7 +1,8 @@
 # coding: utf-8
 
-#SciELO
-scielo_columns_names = ['extraction_date',
+# SciELO
+scielo_columns_names = [
+ 'extraction_date',
  'study_unit',
  'collection',
  'issn_scielo',
@@ -98,9 +99,11 @@ scielo_columns_names = ['extraction_date',
  'google_scholar_m5_2015',
  'google_scholar_m5_2014',
  'google_scholar_m5_2013',
- 'google_scholar_m5_2012']
+ 'google_scholar_m5_2012'
+ ]
 
-submission_scielo_brasil_columns_names = ['title',
+submission_scielo_brasil_columns_names = [
+ 'title',
  'data_inclusao_scielo',
  'issn_scielo',
  'scholarone',
@@ -111,7 +114,8 @@ submission_scielo_brasil_columns_names = ['title',
 
 
 # Scimago
-scimagoall_columns_names = ['rank',
+scimagoall_columns_names = [
+ 'rank',
  'title',
  'type',
  'issn',
@@ -127,7 +131,8 @@ scimagoall_columns_names = ['rank',
  'ref_by_doc',
  'country']
 
-scimago_columns_names_short = ['rank',
+scimago_columns_names_short = [
+ 'rank',
  'title',
  'type',
  'issn',
@@ -145,8 +150,9 @@ scimago_columns_names_short = ['rank',
  'region',
  'year',
  'active']
- 
-scimago_columns_names = ['issn1',
+
+scimago_columns_names = [
+ 'issn1',
  'issn2',
  'issn3',
  'title',
@@ -342,7 +348,8 @@ scimago_columns_names = ['issn1',
 
 
 # Scopus
-scopus_columns_names_2015 = ['sourcerecord_id',
+scopus_columns_names_2015 = [
+ 'sourcerecord_id',
  'title',
  'print_issn',
  'e_issn',
@@ -404,14 +411,15 @@ scopus_columns_names_2015 = ['sourcerecord_id',
  'c3500_dentistry',
  'c3600_health_professions']
 
-scopus_columns_names_2016 = ['sourcerecord_id',
+scopus_columns_names_2016 = [
+ 'sourcerecord_id',
  'title',
  'print_issn',
  'e_issn',
  'active_or_inactive',
  'coverage',
  'article_language_source_iso_codes',
- 'citescore_2014', 
+ 'citescore_2014',
  'sjr_2014',
  'snip_2014',
  'citescore_2015',
@@ -467,7 +475,8 @@ scopus_columns_names_2016 = ['sourcerecord_id',
  'c3600_health_professions']
 
 
-scopuscitscore_columns_names = ['scopus_sourceid',
+scopuscitscore_columns_names = [
+ 'scopus_sourceid',
  'title',
  'citescore',
  'percentile',
@@ -509,12 +518,12 @@ wos_columns_names = [
  'percentage_articles_in_citable_items',
  'empty',
  'average_journal_impact_factor_percentile',
- 'normalized_eigenfactor',
- 'country']
+ 'normalized_eigenfactor']
 
 
-#CWTS
-cwts_columns_names = ['title_and_country_scimago',
+# CWTS
+cwts_columns_names = [
+ 'title_and_country_scimago',
  'title',
  'print_issn',
  'electronic_issn',
@@ -690,8 +699,9 @@ cwts_columns_names = ['title_and_country_scimago',
  'i2015_perc_self_cit',
  'i2015_active']
 
-
-doaj_columns_names = ['colecao',
+# DOAJ
+doaj_columns_names = [
+ 'colecao',
  'title',
  'issn',
  'link_doaj',
@@ -707,9 +717,3 @@ doaj_columns_names = ['colecao',
  'enviado_formulario_pelo_editor',
  'data_de_confirmacao_de_envio',
  'observacoes']
-
-
-capes_columns_names = ['issn', 
-'title', 
-'area_avaliacao', 
-'estrato']
