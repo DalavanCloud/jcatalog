@@ -8,6 +8,7 @@ data/
 docs/
 tools/
 output/
+extractors/wos/download/
 
 # Logs
 logs/
