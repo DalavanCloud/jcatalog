@@ -10,11 +10,13 @@ import logging
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-logging.basicConfig(
-    filename='logs/jcr_export_indicators.info.txt',
-    level=logging.INFO)
+logging.basicConfig(filename='logs/jcr_export.info.txt', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+initial_year = 1997
+
+current_year = 2016
 
 
 def formatindicator(indicator):
@@ -55,7 +57,7 @@ header = [
     'normalized_eigenfactor']
 
 # Creatge the CSV file
-with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
+with open('output/scielo_jcr_indicators4.csv', 'w', encoding='utf-8') as csv_utf:
 
     spamwriter_utf = csv.writer(csv_utf, delimiter='\t')
 
@@ -63,81 +65,65 @@ with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
     spamwriter_utf.writerow(header)
 
     # SciELO
-    scielodocs = models.Scielo.objects
+    scielodocs = models.Scielo.objects.filter(is_wos=1)
 
     for doc in scielodocs:
 
-        if doc.is_wos == 1:
+        docwos = models.Wos.objects(id=str(doc.wos_id))[0]
 
-            docwos = models.Wos.objects(id=str(doc.wos_id))[0]
+        for year in range(initial_year, current_year + 1):
 
-            if hasattr(docwos, 'total_cites'):
-                total_cites = docwos.total_cites
+            if hasattr(docwos, str(year)):
 
-            if hasattr(docwos, 'journal_impact_factor'):
-                journal_impact_factor = formatindicator(
-                    docwos.journal_impact_factor)
+                if hasattr(docwos, str(year)):
 
-            if hasattr(docwos, 'impact_factor_without_journal_self_cites'):
-                impact_factor_without_journal_self_cites = formatindicator(
-                    docwos.impact_factor_without_journal_self_cites)
+                    total_cites = formatindicator(docwos[str(year)]['total_cites'])
 
-            if hasattr(docwos, 'five_year_impact_factor'):
-                five_year_impact_factor = formatindicator(
-                    docwos.five_year_impact_factor)
+                    journal_impact_factor = formatindicator(docwos[str(year)]['journal_impact_factor'])
 
-            if hasattr(docwos, 'immediacy_index'):
-                immediacy_index = formatindicator(docwos.immediacy_index)
+                    impact_factor_without_journal_self_cites = formatindicator(docwos[str(year)]['impact_factor_without_journal_self_cites'])
 
-            if hasattr(docwos, 'citable_items'):
-                citable_items = formatindicator(docwos.citable_items)
+                    five_year_impact_factor = formatindicator(docwos[str(year)]['five_year_impact_factor'])
 
-            if hasattr(docwos, 'cited_half_life'):
-                cited_half_life = formatindicator(docwos.cited_half_life)
+                    immediacy_index = formatindicator(docwos[str(year)]['immediacy_index'])
 
-            if hasattr(docwos, 'citing_half_life'):
-                citing_half_life = formatindicator(docwos.citing_half_life)
+                    citable_items = formatindicator(docwos[str(year)]['citable_items'])
 
-            if hasattr(docwos, 'eigenfactor_score'):
-                eigenfactor_score = formatindicator(docwos.eigenfactor_score)
+                    cited_half_life = formatindicator(docwos[str(year)]['cited_half_life'])
 
-            if hasattr(docwos, 'article_influence_score'):
-                article_influence_score = formatindicator(
-                    docwos.article_influence_score)
+                    citing_half_life = formatindicator(docwos[str(year)]['citing_half_life'])
 
-            if hasattr(docwos, 'percentage_articles_in_citable_items'):
-                percentage_articles_in_citable_items = formatindicator(
-                    docwos.percentage_articles_in_citable_items)
+                    eigenfactor_score = formatindicator(docwos[str(year)]['eigenfactor_score'])
 
-            if hasattr(docwos, 'average_journal_impact_factor_percentile'):
-                average_journal_impact_factor_percentile = formatindicator(
-                    docwos.average_journal_impact_factor_percentile)
+                    article_influence_score = formatindicator(docwos[str(year)]['article_influence_score'])
 
-            if hasattr(docwos, 'normalized_eigenfactor'):
-                normalized_eigenfactor = formatindicator(
-                    docwos.normalized_eigenfactor)
+                    percentage_articles_in_citable_items = formatindicator(docwos[str(year)]['percentage_articles_in_citable_items'])
 
-            # CSV content
-            content = [
-                doc.issn_scielo or u'',
-                u'2016',
-                total_cites or u'',
-                journal_impact_factor or u'',
-                impact_factor_without_journal_self_cites or u'',
-                five_year_impact_factor or u'',
-                immediacy_index or u'',
-                citable_items or u'',
-                cited_half_life or u'',
-                citing_half_life or u'',
-                eigenfactor_score or u'',
-                article_influence_score or u'',
-                percentage_articles_in_citable_items or u'',
-                average_journal_impact_factor_percentile or u'',
-                normalized_eigenfactor or u''
-            ]
+                    average_journal_impact_factor_percentile = formatindicator(docwos[str(year)]['average_journal_impact_factor_percentile'])
 
-            msg = doc.issn_scielo
-            logger.info(msg)
-            print(msg)
+                    normalized_eigenfactor = formatindicator(docwos[str(year)]['normalized_eigenfactor'])
 
-            spamwriter_utf.writerow([l for l in content])
+                # CSV content
+                content = [
+                    doc.issn_scielo or u'',
+                    str(year) or u'',
+                    total_cites or u'',
+                    journal_impact_factor or u'',
+                    impact_factor_without_journal_self_cites or u'',
+                    five_year_impact_factor or u'',
+                    immediacy_index or u'',
+                    citable_items or u'',
+                    cited_half_life or u'',
+                    citing_half_life or u'',
+                    eigenfactor_score or u'',
+                    article_influence_score or u'',
+                    percentage_articles_in_citable_items or u'',
+                    average_journal_impact_factor_percentile or u'',
+                    normalized_eigenfactor or u''
+                ]
+
+                msg = '%s|%s' % (str(year), doc.issn_list)
+                logger.info(msg)
+                print(msg)
+
+                spamwriter_utf.writerow([l for l in content])
