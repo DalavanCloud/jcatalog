@@ -1,4 +1,4 @@
-pyexcel==0.5.1.1
+pyexcel==0.5.2
 pyexcel-xlsx==0.4.1
 xlsxwriter==0.9.8
 mongoengine==0.13.0
