@@ -22,7 +22,7 @@ class Scielo(DynamicDocument):
     is_wos = IntField(required=True, min_value=0, default=0)
     is_doaj = IntField(required=True, min_value=0, default=0)
     is_capes = IntField(required=True, min_value=0, default=0)
-    #Indexes
+    # Indexes
     meta = {
         'indexes': [
             'issn_list',
@@ -39,7 +39,7 @@ class Scimago(DynamicDocument):
     is_scimago = IntField(required=True, min_value=1, default=1)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
-    #Indexes
+    # Indexes
     meta = {
         'indexes': [
             'issn_list',
@@ -56,7 +56,7 @@ class Scopus(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=1, default=1)
     is_wos = IntField(required=True, min_value=0, default=0)
-    #Indexes
+    # Indexes
     meta = {
         'indexes': [
             'issn_list',
@@ -74,7 +74,7 @@ class Wos(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=1, default=1)
-    #Indexes
+    # Indexes
     meta = {
         'indexes': [
             'issn_list',
@@ -86,18 +86,12 @@ class Wos(DynamicDocument):
 class Cwts(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
+    issn_list = ListField()
     is_cwts = IntField(required=True, min_value=1, default=1)
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
-    issn_list = ListField()
-    title_scielo = StringField()
-    country_scielo = StringField()
-    collection_scielo = StringField()
-    status_current_scielo = StringField()
-    title_scimago = StringField()
-    coutry_scimago = StringField()
-    #Indexes
+    # Indexes
     meta = {
         'indexes': [
             'issn_list',
@@ -126,28 +120,9 @@ class Doajapi(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
-    
-
-class Capes(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    issn_list = ListField()
 
 
 class Noscielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
-
-
-class Scopuscitescore(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    issn_list = ListField()
-    #Indexes
-    meta = {
-        'indexes': [
-            'issn_list',
-            'title_country'
-        ]
-    }
