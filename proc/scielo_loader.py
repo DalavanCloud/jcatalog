@@ -20,7 +20,9 @@ logger = logging.getLogger(__name__)
 
 
 def scieloproc():
-    scielo_sheet  = pyexcel.get_sheet(file_name='data/scielo/journals_scl.csv', name_columns_by_row=0)
+    scielo_sheet = pyexcel.get_sheet(
+        file_name='data/scielo/journals.csv',
+        name_columns_by_row=0)
 
     # Key correction
     for i, k in enumerate(keycorrection.scielo_columns_names):
@@ -32,14 +34,16 @@ def scieloproc():
 
     for rec in scielo_json:
 
-        rec['country'] = collections_scielo.country[rec['collection']]
+        rec['country'] = collections_scielo.collection[rec['collection']]
 
-        rec['title_country'] = '%s-%s' % (accent_remover(rec['title']).lower(), rec['country'].lower())
+        rec['title_country'] = '%s-%s' % (
+            accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
+            rec['country'].lower())
 
         # convert issn int type to str type
         if type(rec['issns']) != str:
             rec['issns'] = Issn().issn_hifen(rec['issns'])
-            msg = u'issn modificado: %s - %s' % (rec['issns'], rec['title'])
+            msg = u'issn converted: %s - %s' % (rec['issns'], rec['title'])
             logger.info(msg)
 
         # convert in list
@@ -55,11 +59,15 @@ def scieloproc():
         rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
         rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
 
+        rec['collections'] = []
+        rec['collections'].append(rec['collection'])
+
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}
 
-        mdata = models.Scielo(**rec)
-        mdata.save()
+        if rec['collection'] not in ['sss', 'rve', 'psi']:
+            mdata = models.Scielo(**rec)
+            mdata.save()
 
     num_posts = models.Scielo.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
@@ -68,7 +76,9 @@ def scieloproc():
 
 
 def doajproc():
-    doaj_sheet = pyexcel.get_sheet(file_name='data/doaj/controle_DOAJ.xlsx', name_columns_by_row=0)
+    doaj_sheet = pyexcel.get_sheet(
+        file_name='data/doaj/controle_DOAJ.xlsx',
+        name_columns_by_row=0)
 
     # Key correction
     for i, k in enumerate(keycorrection.doaj_columns_names):
@@ -83,7 +93,8 @@ def doajproc():
         rec['issn_list'] = []
         rec['issn_list'].append(rec['issn'])
 
-        rec = { k : v for k,v in rec.items() if v} #remove empty keys
+        # remove empty keys
+        rec = {k: v for k, v in rec.items() if v or v == 0}
 
         mdata = models.Doaj(**rec)
         mdata.save()
@@ -94,8 +105,11 @@ def doajproc():
     print(msg)
 
 
-def submissions():# Add OJS and ScholarOne
-    submiss_sheet = pyexcel.get_sheet(file_name='data/submiss/sistemas_submissao_scielo_brasil.xlsx', name_columns_by_row=0)
+# Add OJS and ScholarOne
+def submissions():
+    submiss_sheet = pyexcel.get_sheet(
+        file_name='data/submiss/sistemas_submissao_scielo_brasil.xlsx',
+        name_columns_by_row=0)
 
     # Key correction
     for i, k in enumerate(keycorrection.submission_scielo_brasil_columns_names):
@@ -122,38 +136,8 @@ def submissions():# Add OJS and ScholarOne
     print(msg)
 
 
-def capes():
-    capes_sheet = pyexcel.get_sheet(file_name='data/capes/classificações_publicadas_todas_as_areas_avaliacao1495226039817.csv', name_columns_by_row=0, encoding='iso-8859-1', delimiter='\t')
-
-    # Key correction
-    for i, k in enumerate(keycorrection.capes_columns_names):
-        capes_sheet.colnames[i] = k
-
-    capes_json = capes_sheet.to_records()
-
-    models.Capes.drop_collection()
-
-    for rec in capes_json:
-
-        rec['title_country'] = '%s-brazil' % (accent_remover(rec['title']).lower())
-
-        rec['issn_list'] = []
-        rec['issn_list'].append(rec['issn'])
-
-        # remove empty keys
-        rec = {k: v for k, v in rec.items() if v or v == 0}
-
-        mdata = models.Capes(**rec)
-        mdata.save()
-
-    num_posts = models.Capes.objects().count()
-    msg = u'Registred %d posts in Capes collection' % num_posts
-    logger.info(msg)
-    print(msg)
-
-
 def main():
-    # SciELO - csv
+    # SciELO Network csv
     scieloproc()
 
     # DOAJ - xlsx
@@ -162,8 +146,6 @@ def main():
     # Submissions - xlsx
     submissions()
 
-    # Capes - Qualis - xls(csv delimiter = \t)
-    capes()
 
 if __name__ == "__main__":
     main()
