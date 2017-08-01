@@ -55,7 +55,7 @@ def match(dbcol1, dbcol2, country=None):
                             if country == 1:
                                 countrycol = query_issn[0].country
                         else:
-                            countrycol = ''
+                            countrycol = None
 
                         data_modify = {
                             'is_' + col: 1,
@@ -90,7 +90,7 @@ def match(dbcol1, dbcol2, country=None):
                                 if country == 1:
                                     countrycol = query_issn[0].country
                             else:
-                                countrycol = ''
+                                countrycol = None
 
                             data_modify = {
                                 'is_' + col: 1,
@@ -125,7 +125,7 @@ def match(dbcol1, dbcol2, country=None):
                                 if country == 1:
                                     countrycol = query_issn[0].country
                             else:
-                                countrycol = ''
+                                countrycol = None
 
                                 data_modify = {
                                     'is_' + col: 1,
@@ -156,7 +156,7 @@ def match(dbcol1, dbcol2, country=None):
                             if country == 1:
                                 countrycol = query_title_pais[0].country
                             else:
-                                countrycol = ''
+                                countrycol = None
 
                         data_modify = {
                             'is_' + col: 1,
@@ -183,31 +183,28 @@ def match(dbcol1, dbcol2, country=None):
 
 
 def main():
-
     '''
-    match(DataSet1, DataSet2)
+    match(DataSet1, DataSet2, country)
+    contry = 1 to get country of DataSet2
     '''
 
     # SciELO
-
     match(models.Scielo, models.Wos, 1)
     match(models.Scielo, models.Scopus, 1)
     match(models.Scielo, models.Scimago, 1)
+    match(models.Scielo, models.Cwts, 1)
 
     # WoS
     match(models.Wos, models.Scielo, 1)
     match(models.Wos, models.Scopus, 1)
-    match(models.Wos, models.Scimago, 1)
 
     # Scopus
     match(models.Scopus, models.Wos, 1)
     match(models.Scopus, models.Scielo, 1)
-    match(models.Scopus, models.Scimago, 1)
 
     # Scimago
     match(models.Scimago, models.Wos, 1)
     match(models.Scimago, models.Scielo, 1)
-    match(models.Scimago, models.Scopus, 1)
 
 
 if __name__ == "__main__":
