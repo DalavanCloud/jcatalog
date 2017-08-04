@@ -4,21 +4,13 @@
 This script perform data matching between two journals Data Sets
 of various sources.
 '''
-
-import os
-import sys
 import logging
 import datetime
 from mongoengine import *
-
-
-PROJECT_PATH = os.path.abspath(os.path.dirname(''))
-sys.path.append(PROJECT_PATH)
+import models
 
 logging.basicConfig(filename='logs/matches.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-from proc import models
 
 
 def match(dbcol1, dbcol2, country=None):
