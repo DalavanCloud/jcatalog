@@ -45,8 +45,6 @@ def get_country(query):
 
     if 'country' in query:
         country = query['country']
-    else:
-        country = query['publishers_country']
 
     data_modify = {'country': country}
 
