@@ -1,6 +1,7 @@
 # coding: utf-8
 
-scielo_headers = ['extraction date',
+scielo_headers = [
+ 'extraction date',
  'SciELO ou Scopus ou WoS',
  'SciELO',
  'Scopus',
@@ -16,6 +17,7 @@ scielo_headers = ['extraction date',
  'SciELO e não (Scopus)',
  '(Scopus ou WoS) e não SciELO',
  'Título (SciELO-Scopus-Wos)',
+
  # [Dados de SciELO]
  'ISSNs',
  'SciELO ISSN',
@@ -32,17 +34,17 @@ scielo_headers = ['extraction date',
  'SciELO title is multidisciplinary',
  'SciELO inclusion year',
  'SciELO stopping year',
- #[Sistema de Submissão 1 ou 0]
+  # [Sistema de Submissão 1 ou 0]
  'ScholarOne',
  'OJS',
  'Outros sistemas',
-# [Dados de Google]
+  # [Dados de Google]
  'SciELO google scholar h5 2016',
  'SciELO google scholar m5 2016',
- #[Dados de DOAJ]
+  # [Dados de DOAJ]
  'DOAJ',
  'DOAJ title',
- #[Dados de Scopus]
+  # [Dados de Scopus]
  'Scopus title',
  'Scopus Publisher Main',
  'Scopus all science classification codes asjc',
@@ -122,7 +124,8 @@ scielo_headers = ['extraction date',
  'Scimago 2015 citable docs 3years',
  'Scimago 2015 cites doc 2years',
  'Scimago 2015 ref doc',
- #[Dados de WoS]
+
+ # [Dados de WoS]
  'WoS total cites',
  'WoS journal impact factor',
  'WoS impact factor without journal self cites',
