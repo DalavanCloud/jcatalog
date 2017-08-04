@@ -2,7 +2,6 @@
 '''
 This script reads data from JCR CSV files to process and laod in MongoDB.
 '''
-import sys_path_modify
 import os
 import models
 import pyexcel
@@ -16,7 +15,7 @@ logger = logging.getLogger(__name__)
 filelist = [f for f in os.listdir('data/wos/jcr_all/')]
 filelist.sort()
 
-models.Wos2.drop_collection()
+models.Wos.drop_collection()
 
 for f in filelist:
 

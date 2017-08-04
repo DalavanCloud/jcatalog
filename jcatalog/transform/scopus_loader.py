@@ -12,10 +12,10 @@ from accent_remover import *
 logging.basicConfig(filename='logs/scopus_loader.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-models.Scopus.drop_collection()
-
 
 def scopus_loader(file_name, keycorrection):
+
+    models.Scopus.drop_collection()
 
     sheet = pyexcel.get_sheet(file_name=file_name, name_columns_by_row=0)
 
@@ -31,6 +31,8 @@ def scopus_loader(file_name, keycorrection):
 
         if type(rec['sourcerecord_id']) == str:
             rec['sourcerecord_id'] = int(rec['sourcerecord_id'])
+
+        rec['country'] = rec['publishers_country']
 
         rec['title_country'] = '%s-%s' % (
             accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
