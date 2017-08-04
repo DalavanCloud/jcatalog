@@ -1,17 +1,11 @@
 # coding: utf-8
 
 import csv
-import models
-import sys
-import os
 import logging
 
-
-PROJECT_PATH = os.path.abspath(os.path.dirname(''))
-sys.path.append(PROJECT_PATH)
+import models
 
 logging.basicConfig(filename='logs/jcr_export.info.txt', level=logging.INFO)
-
 logger = logging.getLogger(__name__)
 
 initial_year = 1997
@@ -36,7 +30,6 @@ def formatindicator(indicator):
         data = indicator
 
     return data
-
 
 # CSV header
 header = [
@@ -69,11 +62,11 @@ with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
 
     for doc in scielodocs:
 
-        docwos = models.Wos.objects(id=str(doc.wos_id))[0]
+        wosdocs = models.Wos.objects(scielo_id=str(doc.id))
 
-        for year in range(initial_year, current_year + 1):
+        for docwos in wosdocs:
 
-            if hasattr(docwos, str(year)):
+            for year in range(initial_year, current_year + 1):
 
                 if hasattr(docwos, str(year)):
 
@@ -103,27 +96,27 @@ with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
 
                     normalized_eigenfactor = formatindicator(docwos[str(year)]['normalized_eigenfactor'])
 
-                # CSV content
-                content = [
-                    doc.issn_scielo or u'',
-                    str(year) or u'',
-                    total_cites or u'',
-                    journal_impact_factor or u'',
-                    impact_factor_without_journal_self_cites or u'',
-                    five_year_impact_factor or u'',
-                    immediacy_index or u'',
-                    citable_items or u'',
-                    cited_half_life or u'',
-                    citing_half_life or u'',
-                    eigenfactor_score or u'',
-                    article_influence_score or u'',
-                    percentage_articles_in_citable_items or u'',
-                    average_journal_impact_factor_percentile or u'',
-                    normalized_eigenfactor or u''
-                ]
+                    # CSV content
+                    content = [
+                        doc.issn_scielo or u'',
+                        str(year) or u'',
+                        total_cites or u'',
+                        journal_impact_factor or u'',
+                        impact_factor_without_journal_self_cites or u'',
+                        five_year_impact_factor or u'',
+                        immediacy_index or u'',
+                        citable_items or u'',
+                        cited_half_life or u'',
+                        citing_half_life or u'',
+                        eigenfactor_score or u'',
+                        article_influence_score or u'',
+                        percentage_articles_in_citable_items or u'',
+                        average_journal_impact_factor_percentile or u'',
+                        normalized_eigenfactor or u''
+                    ]
 
-                msg = '%s|%s' % (str(year), doc.issn_list)
-                logger.info(msg)
-                print(msg)
+                    msg = '%s|%s' % (str(year), doc.issn_list)
+                    logger.info(msg)
+                    print(msg)
 
-                spamwriter_utf.writerow([l for l in content])
+                    spamwriter_utf.writerow([l for l in content])

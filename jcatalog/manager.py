@@ -12,7 +12,9 @@ EM TESTE
 
 # from transform import cwts_country
 
-from match import matches
+# from match import matches
+
+from reports import jcr_export_indicators
 
 if __name__ == "__main__":
 
@@ -27,4 +29,6 @@ if __name__ == "__main__":
 
     # cwts_country.main()
 
-    matches.main()
+    # matches.main()
+
+    jcr_export_indicators
