@@ -141,7 +141,7 @@ def match(dbcol1, dbcol2, country=None):
                 if 'title_country' in doc:
                     query_title_pais = dbcol2.objects.filter(title_country__iexact=doc.title_country)
 
-                    if len(query_title_pais) == 1:
+                    if len(query_title_pais) > 0:
 
                         countrycol = ''
                         if 'country' in query_title_pais[0]:
@@ -189,6 +189,8 @@ def main():
     # WoS
     match(models.Wos, models.Scielo, 1)
     match(models.Wos, models.Scopus, 1)
+    match(models.Wos, models.Scimago, 1)
+    match(models.Wos, models.Cwts, 1)
 
     # Scopus
     match(models.Scopus, models.Wos, 1)

@@ -14,7 +14,9 @@ EM TESTE
 
 # from match import matches
 
-from reports import jcr_export_indicators
+# from reports import jcr_export_indicators
+
+# from tools import compare
 
 if __name__ == "__main__":
 
@@ -31,4 +33,6 @@ if __name__ == "__main__":
 
     # matches.main()
 
-    jcr_export_indicators
+    # jcr_export_indicators
+
+    # compare.main()
