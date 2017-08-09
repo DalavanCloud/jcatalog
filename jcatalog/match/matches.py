@@ -195,10 +195,12 @@ def main():
     # Scopus
     match(models.Scopus, models.Wos, 1)
     match(models.Scopus, models.Scielo, 1)
+    match(models.Scopus, models.Scimago, 1)
 
     # Scimago
     match(models.Scimago, models.Wos, 1)
     match(models.Scimago, models.Scielo, 1)
+    match(models.Scimago, models.Scopus, 1)
 
 
 if __name__ == "__main__":

@@ -18,6 +18,8 @@ EM TESTE
 
 # from tools import compare
 
+from tools import scopus_list
+
 if __name__ == "__main__":
 
     # data_corrections.scielosp()
@@ -36,3 +38,5 @@ if __name__ == "__main__":
     # jcr_export_indicators
 
     # compare.main()
+
+    scopus_list
