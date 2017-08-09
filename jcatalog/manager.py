@@ -16,9 +16,7 @@ EM TESTE
 
 # from reports import jcr_export_indicators
 
-# from tools import compare
-
-from tools import scopus_list
+from reports import scopus_list1
 
 if __name__ == "__main__":
 
@@ -37,6 +35,4 @@ if __name__ == "__main__":
 
     # jcr_export_indicators
 
-    # compare.main()
-
-    scopus_list
+    scopus_list1
