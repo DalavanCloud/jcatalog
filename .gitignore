@@ -9,7 +9,8 @@ docs/
 tools/
 output/
 extractors/wos/download/
-transform/config.py
+
+config.py
 
 # Logs
 logs/
