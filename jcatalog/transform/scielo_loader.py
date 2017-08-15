@@ -2,18 +2,18 @@
 '''
 This script reads data from various sources to process and store in MongoDB.
 '''
-import os
-import sys
-import models
-import pyexcel
-import keycorrection
-import collections_scielo
-import logging
-from transform import *
-from accent_remover import *
 
-PROJECT_PATH = os.path.abspath(os.path.dirname(''))
-sys.path.append(PROJECT_PATH)
+import ast
+import pyexcel
+import requests
+import logging
+
+import keycorrection
+from transform import collections_scielo
+import models
+from transform_date import *
+from accent_remover import *
+from transform import config
 
 logging.basicConfig(filename='logs/procstore.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -73,6 +73,37 @@ def scieloproc():
     msg = u'Registred %d posts in SciELO collection' % num_posts
     logger.info(msg)
     print(msg)
+
+
+def thematic_areas_scielo():
+
+    url = config.url
+
+    query = models.Scielo.objects
+
+    for doc in query:
+
+        l = []
+        print(doc.issn_scielo)
+
+        try:
+            r = requests.get(url + doc.issn_scielo)
+            d = ast.literal_eval(r.text)
+            l = d[0]['v854']
+        except:
+            pass
+
+        if l:
+            data = {'thematic_areas': []}
+            for i in l:
+                data['thematic_areas'].append(i['_'].upper())
+                data['wos_areas_manual_fill'] = 1
+
+            print(doc.issn_scielo + ':' + str(data))
+
+            if data:
+                doc.modify(**data)
+                doc.save()
 
 
 def doajproc():
@@ -136,9 +167,13 @@ def submissions():
     print(msg)
 
 
+
+
+
 def main():
     # SciELO Network csv
     scieloproc()
+    thematic_areas_scielo()
 
     # DOAJ - xlsx
     doajproc()
