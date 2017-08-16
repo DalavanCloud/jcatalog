@@ -3,11 +3,13 @@
 This script reads data from JCR CSV files to process and laod in MongoDB.
 '''
 import os
-import models
-import pyexcel
-import keycorrection
 import logging
+import pyexcel
+
+import models
+import keycorrection
 from accent_remover import *
+
 
 logging.basicConfig(filename='logs/wos_loader_all.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,20 +46,21 @@ for f in filelist:
             wos_json.append(rec)
 
     for rec in wos_json:
-        # for do not read the last lines
+        # not to read the last lines
         if len(rec['issn']) == 9:
 
             flag = 0
 
-            rec['issn_list'] = [rec['issn']]
-
             # remove empty keys
             rec = {k: v for k, v in rec.items() if v or v == 0}
 
-            query = models.Wos2.objects.filter(issn_list=rec['issn'])
+            query = models.Wos.objects.filter(title__iexact=rec['title'])
 
-            if len(query) == 0 and flag == 0:
-                print('new - '+rec['issn'])
+            if len(query) == 0:
+
+                print('new - '+rec['title'])
+
+                rec['issn_list'] = [rec['issn']]
 
                 rec['citation_database'] = []
                 rec['citation_database'].append(edition)
@@ -90,56 +93,59 @@ for f in filelist:
 
                         del rec[k]
 
-                mdata = models.Wos2(**rec)
+                mdata = models.Wos(**rec)
                 mdata.save()
-                flag = 1
 
-            if len(query) == 1 and flag == 0:
+            if len(query) > 0:
 
-                print('old - '+rec['issn'])
+                print('old - '+rec['title'])
 
                 data = {}
 
-                if edition not in query[0]['citation_database']:
-                    data['citation_database'] = list(query[0]['citation_database'])
-                    data['citation_database'].append(edition)
+                for q in query:
+                    if rec['issn'] not in q['issn']:
+                        data['issn_list'] = [i['issn'] for i in query]
+                        data['issn_list'].append(rec['issn'])
 
-                if str(year) not in query[0]:
+                    if edition not in q['citation_database']:
+                        data['citation_database'] = q['citation_database']
+                        data['citation_database'].append(edition)
 
-                    data[str(year)] = {}
+                    if str(year) not in q:
 
-                    for t, k in [
-                            (int, 'total_cites'),
-                            (float, 'journal_impact_factor'),
-                            (float, 'impact_factor_without_journal_self_cites'),
-                            (float, 'five_year_impact_factor'),
-                            (float, 'immediacy_index'),
-                            (int, 'citable_items'),
-                            (str, 'cited_half_life'),
-                            (str, 'citing_half_life'),
-                            (float, 'eigenfactor_score'),
-                            (float, 'article_influence_score'),
-                            (float, 'percentage_articles_in_citable_items'),
-                            (float, 'average_journal_impact_factor_percentile'),
-                            (float, 'normalized_eigenfactor')
-                            ]:
+                        data[str(year)] = {}
 
-                        if k in rec:
-                            if type(rec[k]) == str and ',' in rec[k]:
-                                data[str(year)][k] = int(rec[k].replace(',', ''))
-                            elif type(rec[k]) == str and 'Not Available' in rec[k]:
-                                data[str(year)][k] = str(rec[k])
-                            else:
-                                data[str(year)][k] = t(rec[k])
+                        for t, k in [
+                                (int, 'total_cites'),
+                                (float, 'journal_impact_factor'),
+                                (float, 'impact_factor_without_journal_self_cites'),
+                                (float, 'five_year_impact_factor'),
+                                (float, 'immediacy_index'),
+                                (int, 'citable_items'),
+                                (str, 'cited_half_life'),
+                                (str, 'citing_half_life'),
+                                (float, 'eigenfactor_score'),
+                                (float, 'article_influence_score'),
+                                (float, 'percentage_articles_in_citable_items'),
+                                (float, 'average_journal_impact_factor_percentile'),
+                                (float, 'normalized_eigenfactor')
+                                ]:
 
-                            del rec[k]
+                            if k in rec:
+                                if type(rec[k]) == str and ',' in rec[k]:
+                                    data[str(year)][k] = int(rec[k].replace(',', ''))
+                                elif type(rec[k]) == str and 'Not Available' in rec[k]:
+                                    data[str(year)][k] = str(rec[k])
+                                else:
+                                    data[str(year)][k] = t(rec[k])
 
-                if data:
-                    query[0].modify(**data)
-                    query[0].save()
-                    flag = 1
+                                del rec[k]
 
-    num_posts = models.Wos2.objects().count()
+                    if data:
+                        q.modify(**data)
+                        q.save()
+
+    num_posts = models.Wos.objects().count()
     msg = u'Registred %d posts in WOS collection' % num_posts
     logger.info(msg)
     print(msg)
