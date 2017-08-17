@@ -202,6 +202,10 @@ def main():
     match(models.Scimago, models.Scielo, 1)
     match(models.Scimago, models.Scopus, 1)
 
+    # CWTS
+    match(models.Cwts, models.Wos, 1)
+    match(models.Cwts, models.Scielo, 1)
+    match(models.Cwts, models.Scopus, 1)
 
 if __name__ == "__main__":
     main()
