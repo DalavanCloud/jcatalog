@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
-This script get the country from others Data Sets and
-saves in the Wos collection.
+This script get the country, publisher and thematic areas(category) from
+a worksheet and saves in the Wos collection.
 '''
 
 import logging
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def thematic_areas():
     sheet = pyexcel.get_sheet(
-        file_name='data/wos/jcr_areas/WoS_2016.xlsx',
+        file_name='data/wos/jcr_areas/wos_country_publisher_category_2016.xlsx',
         sheet_name='journals',
         name_columns_by_row=0)
 
@@ -36,24 +36,22 @@ def thematic_areas():
                 data = {}
 
                 # Thematic areas
-                if 'thematic_areas' not in doc:
-                    print('issn: ' + doc['issn'])
-                    data['thematic_areas'] = j['category'].split(',')
+                if not hasattr(doc, 'thematic_areas'):
+                    data['thematic_areas'] = [j['category']]
+                else:
+                    data['thematic_areas'] = []
+                    data['thematic_areas'] = doc['thematic_areas']
+                    data['thematic_areas'].append(j['category'])
 
                 # Country and title_country
                 if 'country' not in doc:
-                    print('coun: ' + j['country'])
-
                     data['country'] = j['country'].title()
-
                     data['title_country'] = '%s-%s' % (
                     accent_remover(doc.title).lower().replace(' & ', ' and ').replace('&', ' and '),
                     data['country'].lower())
 
                 # Publisher
                 if 'publisher' not in doc:
-                    print('publ: ' + j['publisher'])
-
                     data['publisher'] = j['publisher']
 
                 # save
@@ -95,18 +93,19 @@ def country():
 
 def get_country(query):
 
+    data_modify = {}
+
     if 'country' in query:
         country = query['country']
 
-    data_modify = {'country': country}
+        data_modify = {'country': country}
 
-    result = data_modify
+        result = data_modify
 
     return result
 
 
 def main():
-
     thematic_areas()
     country()
 

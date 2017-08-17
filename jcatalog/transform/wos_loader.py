@@ -103,8 +103,8 @@ for f in filelist:
                 data = {}
 
                 for q in query:
-                    if rec['issn'] not in q['issn']:
-                        data['issn_list'] = [i['issn'] for i in query]
+                    if rec['issn'] not in q['issn_list']:
+                        data['issn_list'] = q['issn_list']
                         data['issn_list'].append(rec['issn'])
 
                     if edition not in q['citation_database']:

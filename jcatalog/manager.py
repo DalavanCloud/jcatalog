@@ -11,16 +11,17 @@ EM TESTE
 # from transform import scielo_loader
 
 
-# from transform import wos_country
+# from transform import wos_loader
+from transform import wos_update
 
 # from transform import cwts_country
 
-from match import matches
+# from match import matches
 
 # from reports import jcr_export_indicators
 
 # Abel
-# from reports import scopus_list1
+# from reports import scopus_list2
 
 if __name__ == "__main__":
 
@@ -34,14 +35,14 @@ if __name__ == "__main__":
 
     # scielo_loader.main()
 
-    # wos_country.main()
+    # wos_loader
+    wos_update.main()
 
     # cwts_country.main()
 
-    matches.main()
+    # matches.main()
 
     # jcr_export_indicators
 
     # Abel
-
-    # scopus_list1
+    # scopus_list2
