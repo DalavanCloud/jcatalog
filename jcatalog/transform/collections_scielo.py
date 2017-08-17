@@ -37,3 +37,23 @@ country = {
     'ury': 'Uruguay',
     'ven': 'Venezuela'
     }
+
+region = {
+    'Argentina': 'Latin America',
+    'Bolivia': 'Latin America',
+    'Brazil': 'Latin America',
+    'Chile': 'Latin America',
+    'Colombia': 'Latin America',
+    'Costa Rica': 'Latin America',
+    'Cuba': 'Latin America',
+    'Spain': 'Western Europe',
+    'Mexico': 'Latin America',
+    'Peru': 'Latin America',
+    'Portugal': 'Western Europe',
+    'South Africa': 'Africa',
+    'Uruguay': 'Latin America',
+    'Venezuela': 'Latin America',
+    'Italy': 'Western Europe',
+    'United States': 'Northern America',
+    'Switzerland': 'Western Europe'
+    }
