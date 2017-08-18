@@ -32,6 +32,9 @@ worksheet = workbook.add_worksheet('Scopus indicators')
 col = 0
 
 wrap = workbook.add_format({'text_wrap': True})
+wrap_blue = workbook.add_format({'text_wrap': True, 'bg_color': '#6495ED'})
+wrap_red = workbook.add_format({'text_wrap': True, 'bg_color': '#DC143C'})
+wrap_orange = workbook.add_format({'text_wrap': True, 'bg_color': '#FFA500'})
 
 for h in [
     'ISSNs',
@@ -51,7 +54,7 @@ for h in [
     col += 1
 
 # Scopus Codes ASJC and Indicators 2016-2011
-worksheet.write(0, col, 'Scopus Codes ASJC', wrap)
+worksheet.write(0, col, 'Scopus Codes ASJC', wrap_blue)
 col += 1
 
 for y in range(2016, 2010, -1):
@@ -59,7 +62,7 @@ for y in range(2016, 2010, -1):
         'Scopus CiteScore',
         'Scopus SNIP'
             ]:
-        worksheet.write(0, col, h + ' ' + str(y), wrap)
+        worksheet.write(0, col, h + ' ' + str(y), wrap_blue)
         col += 1
 
 # Scimago Indicators 2016-1999
@@ -76,7 +79,7 @@ for y in range(2016, 1998, -1):
         'Scimago Cites by Doc(2 years)',
         'Scimago Ref by Doc'
             ]:
-        worksheet.write(0, col, h + ' ' + str(y), wrap)
+        worksheet.write(0, col, h + ' ' + str(y), wrap_orange)
         col += 1
 
 # SciELO Subjects
@@ -93,7 +96,7 @@ for h in [
     'SciELO multidisciplinary'
         ]:
 
-    worksheet.write(0, col, h, wrap)
+    worksheet.write(0, col, h, wrap_red)
     col += 1
 
 # SciELO metrics - 2016-2012
@@ -102,7 +105,7 @@ for  y in range(2016, 2011, -1):
         'SciELO Total Docs',
         'SciELO Citable Docs'
             ]:
-        worksheet.write(0, col, h + ' ' + str(y), wrap)
+        worksheet.write(0, col, h + ' ' + str(y), wrap_red)
         col += 1
 
 # WoS CIs and Thematic Areas
@@ -118,19 +121,19 @@ for h in [
 # WoS Indicators 2016-1997
 for y in range(2016, 1996, -1):
     for h in [
-        'Total cites',
-        'Journal Impact Factor',
-        'Impact Factor without Journal Self Cites',
-        '5 years Impact Factor',
-        'Immediacy Index',
-        'Citable Items',
-        'Cited half life',
-        'Citing half life',
-        'Eigenfactor Score',
-        'Article Influence Score',
-        '% Articles in Citable Items',
-        'Average Journal Impact Factor Percentile',
-        'Normalized Eigenfactor'
+        'WoS Total cites',
+        'WoS Journal Impact Factor',
+        'WoS Impact Factor without Journal Self Cites',
+        'WoS 5 years Impact Factor',
+        'WoS Immediacy Index',
+        'WoS Citable Items',
+        'WoS Cited half life',
+        'WoS Citing half life',
+        'WoS Eigenfactor Score',
+        'WoS Article Influence Score',
+        'WoS % Articles in Citable Items',
+        'WoS Average Journal Impact Factor Percentile',
+        'WoS Normalized Eigenfactor'
             ]:
 
         worksheet.write(0, col, h + ' ' + str(y), wrap)
