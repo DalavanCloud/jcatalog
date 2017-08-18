@@ -675,5 +675,7 @@ for doc in wos:
     # Avançar linha - prox. documento
     row += 1
 
+print('last line of WoS: %s' % row)
+
 # Grava planilha Excel
 workbook.close()
