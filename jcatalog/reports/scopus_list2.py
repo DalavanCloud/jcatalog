@@ -139,7 +139,7 @@ for y in range(2016, 1996, -1):
 row = 1
 
 # SCOPUS
-scopus = models.Scopus.objects.filter(country='Brazil')
+scopus = models.Scopus.objects
 
 for docscopus in scopus:
     print('Scopus : ' + docscopus.title)
