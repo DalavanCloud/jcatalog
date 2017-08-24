@@ -19,9 +19,10 @@ EM TESTE
 # from match import matches
 
 # from reports import jcr_export_indicators
+from reports import scopus_export_indicators
 
 # Abel
-from reports import scopus_list2
+# from reports import scopus_list2
 
 if __name__ == "__main__":
 
@@ -46,4 +47,5 @@ if __name__ == "__main__":
     # jcr_export_indicators
 
     # Abel
-    scopus_list2
+    # scopus_list2
+    scopus_export_indicators
