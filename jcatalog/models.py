@@ -101,6 +101,18 @@ class Wos_scielo(DynamicDocument):
     }
 
 
+class Oecd(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    # Indexes
+    meta = {
+        'indexes': [
+            'description',
+            'wos_description'
+        ]
+    }
+
+
 class Cwts(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
