@@ -21,10 +21,14 @@ EM TESTE
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
 
+# from transform import doajapi
+
+from reports import jcatalog
+
 # Abel
 # from reports import scopus_list2
 
-from transform import oecd_loader
+# from transform import oecd_loader
 
 if __name__ == "__main__":
 
@@ -53,4 +57,8 @@ if __name__ == "__main__":
     # Abel
     # scopus_list2
 
-    oecd_loader
+    # oecd_loader
+
+    # doajapi
+
+    jcatalog.main()

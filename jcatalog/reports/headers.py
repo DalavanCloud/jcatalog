@@ -34,17 +34,21 @@ scielo_headers = [
  'SciELO title is multidisciplinary',
  'SciELO inclusion year',
  'SciELO stopping year',
-  # [Sistema de Submissão 1 ou 0]
+
+ # [Sistema de Submissao 1 ou 0]
  'ScholarOne',
  'OJS',
  'Outros sistemas',
-  # [Dados de Google]
+
+ # [Dados de Google]
  'SciELO google scholar h5 2016',
  'SciELO google scholar m5 2016',
-  # [Dados de DOAJ]
+
+ # [Dados de DOAJ]
  'DOAJ',
  'DOAJ title',
-  # [Dados de Scopus]
+
+ # [Dados de Scopus]
  'Scopus title',
  'Scopus Publisher Main',
  'Scopus all science classification codes asjc',
@@ -80,29 +84,18 @@ scielo_headers = [
  'Scopus 3400 veterinary',
  'Scopus 3500 dentistry',
  'Scopus 3600 health professions',
- 'Scopus 2013 citescore',
- 'Scopus 2013 sjr',
- 'Scopus 2013 snip',
  'Scopus 2014 citescore',
  'Scopus 2014 sjr',
  'Scopus 2014 snip',
  'Scopus 2015 citescore',
  'Scopus 2015 sjr',
  'Scopus 2015 snip',
-#[Dados de Scimago]
+ 'Scopus 2016 citescore',
+ 'Scopus 2016 sjr',
+ 'Scopus 2016 snip',
+
+ # [Dados de Scimago]
  'Scimago title',
- 'Scimago2013 active',
- 'Scimago 2013 sjr',
- 'Scimago 2013 sjr best quartile',
- 'Scimago 2013 h index',
- 'Scimago 2013 total docs 2015',
- 'Scimago 2013 total docs 3years',
- 'Scimago 2013 total refs',
- 'Scimago 2013 total cites 3years',
- 'Scimago 2013 citable docs 3years',
- 'Scimago 2013 cites doc 2years',
- 'Scimago 2013 ref doc',
- 'Scimago 2014 active',
  'Scimago 2014 sjr',
  'Scimago 2014 sjr best quartile',
  'Scimago 2014 h index',
@@ -113,7 +106,6 @@ scielo_headers = [
  'Scimago 2014 citable docs 3years',
  'Scimago 2014 cites doc 2years',
  'Scimago 2014 ref doc',
- 'Scimago 2015 active',
  'Scimago 2015 sjr',
  'Scimago 2015 sjr best quartile',
  'Scimago 2015 h index',
@@ -124,18 +116,28 @@ scielo_headers = [
  'Scimago 2015 citable docs 3years',
  'Scimago 2015 cites doc 2years',
  'Scimago 2015 ref doc',
+ 'Scimago 2016 sjr',
+ 'Scimago 2016 sjr best quartile',
+ 'Scimago 2016 h index',
+ 'Scimago 2016 total docs 2015',
+ 'Scimago 2016 total docs 3years',
+ 'Scimago 2016 total refs',
+ 'Scimago 2016 total cites 3years',
+ 'Scimago 2016 citable docs 3years',
+ 'Scimago 2016 cites doc 2years',
+ 'Scimago 2016 ref doc',
 
  # [Dados de WoS]
- 'WoS total cites',
- 'WoS journal impact factor',
- 'WoS impact factor without journal self cites',
- 'WoS five years impact factor',
- 'WoS immediacy index',
- 'WoS citable items',
- 'WoS cited half-life',
- 'WoS citing half-life',
- 'WoS eigenfactor score',
- 'WoS article influence score',
- 'WoS percentage articles in citable items',
- 'WoS average journal impact factor percentile',
- 'WoS normalized eigenfactor']
+ 'WoS 2016 total cites',
+ 'WoS 2016 journal impact factor',
+ 'WoS 2016 impact factor without journal self cites',
+ 'WoS 2016 five years impact factor',
+ 'WoS 2016 immediacy index',
+ 'WoS 2016 citable items',
+ 'WoS 2016 cited half-life',
+ 'WoS 2016 citing half-life',
+ 'WoS 2016 eigenfactor score',
+ 'WoS 2016 article influence score',
+ 'WoS 2016 percentage articles in citable items',
+ 'WoS 2016 average journal impact factor percentile',
+ 'WoS 2016 normalized eigenfactor']
