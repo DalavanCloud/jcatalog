@@ -185,6 +185,7 @@ def main():
     match(models.Scielo, models.Scopus, 1)
     match(models.Scielo, models.Scimago, 1)
     match(models.Scielo, models.Cwts, 1)
+    match(models.Scielo, models.Submissions)
 
     # WoS
     match(models.Wos, models.Scielo, 1)

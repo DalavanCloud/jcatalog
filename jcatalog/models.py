@@ -16,6 +16,7 @@ class Scielo(DynamicDocument):
     date_of_the_last_document = DateTimeField()
     scholarone = IntField(required=True, min_value=0, default=0)
     ojs_scielo = IntField(required=True, min_value=0, default=0)
+    is_submissions = IntField(required=True, min_value=0, default=0)
     is_scielo = IntField(required=True, min_value=1, default=1)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
