@@ -23,6 +23,8 @@ EM TESTE
 
 # from transform import doajapi
 
+# from transform import noscielo
+
 from reports import jcatalog
 
 # Abel
@@ -54,11 +56,13 @@ if __name__ == "__main__":
 
     # scopus_export_indicators
 
+    # doajapi
+
+    # noscielo
+
+    jcatalog.main()
+
     # Abel
     # scopus_list2
 
     # oecd_loader
-
-    # doajapi
-
-    jcatalog.main()
