@@ -1,27 +1,27 @@
 # coding: utf-8
 
 scielo_headers = [
- 'extraction date',
- 'SciELO ou Scopus ou WoS',
+ 'Extraction date',
+ 'SciELO or Scopus or WoS',
  'SciELO',
  'Scopus',
  'WoS',
- 'SciELO, Scopus e WoS',
- 'SciELO e Scopus',
- 'SciELO e WoS',
- 'Scopus e WoS',
- 'SciELO ou Scopus',
- 'Scopus ou WoS',
- 'SciELO ou WoS',
- 'SciELO e (Scopus ou WoS)',
- 'SciELO e não (Scopus)',
- '(Scopus ou WoS) e não SciELO',
- 'Título (SciELO-Scopus-Wos)',
+ 'SciELO, Scopus and WoS',
+ 'SciELO and Scopus',
+ 'SciELO and WoS',
+ 'Scopus and WoS',
+ 'SciELO or Scopus',
+ 'Scopus or WoS',
+ 'SciELO or WoS',
+ 'SciELO and (Scopus ou WoS)',
+ 'SciELO and not (Scopus)',
+ '(Scopus or WoS) and not SciELO',
+ 'Title (SciELO-Scopus-Wos)',
 
  # [Dados de SciELO]
  'ISSNs',
  'SciELO ISSN',
- 'SciELO Status (corrente = 1; não corrente = 0)',
+ 'SciELO Status (current = 1; not current = 0)',
  'SciELO title thematic areas',
  'SciELO title is agricultural sciences',
  'SciELO title is applied social sciences',
@@ -38,7 +38,7 @@ scielo_headers = [
  # [Sistema de Submissao 1 ou 0]
  'ScholarOne',
  'OJS',
- 'Outros sistemas',
+ 'Other systems',
 
  # [Dados de Google]
  'SciELO google scholar h5 2016',
