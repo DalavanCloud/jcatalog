@@ -58,12 +58,15 @@ class Scopus(DynamicDocument):
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=1, default=1)
     is_wos = IntField(required=True, min_value=0, default=0)
+    is_cwts = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
             'issn_list',
             'title_country',
-            'sourcerecord_id'
+            'sourcerecord_id',
+            'asjc_code_list',
+            'oecd'
         ]
     }
 
@@ -108,7 +111,7 @@ class Oecd(DynamicDocument):
     # Indexes
     meta = {
         'indexes': [
-            'description',
+            'oecd_description',
             'wos_description'
         ]
     }
@@ -121,6 +124,7 @@ class Cwts(DynamicDocument):
     is_cwts = IntField(required=True, min_value=1, default=1)
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
+    is_scopus = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
