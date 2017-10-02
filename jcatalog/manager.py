@@ -4,6 +4,7 @@ EM TESTE
 '''
 
 # from tools import data_corrections
+# from tools import scielo_codes_oecd
 
 # from transform import scopus_loader
 # from transform import scopus_update
@@ -25,10 +26,10 @@ EM TESTE
 
 # from transform import noscielo
 
-from reports import jcatalog
+# from reports import jcatalog
 
 # Abel
-# from reports import scopus_list2
+from reports import scopus_list2
 
 # from transform import oecd_loader
 
@@ -38,6 +39,8 @@ if __name__ == "__main__":
 
     # data_corrections.scopus()
     # data_corrections.scimago()
+
+    # scielo_codes_oecd
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -60,9 +63,9 @@ if __name__ == "__main__":
 
     # noscielo
 
-    jcatalog.main()
+    # jcatalog.main()
 
     # Abel
-    # scopus_list2
+    scopus_list2
 
     # oecd_loader
