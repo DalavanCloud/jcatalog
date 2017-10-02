@@ -24,11 +24,12 @@ oecd_json = oecd_sheet.to_records()
 
 for rec in oecd_json:
 
-    rec['oecd_code'] = []
-    rec['oecd_code'].append(rec['description'].split(' ', 1)[0])
+    rec['oecd'] = []
 
-    rec['oecd_description'] = []
-    rec['oecd_description'].append(rec['description'].split(' ', 1)[1])
+    rec['oecd'].append({
+        'code': rec['description'].split(' ', 1)[0],
+        'description': rec['description'].split(' ', 1)[1]
+            })
 
     del rec['description']
 
@@ -41,20 +42,14 @@ for rec in oecd_json:
         mdata.save()
 
     if len(query) == 1:
-        if rec['oecd_description'][0] not in query[0]['oecd_description']:
-            data = {}
-            data['oecd_code'] = []
-            data['oecd_description'] = []
 
-            for d in query[0]['oecd_code']:
-                data['oecd_code'].append(d)
+        data = {}
+        data['oecd'] = []
 
-            data['oecd_code'].append(rec['oecd_code'][0])
-
-            for d in query[0]['oecd_description']:
-                data['oecd_description'].append(d)
-
-            data['oecd_description'].append(rec['oecd_description'][0])
+        for d in query[0]['oecd']:
+            if rec['oecd'][0] not in query[0]['oecd']:
+                data['oecd'].append(d)
+        data['oecd'].append(rec['oecd'][0])
 
         query[0].modify(**data)
         query[0].save()
