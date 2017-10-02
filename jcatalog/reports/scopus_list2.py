@@ -23,8 +23,8 @@ def formatindicator(indicator):
 
 # Creates the Excel folder and add a worksheet
 
-workbook = xlsxwriter.Workbook('output/scopus_list_v3.xlsx')
-worksheet = workbook.add_worksheet('Scopus indicators')
+workbook = xlsxwriter.Workbook('output/scopus_list_v4.xlsx')
+worksheet = workbook.add_worksheet('Scopus_list')
 
 
 # HEADER
@@ -35,12 +35,13 @@ wrap = workbook.add_format({'text_wrap': True})
 wrap_blue = workbook.add_format({'text_wrap': True, 'bg_color': '#6495ED'})
 wrap_red = workbook.add_format({'text_wrap': True, 'bg_color': '#DC143C'})
 wrap_orange = workbook.add_format({'text_wrap': True, 'bg_color': '#FFA500'})
+wrap_green = workbook.add_format({'text_wrap': True, 'bg_color': '#99FF99'})
 
 for h in [
     'ISSNs',
-    'Scopus Source Type',
-    'Title Scopus / SciELO / WoS',
-    'Publisher Scopus / SciELO / WOS',
+    'Main Title (SciELO, Scopus or WoS)',
+    'OECD major categories',
+    'OECD minor categories',
     'Scimago Region',
     'Scopus Country',
     'SciELO Country',
@@ -53,17 +54,29 @@ for h in [
     worksheet.write(0, col, h, wrap)
     col += 1
 
-# Scopus Codes ASJC and Indicators 2016-2011
-worksheet.write(0, col, 'Scopus Codes ASJC', wrap_blue)
-col += 1
+# Scopus fields
+for h in [
+    'Scopus Title',
+    'Scopus Publisher',
+    'Scopus source type',
+    'Scopus Codes ASJC'
+        ]:
+    worksheet.write(0, col, h, wrap_blue)
+    col += 1
 
+# Scopus SciteScore 2016-2011
 for y in range(2016, 2010, -1):
-    for h in [
-        'Scopus CiteScore',
-        'Scopus SNIP'
-            ]:
-        worksheet.write(0, col, h + ' ' + str(y), wrap_blue)
-        col += 1
+    worksheet.write(0, col, 'Scopus CiteScore ' + str(y), wrap_blue)
+    col += 1
+
+# CWTS SNIP 2016-1999
+for y in range(2016, 1998, -1):
+    worksheet.write(0, col, 'CWTS SNIP ' + str(y), wrap)
+    col += 1
+
+# Scimago fields
+worksheet.write(0, col, 'Scimago Title', wrap_orange)
+col += 1
 
 # Scimago Indicators 2016-1999
 for y in range(2016, 1998, -1):
@@ -82,8 +95,10 @@ for y in range(2016, 1998, -1):
         worksheet.write(0, col, h + ' ' + str(y), wrap_orange)
         col += 1
 
-# SciELO Subjects
+# SciELO fields and Subjects
 for h in [
+    'SciELO Title',
+    'SciELO Publisher',
     'SciELO thematic areas',
     'SciELO agricultural sciences',
     'SciELO applied social sciences',
@@ -100,7 +115,7 @@ for h in [
     col += 1
 
 # SciELO metrics - 2016-2012
-for  y in range(2016, 2011, -1):
+for y in range(2016, 2011, -1):
     for h in [
         'SciELO Total Docs',
         'SciELO Citable Docs'
@@ -110,12 +125,14 @@ for  y in range(2016, 2011, -1):
 
 # WoS CIs and Thematic Areas
 for h in [
-    'SCIE',
-    'SSCI',
+    'WoS SCIE',
+    'WoS SSCI',
+    'WoS Title',
+    'WoS Publisher',
     'WoS Thematic Areas'
         ]:
 
-    worksheet.write(0, col, h, wrap)
+    worksheet.write(0, col, h, wrap_green)
     col += 1
 
 # WoS Indicators 2016-1997
@@ -136,13 +153,13 @@ for y in range(2016, 1996, -1):
         'WoS Normalized Eigenfactor'
             ]:
 
-        worksheet.write(0, col, h + ' ' + str(y), wrap)
+        worksheet.write(0, col, h + ' ' + str(y), wrap_green)
         col += 1
 
 row = 1
 
 # SCOPUS
-scopus = models.Scopus.objects
+scopus = models.Scopus.objects()
 
 for docscopus in scopus:
     print('Scopus : ' + docscopus.title)
@@ -153,18 +170,31 @@ for docscopus in scopus:
         worksheet.write(row, col, '; '.join(docscopus.issn_list))
     col += 1
 
-    if hasattr(docscopus, 'source_type'):
-        worksheet.write(row, col, docscopus.source_type)
+    if docscopus.is_scielo == 1:
+        query = models.Scielo.objects.filter(id=str(docscopus.scielo_id))
+        worksheet.write(row, col, query[0]['title'])
+    else:
+        if hasattr(docscopus, 'title'):
+            worksheet.write(row, col, docscopus.title)
     col += 1
 
-    if hasattr(docscopus, 'title'):
-        worksheet.write(row, col, docscopus.title)
-    col += 1
+    # OECD categories
+    col = 2
+    if hasattr(docscopus, 'oecd'):
+        loecd = sorted(docscopus.oecd, key=lambda k: k['code'])
+        major = []
+        minor = []
+        for d in loecd:
+            if '.' not in d['code']:
+                major.append(d['code'] + ' ' + d['description'])
+            if '.' in d['code']:
+                minor.append(d['code'] + ' ' + d['description'])
+        worksheet.write(row, col, '; '.join(major))
+        col += 1
+        worksheet.write(row, col, '; '.join(minor))
+        col += 1
 
-    if hasattr(docscopus, 'publishers_name'):
-        worksheet.write(row, col, docscopus.publishers_name)
-    col += 1
-
+    col = 4
     if docscopus.is_scielo == 1:
         query = models.Scielo.objects.filter(id=str(docscopus.scielo_id))
         worksheet.write(row, col, query[0]['region'])
@@ -206,12 +236,24 @@ for docscopus in scopus:
         worksheet.write(row, col, 0)
     col += 1
 
-    # Scopus Code ASJC
-    if hasattr(docscopus, 'all_science_classification_codes_asjc'):
-        worksheet.write(row, col, docscopus['all_science_classification_codes_asjc'])
+    # Scopus fields
+    if hasattr(docscopus, 'title'):
+        worksheet.write(row, col, docscopus.title)
     col += 1
 
-    col = 13
+    if hasattr(docscopus, 'publishers_name'):
+        worksheet.write(row, col, docscopus.publishers_name)
+    col += 1
+
+    if hasattr(docscopus, 'source_type'):
+        worksheet.write(row, col, docscopus.source_type)
+    col += 1
+
+    if hasattr(docscopus, 'asjc_code_list'):
+        worksheet.write(row, col, '; '.join(docscopus['asjc_code_list']))
+    col += 1
+
+    col = 16
     for year in range(2016, 2010, -1):
         if hasattr(docscopus, str(year)):
             # print(docscopus[str(year)])
@@ -225,14 +267,27 @@ for docscopus in scopus:
                 worksheet.write(row, col, docscopus[str(year)]['snip'])
         col += 1
 
+    # CWTS SNIP
+    col = 22
+    if docscopus.is_cwts == 1:
+        cwts = models.Cwts.objects(id=str(docscopus.cwts_id))[0]
+        for year in range(2016, 1998, -1):
+            if hasattr(cwts, str(year)):
+                if 'snip' in cwts[str(year)]:
+                    worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
+            col += 1
+
     # SCIMAGO indicators
-    col = 25
+    col = 40
     if docscopus.is_scimago == 1:
 
         scimago = models.Scimago.objects(id=str(docscopus.scimago_id))[0]
 
-        for year in range(2016, 1998, -1):
+        if hasattr(scimago, 'title'):
+            worksheet.write(row, col, scimago['title'])
+        col += 1
 
+        for year in range(2016, 1998, -1):
             if hasattr(scimago, str(year)):
                 if 'sjr' in scimago[str(year)]:
                     worksheet.write(row, col, scimago[str(year)]['sjr'])
@@ -279,10 +334,16 @@ for docscopus in scopus:
                 col += 10
 
     # SciELO - subjects
-    col = 205
+    col = 221
     if docscopus.is_scielo == 1:
 
         scielo = models.Scielo.objects(id=str(docscopus.scielo_id))[0]
+
+        worksheet.write(row, col, scielo['title'])
+        col += 1
+
+        worksheet.write(row, col, scielo['publisher_name'])
+        col += 1
 
         for k in [
             'title_thematic_areas',
@@ -318,7 +379,7 @@ for docscopus in scopus:
             col += 2
 
     # WoS Indicators 2016-1997
-    col = 225
+    col = 243
     if docscopus.is_wos == 1:
 
         wos = models.Wos.objects(id=str(docscopus.wos_id))[0]
@@ -337,7 +398,15 @@ for docscopus in scopus:
         else:
             col += 2
 
-        col = 227
+        col = 245
+        worksheet.write(row, col, wos['title'])
+        col += 1
+
+        if hasattr(wos, 'publisher'):
+            worksheet.write(row, col, wos['publisher'])
+        col += 1
+
+        col = 247
         if docscopus.is_scielo == 1:
             scielo = models.Scielo.objects(id=str(docscopus.scielo_id))[0]
             if hasattr(scielo, 'thematic_areas'):
@@ -346,7 +415,7 @@ for docscopus in scopus:
                 if hasattr(wos, 'thematic_areas'):
                     worksheet.write(row, col, '; '.join(wos['thematic_areas']))
 
-        col = 228
+        col = 248
         for year in range(2016, 1996, -1):
             if hasattr(wos, str(year)):
                 for k in [
@@ -390,23 +459,33 @@ for doc in scielo:
         worksheet.write(row, col, '; '.join(doc.issn_list))
     col += 1
 
-    # if hasattr(docscopus, 'source_type'):
-    #     worksheet.write(row, col, docscopus.source_type)
-    col += 1
-
     if hasattr(doc, 'title'):
         worksheet.write(row, col, doc.title)
     col += 1
 
-    if hasattr(doc, 'publisher_name'):
-        worksheet.write(row, col, doc.publisher_name)
-    col += 1
+    # OECD categories
+    col = 2
+    if hasattr(doc, 'oecd'):
+        loecd = sorted(doc.oecd, key=lambda k: k['code'])
+        major = []
+        minor = []
+        for d in loecd:
+            if '.' not in d['code']:
+                major.append(d['code'] + ' ' + d['description'])
+            if '.' in d['code']:
+                minor.append(d['code'] + ' ' + d['description'])
+        worksheet.write(row, col, '; '.join(major))
+        col += 1
+        worksheet.write(row, col, '; '.join(minor))
+        col += 1
 
+    col = 4
     if hasattr(doc, 'region'):
         worksheet.write(row, col, doc.region)
     col += 1
 
-    col += 1  # Scopus country
+    # Scopus country
+    col += 1
 
     if hasattr(doc, 'country'):
         worksheet.write(row, col, doc.country)
@@ -428,11 +507,24 @@ for doc in scielo:
         worksheet.write(row, col, doc.is_wos)
     col += 1
 
+    # CWTS SNIP
+    col = 22
+    if doc.is_cwts == 1:
+        cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
+        for year in range(2016, 1998, -1):
+            if hasattr(cwts, str(year)):
+                if 'snip' in cwts[str(year)]:
+                    worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
+            col += 1
+
     # SCIMAGO indicators
-    col = 25
+    col = 40
     if doc.is_scimago == 1:
 
         scimago = models.Scimago.objects(id=str(doc.scimago_id))[0]
+
+        worksheet.write(row, col, scimago['title'])
+        col += 1
 
         for year in range(2016, 1998, -1):
 
@@ -482,7 +574,14 @@ for doc in scielo:
                 col += 10
 
     # SciELO - subjects
-    col = 205
+    col = 221
+
+    worksheet.write(row, col, doc['title'])
+    col += 1
+
+    if hasattr(doc, 'publisher_name'):
+        worksheet.write(row, col, doc.publisher_name)
+    col += 1
 
     for k in [
         'title_thematic_areas',
@@ -518,7 +617,7 @@ for doc in scielo:
         col += 2
 
     # WoS Indicators 2016-1997
-    col = 225
+    col = 243
     if doc.is_wos == 1:
 
         wos = models.Wos.objects(id=str(doc.wos_id))[0]
@@ -537,11 +636,19 @@ for doc in scielo:
         else:
             col += 2
 
-        col = 227
+        col = 245
+        worksheet.write(row, col, wos['title'])
+        col += 1
+
+        if hasattr(wos, 'publisher'):
+            worksheet.write(row, col, wos['publisher'])
+        col += 1
+
+        col = 247
         if hasattr(wos, 'thematic_areas'):
             worksheet.write(row, col, '; '.join(wos['thematic_areas']))
 
-        col = 228
+        col = 248
         for year in range(2016, 1996, -1):
             if hasattr(wos, str(year)):
                 for k in [
@@ -585,17 +692,27 @@ for doc in wos:
         worksheet.write(row, col, '; '.join(doc.issn_list))
     col += 1
 
-    # Scopus source_type
-    col += 1
-
     if hasattr(doc, 'title'):
         worksheet.write(row, col, doc.title)
     col += 1
 
-    if hasattr(doc, 'publisher'):
-        worksheet.write(row, col, doc.publisher)
-    col += 1
+    # OECD categories
+    col = 2
+    if hasattr(doc, 'oecd'):
+        loecd = sorted(doc.oecd, key=lambda k: k['code'])
+        major = []
+        minor = []
+        for d in loecd:
+            if '.' not in d['code']:
+                major.append(d['code'] + ' ' + d['description'])
+            if '.' in d['code']:
+                minor.append(d['code'] + ' ' + d['description'])
+        worksheet.write(row, col, '; '.join(major))
+        col += 1
+        worksheet.write(row, col, '; '.join(minor))
+        col += 1
 
+    col = 4
     if doc.is_scimago == 1:
         query = models.Scimago.objects.filter(id=str(doc.scimago_id))
         worksheet.write(row, col, query[0]['region'])
@@ -626,8 +743,74 @@ for doc in wos:
     # open access
     col += 1
 
+    # CWTS SNIP
+    col = 22
+    if doc.is_cwts == 1:
+        cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
+        for year in range(2016, 1998, -1):
+            if hasattr(cwts, str(year)):
+                if 'snip' in cwts[str(year)]:
+                    worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
+            col += 1
+
+    # SCIMAGO indicators
+    col = 40
+    if doc.is_scimago == 1:
+
+        scimago = models.Scimago.objects(id=str(doc.scimago_id))[0]
+
+        worksheet.write(row, col, scimago['title'])
+        col += 1
+
+        for year in range(2016, 1998, -1):
+
+            if hasattr(scimago, str(year)):
+                if 'sjr' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['sjr'])
+                col += 1
+
+                if 'sjr_best_quartile' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['sjr_best_quartile'])
+                col += 1
+
+                if 'h_index' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['h_index'])
+                col += 1
+
+                if 'total_docs' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['total_docs'])
+                col += 1
+
+                if 'total_docs_3years' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['total_docs_3years'])
+                col += 1
+
+                if 'total_refs' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['total_refs'])
+                col += 1
+
+                if 'total_cites_3years' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['total_cites_3years'])
+                col += 1
+
+
+                if 'citable_docs_3years' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['citable_docs_3years'])
+                col += 1
+
+                if 'cites_by_doc_2years' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['cites_by_doc_2years'])
+                col += 1
+
+                if 'ref_by_doc' in scimago[str(year)]:
+                    worksheet.write(row, col, scimago[str(year)]['ref_by_doc'])
+                col += 1
+
+            else:
+                col += 10
+
     # WoS Indicators 2016-1997
-    col = 225
+    col = 243
     if hasattr(doc, 'citation_database'):
         if 'SCIE' in doc['citation_database']:
             worksheet.write(row, col, 1)
@@ -642,11 +825,19 @@ for doc in wos:
     else:
         col += 2
 
-    col = 227
+    col = 245
+    if hasattr(doc, 'title'):
+        worksheet.write(row, col, doc.title)
+    col += 1
+    if hasattr(doc, 'publisher'):
+        worksheet.write(row, col, doc.publisher)
+    col += 1
+
+    col = 247
     if hasattr(doc, 'thematic_areas'):
         worksheet.write(row, col, '; '.join(doc['thematic_areas']))
 
-    col = 228
+    col = 248
     for year in range(2016, 1996, -1):
         if hasattr(doc, str(year)):
             for k in [

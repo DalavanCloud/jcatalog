@@ -1,5 +1,5 @@
 pyexcel==0.5.3
 pyexcel-xlsx==0.5.0.1
-xlsxwriter==0.9.8
+xlsxwriter==1.0.0
 mongoengine==0.14.3
 wget==3.2
