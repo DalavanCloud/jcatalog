@@ -13,7 +13,7 @@ EM TESTE
 # from transform import scielo_update
 
 # from transform import wos_loader
-# from transform import wos_update
+from transform import wos_update
 
 # from transform import cwts_country
 
@@ -29,9 +29,9 @@ EM TESTE
 # from reports import jcatalog
 
 # Abel
-from reports import scopus_list2
-
+# from reports import scopus_list2
 # from transform import oecd_loader
+# from reports import invite_scielo_20
 
 if __name__ == "__main__":
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # scielo_update
 
     # wos_loader
-    # wos_update.main()
+    wos_update.main()
 
     # cwts_country.main()
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     # jcatalog.main()
 
-    # Abel
-    scopus_list2
-
+# Abel
+    # scopus_list2
     # oecd_loader
+    # invite_scielo_20
