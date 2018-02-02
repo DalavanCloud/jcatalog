@@ -1,14 +1,14 @@
 # coding: utf-8
 '''
-This script get the country, publisher and thematic areas(category) from
-a worksheet and saves in the Wos collection.
+This script get the thematic areas(category) from a worksheet,
+country and publisher from other sources and saves in the Wos collection.
 '''
+from accent_remover import *
+import models
 
 import logging
 import pyexcel
 
-from accent_remover import *
-import models
 
 logging.basicConfig(
     filename='logs/wos_tecountry.info.txt',
@@ -27,6 +27,7 @@ def thematic_areas():
     for j in wos_json:
         print(j['title'])
 
+        query = None
         query = models.Wos.objects.filter(title__iexact=j['title'])
 
         if query:
@@ -66,14 +67,13 @@ def country():
 
         if 'country' not in doc:
             print(doc.issn_list)
-            '''
-            # Wos_scielo = 1a carga de WoS de paises da rede SciELO
-            '''
-            for db in [models.Wos_scielo, models.Scielo, models.Scopus, models.Scimago]:
 
+            for db in [models.Scielo, models.Scopus, models.Scimago]:
+
+                query = None
                 query = db.objects.filter(issn_list=doc.issn)
 
-                if len(query) > 0:
+                if query:
 
                     print(db._class_name)
 
