@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 filelist = [f for f in os.listdir('data/wos/jcr_all/')]
 filelist.sort()
 
-models.Wos.drop_collection()
+# models.Wos.drop_collection()
 
 for f in filelist:
 
