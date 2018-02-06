@@ -9,12 +9,12 @@ EM TESTE
 # from transform import scopus_loader
 # from transform import scopus_update
 
-# from transform import scielo_loader
+from transform import scielo_loader
 # from transform import scielo_update
 
 # from transform import wos_loader
 # from transform import wos_update
-from tools import wos_oecd_codes
+# from tools import wos_oecd_codes
 
 # from transform import cwts_country
 
@@ -42,12 +42,12 @@ if __name__ == "__main__":
     # data_corrections.scimago()
 
     # scielo_codes_oecd
-    wos_oecd_codes
+    # wos_oecd_codes
 
     # scopus_loader.main()
     # scopus_update.main()
 
-    # scielo_loader.main()
+    scielo_loader.main()
     # scielo_update
 
     # wos_loader

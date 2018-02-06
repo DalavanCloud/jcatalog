@@ -2,7 +2,6 @@
 '''
 This script reads data from various sources to process and store in MongoDB.
 '''
-
 import ast
 import pyexcel
 import requests
@@ -14,6 +13,7 @@ import models
 from transform_date import *
 from accent_remover import *
 from transform import config
+from articlemeta.client import ThriftClient
 
 logging.basicConfig(filename='logs/procstore.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -75,35 +75,32 @@ def scieloproc():
     print(msg)
 
 
-def thematic_areas_scielo():
+def scieloapi():
 
-    url = config.url
+    client = ThriftClient()
 
-    query = models.Scielo.objects
+    for journal in client.journals():
 
-    for doc in query:
+        query = models.Scielo.objects.filter(issn_scielo=journal.scielo_issn)
 
-        l = []
-        print(doc.issn_scielo)
+        if query:
 
-        try:
-            r = requests.get(url + doc.issn_scielo)
-            d = ast.literal_eval(r.text)
-            l = d[0]['v854']
-        except:
-            pass
+            for doc in query:
+                print('api: ' + journal.scielo_issn)
+                data = {'api': {}}
 
-        if l:
-            data = {'thematic_areas': []}
-            for i in l:
-                data['thematic_areas'].append(i['_'].upper())
-                data['wos_areas_manual_fill'] = 1
+                for label in keycorrection.scielo_api:
 
-            print(doc.issn_scielo + ':' + str(data))
+                    try:
+                        jdata = eval('journal.'+label)
+                        if jdata and jdata is not None:
+                            data['api'][label] = jdata
+                    except ValueError:
+                        continue
 
-            if data:
-                doc.modify(**data)
-                doc.save()
+                if data:
+                    doc.modify(**data)
+                    doc.save()
 
 
 def doajproc():
@@ -168,12 +165,12 @@ def submissions():
 
 
 
-
-
 def main():
     # SciELO Network csv
     scieloproc()
-    thematic_areas_scielo()
+
+    # SciELO Articlemeta API
+    scieloapi()
 
     # DOAJ - xlsx
     doajproc()

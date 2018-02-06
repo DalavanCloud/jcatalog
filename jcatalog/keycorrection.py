@@ -1,6 +1,6 @@
 # coding: utf-8
 
-# SciELO
+# SciELO journals.csv (from reports analytics)
 scielo_columns_names = [
  'extraction_date',
  'study_unit',
@@ -101,6 +101,55 @@ scielo_columns_names = [
  'google_scholar_m5_2013',
  'google_scholar_m5_2012']
 
+
+# SciELO API Articlemetaapi (additional)
+scielo_api = [
+ 'abstract_languages',
+ 'acronym',
+ 'cnn_code',
+ 'controlled_vocabulary',
+ 'copyrighter',
+ 'editor_address',
+ 'editor_email',
+ 'editorial_standard',
+ 'data',
+ 'first_number',
+ 'first_volume',
+ 'first_year',
+ 'fulltitle',
+ 'index_coverage',
+ 'institutional_url',
+ 'is_indexed_in_ahci',
+ 'is_indexed_in_scie',
+ 'is_indexed_in_ssci',
+ 'is_publishing_model_continuous',
+ 'languages',
+ 'last_number',
+ 'last_year',
+ 'mission',
+ 'other_titles',
+ 'previous_title',
+ 'processing_date',
+ 'publication_level',
+ 'publisher_city',
+ 'publisher_country',
+ 'publisher_loc',
+ 'publisher_state',
+ 'publishing_model',
+ 'scielo_domain',
+ 'scimago_code',
+ 'secs_code',
+ 'sponsors',
+ 'status_history',
+ 'subject_descriptors',
+ 'submission_url',
+ 'update_date',
+ 'url()',
+ 'wos_citation_indexes',
+ 'wos_subject_areas']
+
+
+# Submission SciELO Brazil
 submission_scielo_brasil_columns_names = [
  'title',
  'data_inclusao_scielo',
