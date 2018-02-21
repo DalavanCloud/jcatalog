@@ -2,9 +2,7 @@
 '''
 This script reads data from various sources to process and store in MongoDB.
 '''
-import ast
 import pyexcel
-import requests
 import logging
 
 import keycorrection
@@ -12,7 +10,6 @@ from transform import collections_scielo
 import models
 from transform_date import *
 from accent_remover import *
-from transform import config
 from articlemeta.client import ThriftClient
 
 logging.basicConfig(filename='logs/procstore.info.txt', level=logging.INFO)
@@ -92,7 +89,10 @@ def scieloapi():
                 for label in keycorrection.scielo_api:
 
                     try:
-                        jdata = eval('journal.'+label)
+                        if label == 'url':
+                            jdata = getattr(journal, label)()
+                        else:
+                            jdata = getattr(journal, label)
                         if jdata and jdata is not None:
                             data['api'][label] = jdata
                     except ValueError:
@@ -162,7 +162,6 @@ def submissions():
     msg = u'Registred %d posts in Submissions collection' % num_posts
     logger.info(msg)
     print(msg)
-
 
 
 def main():

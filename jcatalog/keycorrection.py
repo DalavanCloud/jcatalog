@@ -144,7 +144,7 @@ scielo_api = [
  'subject_descriptors',
  'submission_url',
  'update_date',
- 'url()',
+ 'url',
  'wos_citation_indexes',
  'wos_subject_areas']
 
