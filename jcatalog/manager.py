@@ -8,8 +8,7 @@ EM TESTE
 
 # from transform import scopus_loader
 # from transform import scopus_update
-
-from transform import scielo_loader
+# from transform import scielo_loader
 # from transform import scielo_update
 
 # from transform import wos_loader
@@ -24,6 +23,8 @@ from transform import scielo_loader
 # from reports import scopus_export_indicators
 
 # from transform import doajapi
+
+from transform import pubmedapi
 
 # from transform import noscielo
 
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     # scopus_loader.main()
     # scopus_update.main()
 
-    scielo_loader.main()
+    # scielo_loader.main()
     # scielo_update
 
     # wos_loader
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     # scopus_export_indicators
 
     # doajapi
-
+    pubmedapi
     # noscielo
 
     # jcatalog.main()

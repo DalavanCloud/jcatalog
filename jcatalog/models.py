@@ -24,6 +24,8 @@ class Scielo(DynamicDocument):
     is_cwts = IntField(required=True, min_value=0, default=0)
     is_doaj = IntField(required=True, min_value=0, default=0)
     is_capes = IntField(required=True, min_value=0, default=0)
+    is_pubmed = IntField(required=True, min_value=0, default=0)
+    is_pmc = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
@@ -152,6 +154,12 @@ class Doaj(DynamicDocument):
 
 
 class Doajapi(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
+
+
+class Pubmedapi(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
