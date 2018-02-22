@@ -31,11 +31,17 @@ def scieloproc():
 
     for rec in scielo_json:
 
-        rec['country'] = collections_scielo.collection[rec['collection']]
+        if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt', 'rve']:
 
-        rec['title_country'] = '%s-%s' % (
-            accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
-            rec['country'].lower())
+            rec['country'] = collections_scielo.collection[rec['collection']]
+
+            if 'region' not in rec and 'country' in rec:
+                # data = {}
+                rec['region'] = collections_scielo.region[rec['country']]
+
+            rec['title_country'] = '%s-%s' % (
+                accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
+                rec['country'].lower())
 
         # convert issn int type to str type
         if type(rec['issns']) != str:
