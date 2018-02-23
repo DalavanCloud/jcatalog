@@ -13,13 +13,13 @@ wrap = workbook.add_format({'text_wrap': True})
 for h in [
     'ISSNs',
     'Scopus source type',
-    'Title Scopus/SciELO/Wos',
+    'Title Scopus/SciELO/JCR',
     'Scopus country',
     'SciELO country',
-    'WoS country',
+    'JCR country',
     'is Scopus',
     'is SciELO',
-    'is WoS',
+    'is JCR',
     'SCIE',
     'SSCI',
     # 2016 - Scopus
@@ -136,8 +136,8 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.country_scielo)
     col += 1
 
-    if hasattr(docscopus, 'country_wos'):
-        worksheet.write(row, col, docscopus.country_wos)
+    if hasattr(docscopus, 'country_jcr'):
+        worksheet.write(row, col, docscopus.country_jcr)
     col += 1
 
     if hasattr(docscopus, 'is_scopus'):
@@ -148,19 +148,19 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.is_scielo)
     col += 1
 
-    if hasattr(docscopus, 'is_wos'):
-        worksheet.write(row, col, docscopus.is_wos)
+    if hasattr(docscopus, 'is_jcr'):
+        worksheet.write(row, col, docscopus.is_jcr)
     col += 1
 
-    if docscopus.is_wos == 1:
-        wos = models.Wos.objects(id=str(docscopus.wos_id))[0]
-        if hasattr(wos, 'citation_database'):
-            if 'SCIE' in wos['citation_database']:
+    if docscopus.is_jcr == 1:
+        jcr = models.Jcr.objects(id=str(docscopus.jcr_id))[0]
+        if hasattr(jcr, 'citation_database'):
+            if 'SCIE' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
             col += 1
-            if 'SSCI' in wos['citation_database']:
+            if 'SSCI' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -307,8 +307,8 @@ for doc in scielo:
         worksheet.write(row, col, doc.country)
     col += 1
 
-    if hasattr(doc, 'country_wos'):
-        worksheet.write(row, col, doc.country_wos)
+    if hasattr(doc, 'country_jcr'):
+        worksheet.write(row, col, doc.country_jcr)
     col += 1
 
     if hasattr(doc, 'is_scopus'):
@@ -319,19 +319,19 @@ for doc in scielo:
         worksheet.write(row, col, doc.is_scielo)
     col += 1
 
-    if hasattr(doc, 'is_wos'):
-        worksheet.write(row, col, doc.is_wos)
+    if hasattr(doc, 'is_jcr'):
+        worksheet.write(row, col, doc.is_jcr)
     col += 1
 
-    if doc.is_wos == 1:
-        wos = models.Wos.objects(id=str(doc.wos_id))[0]
-        if hasattr(wos, 'citation_database'):
-            if 'SCIE' in wos['citation_database']:
+    if doc.is_jcr == 1:
+        jcr = models.Jcr.objects(id=str(doc.jcr_id))[0]
+        if hasattr(jcr, 'citation_database'):
+            if 'SCIE' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
             col += 1
-            if 'SSCI' in wos['citation_database']:
+            if 'SSCI' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -368,10 +368,10 @@ for doc in scielo:
 print('last line of SciELO: %s' % row)
 
 # JCR - is_scopus=0, is_scielo = 0
-wos = models.Wos.objects.filter(is_scopus=0, is_scielo=0)
+jcr = models.Jcr.objects.filter(is_scopus=0, is_scielo=0)
 
-for doc in wos:
-    print('WoS: ' + doc.title)
+for doc in jcr:
+    print('JCR: ' + doc.title)
 
     col = 0
 
@@ -407,8 +407,8 @@ for doc in wos:
         worksheet.write(row, col, doc.is_scielo)
     col += 1
 
-    if hasattr(doc, 'is_wos'):
-        worksheet.write(row, col, doc.is_wos)
+    if hasattr(doc, 'is_jcr'):
+        worksheet.write(row, col, doc.is_jcr)
     col += 1
 
     if 'SCIE' in doc['citation_database']:

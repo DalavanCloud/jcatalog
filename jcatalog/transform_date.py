@@ -3,7 +3,7 @@
 This script transform various data type in datetime
 format type to load in MongoDB.
 '''
-import os 
+import os
 import sys
 import datetime
 

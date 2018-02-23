@@ -29,9 +29,9 @@ if scopus:
             noscielo['scimago_id'] = str(doc.scimago_id)
             noscielo['is_scimago'] = doc.is_scimago
 
-        if hasattr(doc, 'wos_id'):
-            noscielo['wos_id'] = doc.wos_id
-            noscielo['is_wos'] = doc.is_wos
+        if hasattr(doc, 'jcr_id'):
+            noscielo['jcr_id'] = doc.jcr_id
+            noscielo['is_jcr'] = doc.is_jcr
 
         mdata = models.Noscielo(**noscielo)
         mdata.save()
@@ -54,30 +54,30 @@ if scimago:
             noscielo['scimago_id'] = str(doc.id)
             noscielo['is_scimago'] = doc.is_scimago
 
-            if hasattr(doc, 'wos_id'):
-                noscielo['wos_id'] = doc.wos_id
-                noscielo['is_wos'] = doc.is_wos
+            if hasattr(doc, 'jcr_id'):
+                noscielo['jcr_id'] = doc.jcr_id
+                noscielo['is_jcr'] = doc.is_jcr
 
             mdata = models.Noscielo(**noscielo)
             mdata.save()
 
-# 3) WoS - load of WoS in Noscielo collection
-wos = models.Wos.objects.filter(
+# 3) JCR - load of JCR in Noscielo collection
+jcr = models.Jcr.objects.filter(
     country='Brazil',
     is_scielo=0,
     is_scopus=0,
     is_scimago=1)
 
-print('WoS not SciELO: %s' % wos.count())
+print('JCR not SciELO: %s' % jcr.count())
 
-if wos:
-    for doc in wos:
+if jcr:
+    for doc in jcr:
         noscielo = {}
 
         noscielo['issn_list'] = doc.issn_list
         noscielo['title'] = doc.title
-        noscielo['wos_id'] = str(doc.id)
-        noscielo['is_wos'] = doc.is_wos
+        noscielo['jcr_id'] = str(doc.id)
+        noscielo['is_jcr'] = doc.is_jcr
 
         mdata = models.Noscielo(**noscielo)
         mdata.save()
@@ -89,8 +89,8 @@ for doc in models.Noscielo.objects():
         doc.modify(is_scimago=0)
         doc.save()
 
-    if not hasattr(doc, 'is_wos'):
-        doc.modify(is_wos=0)
+    if not hasattr(doc, 'is_jcr'):
+        doc.modify(is_jcr=0)
         doc.save()
 
 # 5) Check if is DOAJ

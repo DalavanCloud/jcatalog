@@ -58,43 +58,43 @@ with open('output/scielo_jcr_indicators.csv', 'w', encoding='utf-8') as csv_utf:
     spamwriter_utf.writerow(header)
 
     # SciELO
-    scielodocs = models.Scielo.objects.filter(is_wos=1)
+    scielodocs = models.Scielo.objects.filter(is_jcr=1)
 
     for doc in scielodocs:
 
-        wosdocs = models.Wos.objects(scielo_id=str(doc.id))
+        jcrdocs = models.Jcr.objects(scielo_id=str(doc.id))
 
-        for docwos in wosdocs:
+        for docjcr in jcrdocs:
 
             for year in range(initial_year, current_year + 1):
 
-                if hasattr(docwos, str(year)):
+                if hasattr(docjcr, str(year)):
 
-                    total_cites = formatindicator(docwos[str(year)]['total_cites'])
+                    total_cites = formatindicator(docjcr[str(year)]['total_cites'])
 
-                    journal_impact_factor = formatindicator(docwos[str(year)]['journal_impact_factor'])
+                    journal_impact_factor = formatindicator(docjcr[str(year)]['journal_impact_factor'])
 
-                    impact_factor_without_journal_self_cites = formatindicator(docwos[str(year)]['impact_factor_without_journal_self_cites'])
+                    impact_factor_without_journal_self_cites = formatindicator(docjcr[str(year)]['impact_factor_without_journal_self_cites'])
 
-                    five_year_impact_factor = formatindicator(docwos[str(year)]['five_year_impact_factor'])
+                    five_year_impact_factor = formatindicator(docjcr[str(year)]['five_year_impact_factor'])
 
-                    immediacy_index = formatindicator(docwos[str(year)]['immediacy_index'])
+                    immediacy_index = formatindicator(docjcr[str(year)]['immediacy_index'])
 
-                    citable_items = formatindicator(docwos[str(year)]['citable_items'])
+                    citable_items = formatindicator(docjcr[str(year)]['citable_items'])
 
-                    cited_half_life = formatindicator(docwos[str(year)]['cited_half_life'])
+                    cited_half_life = formatindicator(docjcr[str(year)]['cited_half_life'])
 
-                    citing_half_life = formatindicator(docwos[str(year)]['citing_half_life'])
+                    citing_half_life = formatindicator(docjcr[str(year)]['citing_half_life'])
 
-                    eigenfactor_score = formatindicator(docwos[str(year)]['eigenfactor_score'])
+                    eigenfactor_score = formatindicator(docjcr[str(year)]['eigenfactor_score'])
 
-                    article_influence_score = formatindicator(docwos[str(year)]['article_influence_score'])
+                    article_influence_score = formatindicator(docjcr[str(year)]['article_influence_score'])
 
-                    percentage_articles_in_citable_items = formatindicator(docwos[str(year)]['percentage_articles_in_citable_items'])
+                    percentage_articles_in_citable_items = formatindicator(docjcr[str(year)]['percentage_articles_in_citable_items'])
 
-                    average_journal_impact_factor_percentile = formatindicator(docwos[str(year)]['average_journal_impact_factor_percentile'])
+                    average_journal_impact_factor_percentile = formatindicator(docjcr[str(year)]['average_journal_impact_factor_percentile'])
 
-                    normalized_eigenfactor = formatindicator(docwos[str(year)]['normalized_eigenfactor'])
+                    normalized_eigenfactor = formatindicator(docjcr[str(year)]['normalized_eigenfactor'])
 
                     # CSV content
                     content = [
