@@ -18,7 +18,7 @@ def match(dbcol1, dbcol2, country=None):
     db1 = dbcol1._class_name
     db2 = dbcol2._class_name
 
-    # DataSet2 - name of DB collection 2. e.g.: 'wos'
+    # DataSet2 - name of DB collection 2. e.g.: 'jcr'
     col = dbcol2._class_name.lower()
 
     # for each document in dbcol1
@@ -181,31 +181,31 @@ def main():
     '''
 
     # SciELO
-    match(models.Scielo, models.Wos, 1)
+    match(models.Scielo, models.Jcr, 1)
     match(models.Scielo, models.Scopus, 1)
     match(models.Scielo, models.Scimago, 1)
     match(models.Scielo, models.Cwts, 1)
     match(models.Scielo, models.Submissions)
 
     # WoS
-    match(models.Wos, models.Scielo, 1)
-    match(models.Wos, models.Scopus, 1)
-    match(models.Wos, models.Scimago, 1)
-    match(models.Wos, models.Cwts, 1)
+    match(models.Jcr, models.Scielo, 1)
+    match(models.Jcr, models.Scopus, 1)
+    match(models.Jcr, models.Scimago, 1)
+    match(models.Jcr, models.Cwts, 1)
 
     # Scopus
-    match(models.Scopus, models.Wos, 1)
+    match(models.Scopus, models.Jcr, 1)
     match(models.Scopus, models.Scielo, 1)
     match(models.Scopus, models.Scimago, 1)
     match(models.Scopus, models.Cwts, 1)
 
     # Scimago
-    match(models.Scimago, models.Wos, 1)
+    match(models.Scimago, models.Jcr, 1)
     match(models.Scimago, models.Scielo, 1)
     match(models.Scimago, models.Scopus, 1)
 
     # CWTS
-    match(models.Cwts, models.Wos, 1)
+    match(models.Cwts, models.Jcr, 1)
     match(models.Cwts, models.Scielo, 1)
     match(models.Cwts, models.Scopus, 1)
 

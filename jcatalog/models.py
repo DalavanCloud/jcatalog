@@ -20,7 +20,7 @@ class Scielo(DynamicDocument):
     is_scielo = IntField(required=True, min_value=1, default=1)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=0, default=0)
+    is_jcr = IntField(required=True, min_value=0, default=0)
     is_cwts = IntField(required=True, min_value=0, default=0)
     is_doaj = IntField(required=True, min_value=0, default=0)
     is_capes = IntField(required=True, min_value=0, default=0)
@@ -42,7 +42,7 @@ class Scimago(DynamicDocument):
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=1, default=1)
     is_scopus = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=0, default=0)
+    is_jcr = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
@@ -59,7 +59,7 @@ class Scopus(DynamicDocument):
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=1, default=1)
-    is_wos = IntField(required=True, min_value=0, default=0)
+    is_jcr = IntField(required=True, min_value=0, default=0)
     is_cwts = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
@@ -73,14 +73,14 @@ class Scopus(DynamicDocument):
     }
 
 
-class Wos(DynamicDocument):
+class Jcr(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=1, default=1)
+    is_jcr = IntField(required=True, min_value=1, default=1)
     # Indexes
     meta = {
         'indexes': [
@@ -90,14 +90,14 @@ class Wos(DynamicDocument):
     }
 
 
-class Wos_scielo(DynamicDocument):
+class Jcr_scielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
     issn_list = ListField()
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=1, default=1)
+    is_jcr = IntField(required=True, min_value=1, default=1)
     # Indexes
     meta = {
         'indexes': [
@@ -127,7 +127,7 @@ class Cwts(DynamicDocument):
     is_scielo = IntField(required=True, min_value=0, default=0)
     is_scimago = IntField(required=True, min_value=0, default=0)
     is_scopus = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=0, default=0)
+    is_jcr = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [

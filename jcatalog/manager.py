@@ -8,7 +8,7 @@ from tools import data_corrections
 
 # from transform import scopus_loader
 # from transform import scopus_update
-# from transform import scielo_loader
+from transform import scielo_loader
 # from transform import scielo_update
 
 # from transform import wos_loader
@@ -36,9 +36,6 @@ from tools import data_corrections
 # from reports import invite_scielo_20
 
 if __name__ == "__main__":
-
-    data_corrections.scielosp()
-
     # data_corrections.scopus()
     # data_corrections.scimago()
 
@@ -48,8 +45,8 @@ if __name__ == "__main__":
     # scopus_loader.main()
     # scopus_update.main()
 
-    # scielo_loader.main()
-    # scielo_update
+    scielo_loader.main()
+    data_corrections.scielosp()
 
     # wos_loader
     # wos_update.main()

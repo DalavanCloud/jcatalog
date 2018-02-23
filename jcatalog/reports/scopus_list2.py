@@ -39,16 +39,16 @@ wrap_green = workbook.add_format({'text_wrap': True, 'bg_color': '#99FF99'})
 
 for h in [
     'ISSNs',
-    'Main Title (SciELO, Scopus or WoS)',
+    'Main Title (SciELO, Scopus or JCR)',
     'OECD major categories',
     'OECD minor categories',
     'Scimago Region',
     'Scopus Country',
     'SciELO Country',
-    'WoS country',
+    'JCR country',
     'is Scopus',
     'is SciELO',
-    'is WoS',
+    'is JCR',
     'Open Access(Scopus or SciELO)'
         ]:
     worksheet.write(0, col, h, wrap)
@@ -123,34 +123,34 @@ for y in range(2016, 2011, -1):
         worksheet.write(0, col, h + ' ' + str(y), wrap_red)
         col += 1
 
-# WoS CIs and Thematic Areas
+# JCR CIs and Thematic Areas
 for h in [
-    'WoS SCIE',
-    'WoS SSCI',
-    'WoS Title',
-    'WoS Publisher',
-    'WoS Thematic Areas'
+    'JCR SCIE',
+    'JCR SSCI',
+    'JCR Title',
+    'JCR Publisher',
+    'JCR Thematic Areas'
         ]:
 
     worksheet.write(0, col, h, wrap_green)
     col += 1
 
-# WoS Indicators 2016-1997
+# JCR Indicators 2016-1997
 for y in range(2016, 1996, -1):
     for h in [
-        'WoS Total cites',
-        'WoS Journal Impact Factor',
-        'WoS Impact Factor without Journal Self Cites',
-        'WoS 5 years Impact Factor',
-        'WoS Immediacy Index',
-        'WoS Citable Items',
-        'WoS Cited half life',
-        'WoS Citing half life',
-        'WoS Eigenfactor Score',
-        'WoS Article Influence Score',
-        'WoS % Articles in Citable Items',
-        'WoS Average Journal Impact Factor Percentile',
-        'WoS Normalized Eigenfactor'
+        'JCR Total cites',
+        'JCR Journal Impact Factor',
+        'JCR Impact Factor without Journal Self Cites',
+        'JCR 5 years Impact Factor',
+        'JCR Immediacy Index',
+        'JCR Citable Items',
+        'JCR Cited half life',
+        'JCR Citing half life',
+        'JCR Eigenfactor Score',
+        'JCR Article Influence Score',
+        'JCR % Articles in Citable Items',
+        'JCR Average Journal Impact Factor Percentile',
+        'JCR Normalized Eigenfactor'
             ]:
 
         worksheet.write(0, col, h + ' ' + str(y), wrap_green)
@@ -212,8 +212,8 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.country_scielo)
     col += 1
 
-    if hasattr(docscopus, 'country_wos'):
-        worksheet.write(row, col, docscopus.country_wos)
+    if hasattr(docscopus, 'country_jcr'):
+        worksheet.write(row, col, docscopus.country_jcr)
     col += 1
 
     if hasattr(docscopus, 'is_scopus'):
@@ -224,8 +224,8 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.is_scielo)
     col += 1
 
-    if hasattr(docscopus, 'is_wos'):
-        worksheet.write(row, col, docscopus.is_wos)
+    if hasattr(docscopus, 'is_jcr'):
+        worksheet.write(row, col, docscopus.is_jcr)
     col += 1
 
     if hasattr(docscopus, 'open_access_status'):
@@ -378,19 +378,19 @@ for docscopus in scopus:
         else:
             col += 2
 
-    # WoS Indicators 2016-1997
+    # JCR Indicators 2016-1997
     col = 243
-    if docscopus.is_wos == 1:
+    if docscopus.is_jcr == 1:
 
-        wos = models.Wos.objects(id=str(docscopus.wos_id))[0]
+        jcr = models.Jcr.objects(id=str(docscopus.jcr_id))[0]
 
-        if hasattr(wos, 'citation_database'):
-            if 'SCIE' in wos['citation_database']:
+        if hasattr(jcr, 'citation_database'):
+            if 'SCIE' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
             col += 1
-            if 'SSCI' in wos['citation_database']:
+            if 'SSCI' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -399,11 +399,11 @@ for docscopus in scopus:
             col += 2
 
         col = 245
-        worksheet.write(row, col, wos['title'])
+        worksheet.write(row, col, jcr['title'])
         col += 1
 
-        if hasattr(wos, 'publisher'):
-            worksheet.write(row, col, wos['publisher'])
+        if hasattr(jcr, 'publisher'):
+            worksheet.write(row, col, jcr['publisher'])
         col += 1
 
         col = 247
@@ -412,12 +412,12 @@ for docscopus in scopus:
             if hasattr(scielo, 'thematic_areas'):
                 worksheet.write(row, col, '; '.join(scielo['thematic_areas']))
             else:
-                if hasattr(wos, 'thematic_areas'):
-                    worksheet.write(row, col, '; '.join(wos['thematic_areas']))
+                if hasattr(jcr, 'thematic_areas'):
+                    worksheet.write(row, col, '; '.join(jcr['thematic_areas']))
 
         col = 248
         for year in range(2016, 1996, -1):
-            if hasattr(wos, str(year)):
+            if hasattr(jcr, str(year)):
                 for k in [
                     'total_cites',
                     'journal_impact_factor',
@@ -433,11 +433,11 @@ for docscopus in scopus:
                     'average_journal_impact_factor_percentile',
                     'normalized_eigenfactor'
                         ]:
-                    if k in wos[str(year)]:
+                    if k in jcr[str(year)]:
                         worksheet.write(
                             row,
                             col,
-                            formatindicator(wos[str(year)][k])
+                            formatindicator(jcr[str(year)][k])
                         )
                     col += 1
 
@@ -491,8 +491,8 @@ for doc in scielo:
         worksheet.write(row, col, doc.country)
     col += 1
 
-    if hasattr(doc, 'country_wos'):
-        worksheet.write(row, col, doc.country_wos)
+    if hasattr(doc, 'country_jcr'):
+        worksheet.write(row, col, doc.country_jcr)
     col += 1
 
     if hasattr(doc, 'is_scopus'):
@@ -503,8 +503,8 @@ for doc in scielo:
         worksheet.write(row, col, doc.is_scielo)
     col += 1
 
-    if hasattr(doc, 'is_wos'):
-        worksheet.write(row, col, doc.is_wos)
+    if hasattr(doc, 'is_jcr'):
+        worksheet.write(row, col, doc.is_jcr)
     col += 1
 
     # CWTS SNIP
@@ -616,19 +616,19 @@ for doc in scielo:
     else:
         col += 2
 
-    # WoS Indicators 2016-1997
+    # JCR Indicators 2016-1997
     col = 243
-    if doc.is_wos == 1:
+    if doc.is_jcr == 1:
 
-        wos = models.Wos.objects(id=str(doc.wos_id))[0]
+        jcr = models.Jcr.objects(id=str(doc.jcr_id))[0]
 
-        if hasattr(wos, 'citation_database'):
-            if 'SCIE' in wos['citation_database']:
+        if hasattr(jcr, 'citation_database'):
+            if 'SCIE' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
             col += 1
-            if 'SSCI' in wos['citation_database']:
+            if 'SSCI' in jcr['citation_database']:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -637,20 +637,20 @@ for doc in scielo:
             col += 2
 
         col = 245
-        worksheet.write(row, col, wos['title'])
+        worksheet.write(row, col, jcr['title'])
         col += 1
 
-        if hasattr(wos, 'publisher'):
-            worksheet.write(row, col, wos['publisher'])
+        if hasattr(jcr, 'publisher'):
+            worksheet.write(row, col, jcr['publisher'])
         col += 1
 
         col = 247
-        if hasattr(wos, 'thematic_areas'):
-            worksheet.write(row, col, '; '.join(wos['thematic_areas']))
+        if hasattr(jcr, 'thematic_areas'):
+            worksheet.write(row, col, '; '.join(jcr['thematic_areas']))
 
         col = 248
         for year in range(2016, 1996, -1):
-            if hasattr(wos, str(year)):
+            if hasattr(jcr, str(year)):
                 for k in [
                     'total_cites',
                     'journal_impact_factor',
@@ -666,11 +666,11 @@ for doc in scielo:
                     'average_journal_impact_factor_percentile',
                     'normalized_eigenfactor'
                         ]:
-                    if k in wos[str(year)]:
+                    if k in jcr[str(year)]:
                         worksheet.write(
                             row,
                             col,
-                            formatindicator(wos[str(year)][k])
+                            formatindicator(jcr[str(year)][k])
                         )
                     col += 1
 
@@ -681,10 +681,10 @@ print('last line of SciELO: %s' % row)
 
 # --------------------------------
 # JCR - is_scopus=0, is_scielo = 0
-wos = models.Wos.objects.filter(is_scopus=0, is_scielo=0)
+jcr = models.Jcr.objects.filter(is_scopus=0, is_scielo=0)
 
-for doc in wos:
-    print('WoS: ' + doc.title)
+for doc in jcr:
+    print('JCR: ' + doc.title)
 
     col = 0
 
@@ -736,8 +736,8 @@ for doc in wos:
         worksheet.write(row, col, doc.is_scielo)
     col += 1
 
-    if hasattr(doc, 'is_wos'):
-        worksheet.write(row, col, doc.is_wos)
+    if hasattr(doc, 'is_jcr'):
+        worksheet.write(row, col, doc.is_jcr)
     col += 1
 
     # open access
@@ -809,7 +809,7 @@ for doc in wos:
             else:
                 col += 10
 
-    # WoS Indicators 2016-1997
+    # JCR Indicators 2016-1997
     col = 243
     if hasattr(doc, 'citation_database'):
         if 'SCIE' in doc['citation_database']:
@@ -866,7 +866,7 @@ for doc in wos:
     # Avançar linha - prox. documento
     row += 1
 
-print('last line of WoS: %s' % row)
+print('last line of JCR: %s' % row)
 
 # Grava planilha Excel
 workbook.close()

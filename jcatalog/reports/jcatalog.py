@@ -23,22 +23,22 @@ def jcatalog():
         worksheet.write(0, col, h, wrap)
         col += 1
 
-    # Extraction date - get date from SciELO collection
+    # Extraction date - get date from SciELO, Scopus and JCR collection
     extraction_date = models.Scielo.objects.first().extraction_date
 
     row = 1
 
     for dbcol in (
-        models.Scielo.objects.filter(collection='scl'),
+        models.Scielo.objects.filter(collection='scl'),  # SciELO Brazil
         models.Scopus.objects.filter(
             publishers_country='Brazil',
             is_scielo=0,
-            source_type='Journal'),
-        models.Wos.objects.filter(
+            source_type='Journal'),  # Scopus - brazilian journals
+        models.Jcr.objects.filter(
             country='Brazil',
             is_scielo=0,
             is_scimago=1,
-            is_scopus=0)
+            is_scopus=0)  # JCR - brazilian journals
                 ):
 
         dbname = dbcol._collection.name
@@ -53,7 +53,7 @@ def jcatalog():
             col += 1
 
             # SciELO ou Scopus ou WoS
-            if doc.is_scielo == 1 or doc.is_scopus == 1 or doc.is_wos == 1:
+            if doc.is_scielo == 1 or doc.is_scopus == 1 or doc.is_jcr == 1:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -72,7 +72,7 @@ def jcatalog():
             col += 1
 
             # SciELO, Scopus e WoS
-            if doc.is_scielo == 1 and doc.is_scopus == 1 and doc.is_wos == 1:
+            if doc.is_scielo == 1 and doc.is_scopus == 1 and doc.is_jcr == 1:
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
@@ -363,7 +363,7 @@ def jcatalog():
                 if dbname == 'wos':
                     docsmago = doc
                 else:
-                    docwos = models.Wos.objects(id=str(doc.wos_id))[0]
+                    docwos = models.Jcr.objects(id=str(doc.wos_id))[0]
 
                     year = 2016
 

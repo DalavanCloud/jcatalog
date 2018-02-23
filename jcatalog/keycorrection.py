@@ -268,8 +268,8 @@ scopuscitscore_columns_names = [
  'print_issn',
  'eissn']
 
-# WOS
-wos_columns_names = [
+# JCR
+jcr_columns_names = [
  'rank',
  'title',
  'jcr_abbreviated_title',
