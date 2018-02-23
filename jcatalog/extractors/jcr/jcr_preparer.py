@@ -5,8 +5,8 @@ and saves as name 'year'_'edition'
 '''
 import os
 
-work_dir = 'extractors/wos/download_all/'
-dest_dir = 'data/wos/jcr_all/'
+work_dir = 'extractors/jcr/download_all/'
+dest_dir = 'data/jcr/jcr_all/'
 
 filelist = [f for f in os.listdir(work_dir) if os.path.isfile(work_dir + f)]
 
