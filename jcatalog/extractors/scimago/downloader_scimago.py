@@ -3,12 +3,10 @@
 This script downloads all Scimago data in XLS format.
 Also adds the columns 'Region'; 'Year' and 'Activate (1)'.
 '''
-
 import os
 import sys
-import wget
-from datetime import date
 import time
+import wget
 import logging
 
 
@@ -19,41 +17,72 @@ logging.basicConfig(filename='logs/extractors.scimago.info.txt',level=logging.IN
 logger = logging.getLogger(__name__)
 
 
-regions = ['Africa', 
-    'Asiatic Region', 
-    'Eastern Europe', 
-    'Latin America', 
-    'Middle East', 
-    'Northern America', 
-    'Pacific Region', 
-    'Western Europe']
+def downloader(scielo):
 
-if not os.path.exists('data/scimago/xlsx'):
-    os.makedirs('data/scimago/xlsx')
-    os.chdir('data/scimago/xlsx')
-else:
-    os.chdir('data/scimago/xlsx')
+    regions = [
+        'Africa',
+        'Asiatic Region',
+        'Eastern Europe',
+        'Latin America',
+        'Middle East',
+        'Northern America',
+        'Pacific Region',
+        'Western Europe']
 
-for reg in regions:
+    download_dir = 'data/scimago/xlsx'
 
-    initial_year = 1999
+    if scielo == 'true':
+        if not os.path.exists(download_dir + '/inscielo'):
+            os.makedirs(download_dir + '/inscielo')
+            os.chdir(download_dir + '/inscielo')
+        else:
+            os.chdir(download_dir)
+    else:
+        if not os.path.exists(download_dir):
+            os.makedirs(download_dir)
+            os.chdir(download_dir)
+        else:
+            os.chdir(download_dir)
 
-    last_year = date.today().year - 1
+    for region in regions:
 
-    while (initial_year <= last_year):
+        initial_year = 1999
 
-        url = 'http://www.scimagojr.com/journalrank.php?year='+ str(initial_year) + '&country='+ reg.replace(' ', '%20') +'&out=xls'
+        last_year = 2016
 
-        filename = wget.download(url)
+        while (initial_year <= last_year):
 
-        os.rename(filename, 'scimago_' + reg.replace(' ', '_') + '_' + str(initial_year) + '.xlsx')
-        
-        newfile = 'scimago_' + reg.replace(' ', '_') + '_' + str(initial_year) + '.xlsx'
+            url = 'http://www.scimagojr.com/journalrank.php'
 
-        msg = '|%s|%s|%s' % (reg, str(initial_year), newfile)
-        logger.info(msg)
-        print(msg)
+            link = '%s?year=%s&country=%s&scielo=%s&out=xls' % (
+                url,
+                str(initial_year),
+                region.replace(' ', '%20'),
+                scielo)
 
-        initial_year += 1
+            filename = wget.download(link)
 
-        time.sleep(3)
+            if scielo == 'true':
+                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '_scielo' +'.xlsx'
+            else:
+                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '.xlsx'
+
+            os.rename(filename, newfile)
+
+            msg = '|%s|%s|%s|%s' % (region, str(initial_year), newfile, link)
+            logger.info(msg)
+            print(msg)
+
+            initial_year += 1
+
+            time.sleep(3)
+
+
+def main():
+    downloader('false')
+    os.chdir(PROJECT_PATH)
+    downloader('true')
+
+
+if __name__ == "__main__":
+    main()
