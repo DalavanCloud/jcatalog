@@ -31,7 +31,7 @@ def scieloproc():
 
     for rec in scielo_json:
 
-        if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt', 'rve']:
+        if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt']:
 
             rec['country'] = collections_scielo.collection[rec['collection']]
 
@@ -68,7 +68,7 @@ def scieloproc():
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}
 
-        if rec['collection'] not in ['sss', 'rve', 'psi']:
+        if rec['collection'] not in ['sss', 'rve', 'psi', 'rvt']:
             mdata = models.Scielo(**rec)
             mdata.save()
 

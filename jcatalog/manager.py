@@ -3,12 +3,12 @@
 EM TESTE
 '''
 
-from tools import data_corrections
+# from tools import data_corrections
 # from tools import scielo_codes_oecd
 
 # from transform import scopus_loader
-# from transform import scopus_update
-from transform import scielo_loader
+from transform import scopus_update
+# from transform import scielo_loader
 # from transform import scielo_update
 
 # from transform import wos_loader
@@ -43,10 +43,11 @@ if __name__ == "__main__":
     # wos_oecd_codes
 
     # scopus_loader.main()
-    # scopus_update.main()
+    scopus_update.main()
 
-    scielo_loader.main()
-    data_corrections.scielosp()
+    # scielo_loader.main()
+
+    # data_corrections.scopus()
 
     # wos_loader
     # wos_update.main()
