@@ -6,10 +6,13 @@ EM TESTE
 # from tools import data_corrections
 # from tools import scielo_codes_oecd
 
+# from extractors.scimago import downloader_scimago
+
 # from transform import scopus_loader
-from transform import scopus_update
+# from transform import scopus_update
 # from transform import scielo_loader
 # from transform import scielo_update
+from transform import scimago_loader
 
 # from transform import wos_loader
 # from transform import wos_update
@@ -43,7 +46,8 @@ if __name__ == "__main__":
     # wos_oecd_codes
 
     # scopus_loader.main()
-    scopus_update.main()
+    # scopus_update.main()
+    scimago_loader.main()
 
     # scielo_loader.main()
 
@@ -65,6 +69,8 @@ if __name__ == "__main__":
     # noscielo
 
     # jcatalog.main()
+
+    # downloader_scimago.main()
 
     # Abel
     # scopus_list2

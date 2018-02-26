@@ -177,7 +177,8 @@ scimago_columns_names = [
  'citable_docs_3years',
  'cites_by_doc_2years',
  'ref_by_doc',
- 'country']
+ 'country',
+ 'categories']
 
 
 # Scopus
