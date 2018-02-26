@@ -63,6 +63,15 @@ def scopus_loader(file_name, keycorrection):
 
                     del rec[k+'_'+year]
 
+        # Codes ASJC
+        codes = []
+        codes = rec['all_science_classification_codes_asjc'].replace(' ', '').split(';')
+        for c in codes:
+            if c == '':
+                codes.pop()
+        rec['asjc_code_list'] = codes
+
+        # Save data
         mdata = models.Scopus(**rec)
         mdata.save()
 
@@ -74,12 +83,12 @@ def scopus_loader(file_name, keycorrection):
 
 def main():
     '''
-    scopusproc(file_name, keycorrection)
+    scopus_loader(file_name, keycorrection)
         file_name = xlsx path and file name
     keycorrection = dict name of keycorrection module
     '''
     scopus_loader(
-        'data/scopus/ext_list_June_2017.xlsx',
+        'data/scopus/ext_list_October_2017.xlsx',
         keycorrection.scopus_columns_names)
 
 

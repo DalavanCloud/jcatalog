@@ -10,13 +10,14 @@ import models
 import keycorrection
 from accent_remover import *
 
-logging.basicConfig(filename='logs/scopus_update.txt',level=logging.INFO)
+
+logging.basicConfig(filename='logs/scopus_update.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def scopuscs(year):
+def scopuscs(filename, year):
     scopus_sheet = pyexcel.get_sheet(
-        file_name='data/scopus/CiteScore_Metrics_2011-2016_Download_21Jun2017.xlsx',
+        file_name=filename,
         sheet_name=year + ' All',
         name_columns_by_row=0)
 
@@ -56,9 +57,12 @@ def scopuscs(year):
 
 
 def main():
+
+    filename = 'data/scopus/CiteScore_Metrics_2011-2016_Download_06Feb2018.xlsx'
+
     # Updates from year 2011 to 2013
     for year in range(2011, 2014):
-        scopuscs(str(year))
+        scopuscs(filename, str(year))
 
 if __name__ == "__main__":
     main()
