@@ -43,6 +43,7 @@ class Scimago(DynamicDocument):
     is_scimago = IntField(required=True, min_value=1, default=1)
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_jcr = IntField(required=True, min_value=0, default=0)
+    inscielo = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
