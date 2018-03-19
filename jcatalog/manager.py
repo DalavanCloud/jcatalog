@@ -12,7 +12,10 @@ EM TESTE
 # from transform import scopus_update
 # from transform import scielo_loader
 # from transform import scielo_update
-from transform import scimago_loader
+# from transform import scielo_access_update
+# from transform import scielo_docs_update
+# from transform import scimago_loader
+# from transform import scimago_inscielo_loader
 
 # from transform import wos_loader
 # from transform import wos_update
@@ -20,7 +23,7 @@ from transform import scimago_loader
 
 # from transform import cwts_country
 
-# from match import matches
+from match import matches
 
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
@@ -37,8 +40,10 @@ from transform import scimago_loader
 # from reports import scopus_list2
 # from transform import oecd_loader
 # from reports import invite_scielo_20
+# from reports import scopus_scimago_check
 
 if __name__ == "__main__":
+    # data_corrections.scielosp()
     # data_corrections.scopus()
     # data_corrections.scimago()
 
@@ -47,18 +52,19 @@ if __name__ == "__main__":
 
     # scopus_loader.main()
     # scopus_update.main()
-    scimago_loader.main()
+    # scimago_loader.main()
+    # scimago_inscielo_loader.main()
 
     # scielo_loader.main()
+    # scielo_access_update.main()
+    # scielo_docs_update.main()
 
-    # data_corrections.scopus()
-
-    # wos_loader
+    # wos_loader.main()
     # wos_update.main()
 
     # cwts_country.main()
 
-    # matches.main()
+    matches.main()
 
     # jcr_export_indicators
 
@@ -76,3 +82,4 @@ if __name__ == "__main__":
     # scopus_list2
     # oecd_loader
     # invite_scielo_20
+    # scopus_scimago_check

@@ -176,38 +176,45 @@ def match(dbcol1, dbcol2, country=None):
 
 def main():
     '''
-    match(DataSet1, DataSet2, country)
+    match(collection1, collection2, country)
     contry = 1 to get country of DataSet2
     '''
 
     # SciELO
-    match(models.Scielo, models.Jcr, 1)
-    match(models.Scielo, models.Scopus, 1)
-    match(models.Scielo, models.Scimago, 1)
-    match(models.Scielo, models.Cwts, 1)
-    match(models.Scielo, models.Submissions)
+    # match(models.Scielo, models.Jcr, 1)
+    match(models.Scielo, models.Wos, 1)
+    # match(models.Scielo, models.Scopus, 1)
+    # match(models.Scielo, models.Scimago, 1)
+    # match(models.Scielo, models.Cwts, 1)
+    # match(models.Scielo, models.Submissions)
 
-    # WoS
-    match(models.Jcr, models.Scielo, 1)
-    match(models.Jcr, models.Scopus, 1)
-    match(models.Jcr, models.Scimago, 1)
-    match(models.Jcr, models.Cwts, 1)
+    # JCR
+    # match(models.Jcr, models.Scielo, 1)
+    # match(models.Jcr, models.Scopus, 1)
+    # match(models.Jcr, models.Scimago, 1)
+    # match(models.Jcr, models.Cwts, 1)
+
+    # WOS
+    match(models.Wos, models.Scielo, 1)
+    match(models.Wos, models.Jcr, 1)
+    match(models.Wos, models.Scopus, 1)
+    match(models.Wos, models.Scimago, 1)
 
     # Scopus
-    match(models.Scopus, models.Jcr, 1)
-    match(models.Scopus, models.Scielo, 1)
-    match(models.Scopus, models.Scimago, 1)
-    match(models.Scopus, models.Cwts, 1)
+    # match(models.Scopus, models.Jcr, 1)
+    # match(models.Scopus, models.Scielo, 1)
+    # match(models.Scopus, models.Scimago, 1)
+    # match(models.Scopus, models.Cwts, 1)
 
     # Scimago
-    match(models.Scimago, models.Jcr, 1)
-    match(models.Scimago, models.Scielo, 1)
-    match(models.Scimago, models.Scopus, 1)
+    # match(models.Scimago, models.Jcr, 1)
+    # match(models.Scimago, models.Scielo, 1)
+    # match(models.Scimago, models.Scopus, 1)
 
     # CWTS
-    match(models.Cwts, models.Jcr, 1)
-    match(models.Cwts, models.Scielo, 1)
-    match(models.Cwts, models.Scopus, 1)
+    # match(models.Cwts, models.Jcr, 1)
+    # match(models.Cwts, models.Scielo, 1)
+    # match(models.Cwts, models.Scopus, 1)
 
 if __name__ == "__main__":
     main()
