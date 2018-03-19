@@ -1,113 +1,151 @@
 # coding: utf-8
 '''
-This script get the thematic areas(category) from a worksheet,
-country and publisher from other sources and saves in the Wos collection.
+This script reads data from JCR CSV files to process and laod in MongoDB.
 '''
-from accent_remover import *
-import models
-
+import os
 import logging
 import pyexcel
 
+import models
+import keycorrection
+from accent_remover import *
 
-logging.basicConfig(
-    filename='logs/wos_tecountry.info.txt',
-    level=logging.INFO)
+
+logging.basicConfig(filename='logs/wos_loader_all.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+filelist = [f for f in os.listdir('data/wos/jcr_all/')]
+filelist.sort()
 
-def thematic_areas():
-    sheet = pyexcel.get_sheet(
-        file_name='data/wos/jcr_areas/wos_country_publisher_category_2016.xlsx',
-        sheet_name='journals',
-        name_columns_by_row=0)
+models.Wos.drop_collection()
 
-    wos_json = sheet.to_records()
+for f in filelist:
 
-    for j in wos_json:
-        print(j['title'])
+    print(f)
 
-        query = None
-        query = models.Wos.objects.filter(title__iexact=j['title'])
+    year = f[9:13]
+    edition = f[4:8]
 
-        if query:
+    print('%s - %s' % (edition, year))
 
-            for doc in query:
+    wos_sheet = pyexcel.get_sheet(file_name='data/wos/jcr_all/' + f, name_columns_by_row=0)
+
+    # Key correction
+    for i, k in enumerate(keycorrection.wos_columns_names):
+        wos_sheet.colnames[i] = k
+
+    wos_json_dup = wos_sheet.to_records()
+
+    # remove duplicates
+    wos_json = []
+
+    for rec in wos_json_dup:
+
+        if rec not in wos_json:
+
+            wos_json.append(rec)
+
+    for rec in wos_json:
+        # not to read the last lines
+        if len(rec['issn']) == 9:
+
+            flag = 0
+
+            # remove empty keys
+            rec = {k: v for k, v in rec.items() if v or v == 0}
+
+            query = models.Wos.objects.filter(title__iexact=rec['title'])
+
+            if len(query) == 0:
+
+                print('new - '+rec['title'])
+
+                rec['issn_list'] = [rec['issn']]
+
+                rec['citation_database'] = []
+                rec['citation_database'].append(edition)
+
+                rec[str(year)] = {}
+
+                for t, k in [
+                        (int, 'total_cites'),
+                        (float, 'journal_impact_factor'),
+                        (float, 'impact_factor_without_journal_self_cites'),
+                        (float, 'five_year_impact_factor'),
+                        (float, 'immediacy_index'),
+                        (int, 'citable_items'),
+                        (str, 'cited_half_life'),
+                        (str, 'citing_half_life'),
+                        (float, 'eigenfactor_score'),
+                        (float, 'article_influence_score'),
+                        (float, 'percentage_articles_in_citable_items'),
+                        (float, 'average_journal_impact_factor_percentile'),
+                        (float, 'normalized_eigenfactor')
+                        ]:
+
+                    if k in rec:
+                        if type(rec[k]) == str and ',' in rec[k]:
+                            rec[str(year)][k] = int(rec[k].replace(',', ''))
+                        elif type(rec[k]) == str and 'Not Available' in rec[k]:
+                            rec[str(year)][k] = str(rec[k])
+                        else:
+                            rec[str(year)][k] = t(rec[k])
+
+                        del rec[k]
+
+                mdata = models.Wos(**rec)
+                mdata.save()
+
+            if len(query) > 0:
+
+                print('old - '+rec['title'])
 
                 data = {}
 
-                # Thematic areas
-                if not hasattr(doc, 'thematic_areas'):
-                    data['thematic_areas'] = [j['category']]
-                else:
-                    data['thematic_areas'] = []
-                    data['thematic_areas'] = doc['thematic_areas']
-                    data['thematic_areas'].append(j['category'])
+                for q in query:
+                    if rec['issn'] not in q['issn_list']:
+                        data['issn_list'] = q['issn_list']
+                        data['issn_list'].append(rec['issn'])
 
-                # Country and title_country
-                if 'country' not in doc:
-                    data['country'] = j['country'].title()
-                    data['title_country'] = '%s-%s' % (
-                    accent_remover(doc.title).lower().replace(' & ', ' and ').replace('&', ' and '),
-                    data['country'].lower())
+                    if edition not in q['citation_database']:
+                        data['citation_database'] = q['citation_database']
+                        data['citation_database'].append(edition)
 
-                # Publisher
-                if 'publisher' not in doc:
-                    data['publisher'] = j['publisher']
+                    if str(year) not in q:
 
-                # save
-                if data:
-                    doc.modify(**data)
-                    doc.save()
+                        data[str(year)] = {}
 
+                        for t, k in [
+                                (int, 'total_cites'),
+                                (float, 'journal_impact_factor'),
+                                (float, 'impact_factor_without_journal_self_cites'),
+                                (float, 'five_year_impact_factor'),
+                                (float, 'immediacy_index'),
+                                (int, 'citable_items'),
+                                (str, 'cited_half_life'),
+                                (str, 'citing_half_life'),
+                                (float, 'eigenfactor_score'),
+                                (float, 'article_influence_score'),
+                                (float, 'percentage_articles_in_citable_items'),
+                                (float, 'average_journal_impact_factor_percentile'),
+                                (float, 'normalized_eigenfactor')
+                                ]:
 
-def country():
+                            if k in rec:
+                                if type(rec[k]) == str and ',' in rec[k]:
+                                    data[str(year)][k] = int(rec[k].replace(',', ''))
+                                elif type(rec[k]) == str and 'Not Available' in rec[k]:
+                                    data[str(year)][k] = str(rec[k])
+                                else:
+                                    data[str(year)][k] = t(rec[k])
 
-    for doc in models.Wos.objects().batch_size(5):
+                                del rec[k]
 
-        if 'country' not in doc:
-            print(doc.issn_list)
+                    if data:
+                        q.modify(**data)
+                        q.save()
 
-            for db in [models.Scielo, models.Scopus, models.Scimago]:
-
-                query = None
-                query = db.objects.filter(issn_list=doc.issn)
-
-                if query:
-
-                    print(db._class_name)
-
-                    data = get_country(query[0])
-
-                    data['title_country'] = '%s-%s' % (
-                        accent_remover(doc.title).lower().replace(' & ', ' and ').replace('&', ' and '),
-                        data['country'].lower())
-
-                    print(data)
-
-                    doc.modify(**data)
-                    doc.save()  # save in dbcol1 collection
-
-                    break
-
-
-def get_country(query):
-
-    data_modify = {}
-
-    if 'country' in query:
-        country = query['country']
-
-        data_modify = {'country': country}
-
-        result = data_modify
-
-    return result
-
-
-def main():
-    thematic_areas()
-    country()
-
-if __name__ == "__main__":
-    main()
+    num_posts = models.Wos.objects().count()
+    msg = u'Registred %d posts in WOS collection' % num_posts
+    logger.info(msg)
+    print(msg)
