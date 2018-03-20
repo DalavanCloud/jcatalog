@@ -4,6 +4,8 @@ This script reads data from various sources to process and store in MongoDB.
 '''
 import pyexcel
 import logging
+import json
+import requests
 
 import keycorrection
 from transform import collections_scielo
@@ -170,18 +172,64 @@ def submissions():
     print(msg)
 
 
+# Crossref
+def crossref():
+
+    query = models.Scielo.objects.filter()
+    if query:
+        for journal in query:
+            doc = journal
+            print(journal['issn_scielo'])
+            issn = journal['issn_scielo']
+            url = 'https://api.crossref.org/works?filter=issn:%s' % issn
+            r = requests.get(url)
+            doi = json.loads(r.text)
+
+            # Other ISSNs
+            other_issns = []
+
+            if len(doi['message']['items']) > 1:
+                print('doi')
+                if 'ISSN' in doi['message']['items'][0]:
+                    if issn in doi['message']['items'][0]['ISSN']:
+                        jdata = {'crossref': {}}
+                        jdata['crossref']['doi_provider'] = {}
+                        prefix = doi['message']['items'][0]['prefix']
+                        publisher = doi['message']['items'][0]['publisher']
+                        jdata['crossref']['doi_provider']['prefix'] = prefix
+                        jdata['crossref']['doi_provider']['publisher'] = publisher
+
+                        for i in doi['message']['items'][0]['ISSN']:
+
+                            if i not in journal['issn_list']:
+                                other_issns.append(i)
+                                print('add issn')
+
+            if other_issns:
+                jdata['crossref']['other_issns'] = other_issns
+
+            # Save data in Mongo DB
+            if jdata:
+                doc.modify(**jdata)
+                doc.save()
+                print(jdata)
+
+
 def main():
     # SciELO Network csv
     scieloproc()
 
-    # SciELO Articlemeta API
+    # # SciELO Articlemeta API
     scieloapi()
 
-    # DOAJ - xlsx
+    # # DOAJ - xlsx
     doajproc()
 
-    # Submissions - xlsx
+    # # Submissions - xlsx
     submissions()
+
+    # Crossref
+    crossref()
 
 
 if __name__ == "__main__":
