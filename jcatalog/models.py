@@ -1,5 +1,4 @@
 # coding: utf-8
-
 from mongoengine import *
 import datetime
 
@@ -111,6 +110,7 @@ class Wos(DynamicDocument):
             'title_country'
         ]
     }
+
 
 class Jcr_scielo(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
