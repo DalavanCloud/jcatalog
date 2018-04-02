@@ -15,7 +15,7 @@ EM TESTE
 # from transform import scielo_access_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
-from transform import scielo_avaliacao_update
+# from transform import scielo_avaliacao_update
 # from transform import scielo_apc_update
 
 # from transform import scimago_loader
@@ -46,8 +46,8 @@ from transform import scielo_avaliacao_update
 # from transform import oecd_loader
 # from reports import invite_scielo_20
 # from reports import scopus_scimago_check
-# from tools import fapesp_evaluation
-# from tools import fapesp_evaluation_line
+# from reports import fapesp_evaluation
+# from reports import fapesp_evaluation_line
 
 if __name__ == "__main__":
     # data_corrections.scielosp()
