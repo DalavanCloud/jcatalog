@@ -23,7 +23,7 @@ def formatindicator(indicator):
 
 # Creates the Excel folder and add a worksheet
 
-workbook = xlsxwriter.Workbook('output/scopus_list_v4.xlsx')
+workbook = xlsxwriter.Workbook('output/scopus_list_20180329.xlsx')
 worksheet = workbook.add_worksheet('Scopus_list')
 
 
@@ -39,7 +39,7 @@ wrap_green = workbook.add_format({'text_wrap': True, 'bg_color': '#99FF99'})
 
 for h in [
     'ISSNs',
-    'Main Title (SciELO, Scopus or JCR)',
+    'Main Title (SciELO, Scopus, JCR or WOS)',
     'OECD major categories',
     'OECD minor categories',
     'Scimago Region',
@@ -49,6 +49,7 @@ for h in [
     'is Scopus',
     'is SciELO',
     'is JCR',
+    'is WOS',
     'Open Access(Scopus or SciELO)'
         ]:
     worksheet.write(0, col, h, wrap)
@@ -228,6 +229,10 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.is_jcr)
     col += 1
 
+    if hasattr(docscopus, 'is_wos'):
+        worksheet.write(row, col, docscopus.is_wos)
+    col += 1
+
     if hasattr(docscopus, 'open_access_status'):
         worksheet.write(row, col, 1)
     elif docscopus.is_scielo == 1:
@@ -253,7 +258,7 @@ for docscopus in scopus:
         worksheet.write(row, col, '; '.join(docscopus['asjc_code_list']))
     col += 1
 
-    col = 16
+    col = 17
     for year in range(2016, 2010, -1):
         if hasattr(docscopus, str(year)):
             # print(docscopus[str(year)])
@@ -268,7 +273,7 @@ for docscopus in scopus:
         col += 1
 
     # CWTS SNIP
-    col = 22
+    col = 23
     if docscopus.is_cwts == 1:
         cwts = models.Cwts.objects(id=str(docscopus.cwts_id))[0]
         for year in range(2016, 1998, -1):
@@ -278,7 +283,7 @@ for docscopus in scopus:
             col += 1
 
     # SCIMAGO indicators
-    col = 40
+    col = 41
     if docscopus.is_scimago == 1:
 
         scimago = models.Scimago.objects(id=str(docscopus.scimago_id))[0]
@@ -334,7 +339,7 @@ for docscopus in scopus:
                 col += 10
 
     # SciELO - subjects
-    col = 221
+    col = 222
     if docscopus.is_scielo == 1:
 
         scielo = models.Scielo.objects(id=str(docscopus.scielo_id))[0]
@@ -379,7 +384,7 @@ for docscopus in scopus:
             col += 2
 
     # JCR Indicators 2016-1997
-    col = 243
+    col = 244
     if docscopus.is_jcr == 1:
 
         jcr = models.Jcr.objects(id=str(docscopus.jcr_id))[0]
@@ -398,7 +403,7 @@ for docscopus in scopus:
         else:
             col += 2
 
-        col = 245
+        col = 246
         worksheet.write(row, col, jcr['title'])
         col += 1
 
@@ -406,7 +411,7 @@ for docscopus in scopus:
             worksheet.write(row, col, jcr['publisher'])
         col += 1
 
-        col = 247
+        col = 248
         if docscopus.is_scielo == 1:
             scielo = models.Scielo.objects(id=str(docscopus.scielo_id))[0]
             if hasattr(scielo, 'thematic_areas'):
@@ -415,7 +420,7 @@ for docscopus in scopus:
                 if hasattr(jcr, 'thematic_areas'):
                     worksheet.write(row, col, '; '.join(jcr['thematic_areas']))
 
-        col = 248
+        col = 249
         for year in range(2016, 1996, -1):
             if hasattr(jcr, str(year)):
                 for k in [
@@ -507,8 +512,13 @@ for doc in scielo:
         worksheet.write(row, col, doc.is_jcr)
     col += 1
 
+    if hasattr(doc, 'is_wos'):
+        worksheet.write(row, col, doc.is_wos)
+    col += 1
+
+
     # CWTS SNIP
-    col = 22
+    col = 23
     if doc.is_cwts == 1:
         cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
         for year in range(2016, 1998, -1):
@@ -518,7 +528,7 @@ for doc in scielo:
             col += 1
 
     # SCIMAGO indicators
-    col = 40
+    col = 41
     if doc.is_scimago == 1:
 
         scimago = models.Scimago.objects(id=str(doc.scimago_id))[0]
@@ -574,7 +584,7 @@ for doc in scielo:
                 col += 10
 
     # SciELO - subjects
-    col = 221
+    col = 222
 
     worksheet.write(row, col, doc['title'])
     col += 1
@@ -617,7 +627,7 @@ for doc in scielo:
         col += 2
 
     # JCR Indicators 2016-1997
-    col = 243
+    col = 244
     if doc.is_jcr == 1:
 
         jcr = models.Jcr.objects(id=str(doc.jcr_id))[0]
@@ -636,7 +646,7 @@ for doc in scielo:
         else:
             col += 2
 
-        col = 245
+        col = 246
         worksheet.write(row, col, jcr['title'])
         col += 1
 
@@ -644,11 +654,11 @@ for doc in scielo:
             worksheet.write(row, col, jcr['publisher'])
         col += 1
 
-        col = 247
+        col = 248
         if hasattr(jcr, 'thematic_areas'):
             worksheet.write(row, col, '; '.join(jcr['thematic_areas']))
 
-        col = 248
+        col = 249
         for year in range(2016, 1996, -1):
             if hasattr(jcr, str(year)):
                 for k in [
@@ -744,17 +754,17 @@ for doc in jcr:
     col += 1
 
     # CWTS SNIP
-    col = 22
-    if doc.is_cwts == 1:
-        cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
-        for year in range(2016, 1998, -1):
-            if hasattr(cwts, str(year)):
-                if 'snip' in cwts[str(year)]:
-                    worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
-            col += 1
+    # col = 22
+    # if doc.is_cwts == 1:
+    #     cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
+    #     for year in range(2016, 1998, -1):
+    #         if hasattr(cwts, str(year)):
+    #             if 'snip' in cwts[str(year)]:
+    #                 worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
+    #         col += 1
 
     # SCIMAGO indicators
-    col = 40
+    col = 41
     if doc.is_scimago == 1:
 
         scimago = models.Scimago.objects(id=str(doc.scimago_id))[0]
@@ -810,7 +820,7 @@ for doc in jcr:
                 col += 10
 
     # JCR Indicators 2016-1997
-    col = 243
+    col = 244
     if hasattr(doc, 'citation_database'):
         if 'SCIE' in doc['citation_database']:
             worksheet.write(row, col, 1)
@@ -825,7 +835,7 @@ for doc in jcr:
     else:
         col += 2
 
-    col = 245
+    col = 246
     if hasattr(doc, 'title'):
         worksheet.write(row, col, doc.title)
     col += 1
@@ -833,11 +843,11 @@ for doc in jcr:
         worksheet.write(row, col, doc.publisher)
     col += 1
 
-    col = 247
+    col = 248
     if hasattr(doc, 'thematic_areas'):
         worksheet.write(row, col, '; '.join(doc['thematic_areas']))
 
-    col = 248
+    col = 249
     for year in range(2016, 1996, -1):
         if hasattr(doc, str(year)):
             for k in [
