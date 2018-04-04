@@ -23,7 +23,7 @@ def formatindicator(indicator):
 
 # Creates the Excel folder and add a worksheet
 
-workbook = xlsxwriter.Workbook('output/scopus_list_20180329.xlsx')
+workbook = xlsxwriter.Workbook('output/scopus_list_20180403_check.xlsx')
 worksheet = workbook.add_worksheet('Scopus_list')
 
 
@@ -264,12 +264,6 @@ for docscopus in scopus:
             # print(docscopus[str(year)])
             if 'citescore' in docscopus[str(year)]:
                 worksheet.write(row, col, docscopus[str(year)]['citescore'])
-        col += 1
-
-        if hasattr(docscopus, str(year)):
-            # print(docscopus[str(year)])
-            if 'snip' in docscopus[str(year)]:
-                worksheet.write(row, col, docscopus[str(year)]['snip'])
         col += 1
 
     # CWTS SNIP
