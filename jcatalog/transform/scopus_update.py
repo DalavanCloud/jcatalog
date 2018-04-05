@@ -21,7 +21,7 @@ def scopuscs(filename, year):
         sheet_name=year + ' All',
         name_columns_by_row=0)
 
-    print(year)
+    print(str(year))
 
     # Key correction
     for i, k in enumerate(keycorrection.scopuscitscore_columns_names):
@@ -32,6 +32,7 @@ def scopuscs(filename, year):
     scopus_json = scopus_sheet.to_records()
 
     for rec in scopus_json:
+        print(str(year)+'_'+str(rec['scopus_sourceid']))
 
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}

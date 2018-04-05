@@ -42,7 +42,7 @@ EM TESTE
 # from reports import jcatalog
 
 # Abel
-# from reports import scopus_list2
+from reports import scopus_list2
 # from transform import oecd_loader
 # from reports import invite_scielo_20
 # from reports import scopus_scimago_check
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # scielo_access_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
-    scielo_avaliacao_update.main()
+    # scielo_avaliacao_update.main()
     # scielo_apc_update.main()
 
     # wos_loader.main()
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # downloader_scimago.main()
 
     # Abel
-    # scopus_list2
+    scopus_list2
     # oecd_loader
     # invite_scielo_20
     # scopus_scimago_check
