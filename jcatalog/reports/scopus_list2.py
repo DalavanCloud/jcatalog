@@ -439,6 +439,8 @@ for docscopus in scopus:
                             formatindicator(jcr[str(year)][k])
                         )
                     col += 1
+            else:
+                col += 13
 
     # Avançar linha - prox. documento
     row += 1
@@ -509,7 +511,6 @@ for doc in scielo:
     if hasattr(doc, 'is_wos'):
         worksheet.write(row, col, doc.is_wos)
     col += 1
-
 
     # CWTS SNIP
     col = 23
@@ -677,6 +678,8 @@ for doc in scielo:
                             formatindicator(jcr[str(year)][k])
                         )
                     col += 1
+            else:
+                col += 13
 
     # Avançar linha - prox. documento
     row += 1
@@ -866,6 +869,8 @@ for doc in jcr:
                         formatindicator(doc[str(year)][k])
                     )
                 col += 1
+        else:
+            col += 13
 
     # Avançar linha - prox. documento
     row += 1
