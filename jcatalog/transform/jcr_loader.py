@@ -11,13 +11,13 @@ import keycorrection
 from accent_remover import *
 
 
-logging.basicConfig(filename='logs/wos_loader_all.info.txt', level=logging.INFO)
+logging.basicConfig(filename='logs/jcr_loader_all.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-filelist = [f for f in os.listdir('data/wos/jcr_all/')]
+filelist = [f for f in os.listdir('data/jcr/jcr_all/')]
 filelist.sort()
 
-models.Wos.drop_collection()
+models.Jcr.drop_collection()
 
 for f in filelist:
 
@@ -28,33 +28,37 @@ for f in filelist:
 
     print('%s - %s' % (edition, year))
 
-    wos_sheet = pyexcel.get_sheet(file_name='data/wos/jcr_all/' + f, name_columns_by_row=0)
+    jcr_sheet = pyexcel.get_sheet(
+        file_name='data/jcr/jcr_all/' + f,
+        name_columns_by_row=0)
 
     # Key correction
-    for i, k in enumerate(keycorrection.wos_columns_names):
-        wos_sheet.colnames[i] = k
+    for i, k in enumerate(keycorrection.jcr_columns_names):
+        jcr_sheet.colnames[i] = k
 
-    wos_json_dup = wos_sheet.to_records()
+    jcr_json_dup = jcr_sheet.to_records()
 
     # remove duplicates
-    wos_json = []
+    jcr_json = []
 
-    for rec in wos_json_dup:
+    for rec in jcr_json_dup:
 
-        if rec not in wos_json:
+        if rec not in jcr_json:
 
-            wos_json.append(rec)
+            jcr_json.append(rec)
 
-    for rec in wos_json:
+    for rec in jcr_json:
         # not to read the last lines
         if len(rec['issn']) == 9:
-
-            flag = 0
 
             # remove empty keys
             rec = {k: v for k, v in rec.items() if v or v == 0}
 
-            query = models.Wos.objects.filter(title__iexact=rec['title'])
+            lower_title = accent_remover(rec['title']).replace(' & ', ' and ').replace('&', ' and ').lower()
+
+            query = models.Jcr.objects.filter(issn=rec['issn'])
+            if len(query) == 0:
+                query = models.Jcr.objects.filter(lower_title=lower_title)
 
             if len(query) == 0:
 
@@ -64,6 +68,8 @@ for f in filelist:
 
                 rec['citation_database'] = []
                 rec['citation_database'].append(edition)
+
+                rec['lower_title'] = lower_title
 
                 rec[str(year)] = {}
 
@@ -93,7 +99,7 @@ for f in filelist:
 
                         del rec[k]
 
-                mdata = models.Wos(**rec)
+                mdata = models.Jcr(**rec)
                 mdata.save()
 
             if len(query) > 0:
@@ -145,7 +151,7 @@ for f in filelist:
                         q.modify(**data)
                         q.save()
 
-    num_posts = models.Wos.objects().count()
-    msg = u'Registred %d posts in WOS collection' % num_posts
+    num_posts = models.Jcr.objects().count()
+    msg = u'Registred %d posts in JCR collection' % num_posts
     logger.info(msg)
     print(msg)
