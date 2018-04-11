@@ -23,7 +23,7 @@ def formatindicator(indicator):
 
 # Creates the Excel folder and add a worksheet
 
-workbook = xlsxwriter.Workbook('output/scopus_list_20180403_check.xlsx')
+workbook = xlsxwriter.Workbook('output/scopus_list_20180406.xlsx')
 worksheet = workbook.add_worksheet('Scopus_list')
 
 
@@ -233,6 +233,7 @@ for docscopus in scopus:
         worksheet.write(row, col, docscopus.is_wos)
     col += 1
 
+    # Open Access
     if hasattr(docscopus, 'open_access_status'):
         worksheet.write(row, col, 1)
     elif docscopus.is_scielo == 1:
@@ -512,6 +513,9 @@ for doc in scielo:
         worksheet.write(row, col, doc.is_wos)
     col += 1
 
+    # Open Access
+    worksheet.write(row, col, 1)
+
     # CWTS SNIP
     col = 23
     if doc.is_cwts == 1:
@@ -747,18 +751,15 @@ for doc in jcr:
         worksheet.write(row, col, doc.is_jcr)
     col += 1
 
-    # open access
-    col += 1
-
     # CWTS SNIP
-    # col = 22
-    # if doc.is_cwts == 1:
-    #     cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
-    #     for year in range(2016, 1998, -1):
-    #         if hasattr(cwts, str(year)):
-    #             if 'snip' in cwts[str(year)]:
-    #                 worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
-    #         col += 1
+    col = 22
+    if doc.is_cwts == 1:
+        cwts = models.Cwts.objects(id=str(doc.cwts_id))[0]
+        for year in range(2016, 1998, -1):
+            if hasattr(cwts, str(year)):
+                if 'snip' in cwts[str(year)]:
+                    worksheet.write(row, col, round(cwts[str(year)]['snip'], 3))
+            col += 1
 
     # SCIMAGO indicators
     col = 41
