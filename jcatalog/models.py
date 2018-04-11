@@ -85,6 +85,7 @@ class Jcr(DynamicDocument):
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_jcr = IntField(required=True, min_value=1, default=1)
     is_wos = IntField(required=True, min_value=0, default=0)
+    is_cwts = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
@@ -103,6 +104,7 @@ class Wos(DynamicDocument):
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_jcr = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=1, default=1)
+    is_cwts = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
@@ -121,6 +123,7 @@ class Jcr_scielo(DynamicDocument):
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_jcr = IntField(required=True, min_value=1, default=1)
     is_wos = IntField(required=True, min_value=0, default=0)
+    is_cwts = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [

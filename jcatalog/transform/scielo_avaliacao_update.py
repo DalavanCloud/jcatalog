@@ -64,6 +64,8 @@ def avaliacao(filename):
 
                 print(rec['issn_scielo'])
 
+                doc = query[0]
+
                 data = {'avaliacao': ''}
 
                 data['avaliacao'] = json.loads(query[0].to_json())['avaliacao']
@@ -88,8 +90,7 @@ def avaliacao(filename):
                 data['avaliacao']['contatos'].append(contato)
 
                 if data:
-                    query[0].update(**data)
-                    query[0].save()
+                    doc.update(**data)
 
 
 def main():
