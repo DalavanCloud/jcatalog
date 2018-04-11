@@ -1,12 +1,12 @@
 # coding: utf-8
 '''
-This script adjusts the OECD areas in the JCR collection.
+This script adjusts the OECD areas in the WoS collection.
 '''
 import models
 
-jcr = models.Jcr.objects.filter(is_scopus=0, is_scielo=0)
+wos = models.Wos.objects.filter(is_scopus=0, is_scielo=0)
 
-for doc in jcr:
+for doc in wos:
     if hasattr(doc, 'thematic_areas'):
         data = {}
         data['oecd'] = []

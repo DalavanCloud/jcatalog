@@ -1,7 +1,7 @@
 # coding: utf-8
 '''
 This script get the thematic areas(category) from a worksheet,
-country and publisher from other sources and saves in the Wos collection.
+country and publisher from other sources and saves in the JCR collection.
 '''
 from accent_remover import *
 import models
@@ -11,24 +11,25 @@ import pyexcel
 
 
 logging.basicConfig(
-    filename='logs/wos_tecountry.info.txt',
+    filename='logs/jcr_tecountry.info.txt',
     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 def thematic_areas():
     sheet = pyexcel.get_sheet(
-        file_name='data/wos/jcr_areas/wos_country_publisher_category_2016.xlsx',
+        file_name='data/jcr/jcr_areas/wos_country_publisher_category_2016.xlsx',
         sheet_name='journals',
         name_columns_by_row=0)
 
-    wos_json = sheet.to_records()
+    jcr_json = sheet.to_records()
 
-    for j in wos_json:
+    for j in jcr_json:
         print(j['title'])
 
         query = None
-        query = models.Wos.objects.filter(title__iexact=j['title'])
+        lower_title = accent_remover(j['title']).replace(' & ', ' and ').replace('&', ' and ').lower()
+        query = models.Jcr.objects.filter(lower_title__iexact=lower_title)
 
         if query:
 
@@ -63,7 +64,7 @@ def thematic_areas():
 
 def country():
 
-    for doc in models.Wos.objects().batch_size(5):
+    for doc in models.Jcr.objects().batch_size(5):
 
         if 'country' not in doc:
             print(doc.issn_list)
