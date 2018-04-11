@@ -7,8 +7,8 @@ def formatindicator(indicator):
 
     data = indicator
 
-    if indicator == 0:
-        data = '0'
+    # if indicator == 0:
+    #     data = '0'
 
     if type(indicator) == str:
         if '.' in indicator and '>' not in indicator:
@@ -21,7 +21,7 @@ def formatindicator(indicator):
 
 
 # Creates the Excel folder and add a worksheet
-workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r2.xlsx')
+workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r4.xlsx')
 worksheet = workbook.add_worksheet('SciELO Journals')
 
 
@@ -91,7 +91,7 @@ for h in [
     'is_jcr',
     'is_medline',
     'medline_db_names',
-    'ano_publicacao',
+    'ano_publicacao', # YEAR
     'num_docs',
     'num_docs_ing',
     'num_docs_por',
@@ -123,32 +123,65 @@ for yacc in [
     worksheet.write(0, col, 'accesso_'+yacc)
     col += 1
 
+# cabecalho SciELO CI; Google Scholar, Scopus; JCR
 for h in [
     'scieloci_docs_count',
     'scieloci_cited',
     'scieloci_wos_cited',
     'google_scholar_h5',
     'google_scholar_m5',
-    'citescore',
-    'snip',
-    'sjr',
-    'total_cites',
-    'journal_impact_factor',
-    'impact_factor_without_journal_self_cites',
-    'five_year_impact_factor',
-    'immediacy_index',
-    'citable_items',
-    'cited_half_life',
-    'citing_half_life',
-    'eigenfactor_score',
-    'article_influence_score',
-    'percentage_articles_in_citable_items',
-    'average_journal_impact_factor_percentile',
-    'normalized_eigenfactor'
+    'scopus_citescore',
+    'scopus_snip',
+    'scopus_sjr',
+    'scimago_total_cites_3years',
+    'scimago_cites_by_doc_2years',
+    'jcr_total_cites',
+    'jcr_journal_impact_factor',
+    'jcr_impact_factor_without_journal_self_cites',
+    'jcr_five_year_impact_factor',
+    'jcr_immediacy_index',
+    'jcr_citable_items',
+    'jcr_cited_half_life',
+    'jcr_citing_half_life',
+    'jcr_eigenfactor_score',
+    'jcr_article_influence_score',
+    'jcr_percentage_articles_in_citable_items',
+    'jcr_average_journal_impact_factor_percentile',
+    'jcr_normalized_eigenfactor'
         ]:
     worksheet.write(0, col, h)
     col += 1
 
+# cabecalho Affiliations
+for h in [
+    'afiliacao_br',
+    'afiliacao_estrang',
+    'afiliacao_nao_ident',
+    'afiliacao_br_estrang',
+    'afiliacao_nao_ident_todos'
+        ]:
+    worksheet.write(0, col, h)
+    col += 1
+
+# cabecalho manuscritos
+for h in [
+    'manuscritos_recebidos_1sem',
+    'manuscritos_aprovados_1sem',
+    'manuscritos_recebidos_2sem',
+    'manuscritos_aprovados_2sem',
+    'manuscritos_recebidos_ano',
+    'manuscritos_aprovados_ano',
+        ]:
+    worksheet.write(0, col, h)
+    col += 1
+
+# cabecalho tempos entre submissao, aprovacao e publicacao
+for h in [
+    'media_meses_submissao_aprovacao',
+    'media_meses_aprovacao_publicacao'
+        ]:
+    worksheet.write(0, col, h)
+    col += 1
 extraction_date = models.Scielo.objects.first().extraction_date
 
 # SciELO
@@ -524,8 +557,20 @@ for doc in scielo:
                     worksheet.write(row, col, formatindicator(scopus[h][i]))
                 col += 1
 
-        # JCR
+        # SCIMAGO
         col = 82
+        if doc['is_scimago'] == 1:
+            scimago = models.Scimago.objects.filter(id=str(doc.scimago_id))[0]
+            for i in [
+                'total_cites_3years',
+                'cites_by_doc_2years',
+                   ]:
+                if h in scimago and i in scimago[h]:
+                    worksheet.write(row, col, formatindicator(scimago[h][i]))
+                col += 1
+
+        # JCR
+        col = 84
         if doc['is_jcr'] == 1:
             jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
             for i in [
@@ -546,9 +591,145 @@ for doc in scielo:
                 if h in jcr and i in jcr[h]:
                     worksheet.write(row, col, formatindicator(jcr[h][i]))
                 col += 1
+        else:
+            col += 13
+
+        # Affiliations_documents
+        col = 97
+        if 'aff' in doc:
+            if h == 'anterior':
+                if 'br_ate_2007' in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['br_ate_2007'] or 0)
+                col += 1
+                if 'estrang_ate_2007' in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['estrang_ate_2007'] or 0)
+                col += 1
+                if 'nao_ident_ate_2007' in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['nao_ident_ate_2007'] or 0)
+                col += 1
+                if 'br_estrang_ate_2007' in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['br_estrang_ate_2007'] or 0)
+                col += 1
+                if 'nao_ident_todos_ate_2007' in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['nao_ident_todos_ate_2007'] or 0)
+                col += 1
+
+            if 'br_'+h in doc['aff']:
+                worksheet.write(row, col, doc['aff']['br_'+h] or 0)
+            col += 1
+
+            if 'estrang_'+h in doc['aff']:
+                worksheet.write(row, col, doc['aff']['estrang_'+h] or 0)
+
+            col += 1
+            if 'nao_ident_'+h in doc['aff']:
+                worksheet.write(row, col, doc['aff']['nao_ident_'+h] or 0)
+            col += 1
+
+            if 'br_estrang_'+h in doc['aff']:
+                worksheet.write(row, col, doc['aff']['br_estrang_'+h] or 0)
+            col += 1
+
+            if 'nao_ident_todos_'+h in doc['aff']:
+                worksheet.write(row, col, doc['aff']['nao_ident_todos_'+h] or 0)
+            col += 1
+        else:
+            col += 5
+
+        # Manuscritos
+        col = 102
+        if 'manuscritos' in doc:
+            if h == '2014':
+
+                col += 4
+                if 'recebidos_2014' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['recebidos_2014'])
+                col += 1
+                if 'aprovados_2014' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['aprovados_2014'])
+                col += 1
+            else:
+                if 'recebidos_'+h+'_1sem' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['recebidos_'+h+'_1sem'])
+                col += 1
+                if 'aprovados_'+h+'_1sem' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['aprovados_'+h+'_1sem'])
+                col += 1
+
+                if 'recebidos_'+h+'_2sem' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['recebidos_'+h+'_2sem'])
+                col += 1
+                if 'aprovados_'+h+'_2sem' in doc['manuscritos']:
+                    worksheet.write(row, col, doc['manuscritos']['aprovados_'+h+'_2sem'])
+                col += 1
+
+        # Tempos entre submissao, aprovacao e publicacao
+        col = 108
+        if 'times' in doc:
+            if h == 'anterior':
+                if 'meses_sub_aprov_ate_2007' in doc['times']:
+                    msap = doc['times']['meses_sub_aprov_ate_2007']
+                    if isinstance(msap, float):
+                        msapr = round(msap)
+                    elif isinstance(msap, int):
+                        msapr = msap
+                    else:
+                        if isinstance(msap, str):
+                            if 'DIV' in msap:
+                                msapr = 'n/d'
+                            else:
+                                msapr = msap
+                    worksheet.write(row, col, msapr)
+                col += 1
+
+                if 'meses_aprov_pub_ate_2007' in doc['times']:
+                    mapp = doc['times']['meses_aprov_pub_ate_2007']
+                    if isinstance(mapp, float):
+                        mappr = round(mapp)
+                    elif isinstance(mapp, int):
+                        mappr = mapp
+                    else:
+                        if isinstance(mapp, str):
+                            if 'DIV' in mapp:
+                                mappr = 'n/d'
+                            else:
+                                mappr = mapp
+                    worksheet.write(row, col, mappr)
+                col += 1
+            else:
+                if 'meses_sub_aprov_'+h in doc['times']:
+                    msap = doc['times']['meses_sub_aprov_'+h]
+                    if isinstance(msap, float):
+                        msapr = round(msap)
+                    elif isinstance(msap, int):
+                        msapr = msap
+                    else:
+                        if isinstance(msap, str):
+                            if 'DIV' in msap:
+                                msapr = 'n/d'
+                            else:
+                                msapr = msap
+                    worksheet.write(row, col, msapr)
+                col += 1
+
+                if 'meses_aprov_pub_'+h in doc['times']:
+                    mapp = doc['times']['meses_aprov_pub_'+h]
+                    if isinstance(mapp, float):
+                        mappr = round(mapp)
+                    elif isinstance(mapp, int):
+                        mappr = mapp
+                    else:
+                        if isinstance(mapp, str):
+                            if 'DIV' in mapp:
+                                mappr = 'n/d'
+                            else:
+                                mappr = mapp
+                    worksheet.write(row, col, mappr)
+                col += 1
 
         # Avança ano
         row += 1
+
 # Avança journal
 row += 1
 
