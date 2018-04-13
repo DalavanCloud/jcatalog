@@ -7,9 +7,6 @@ def formatindicator(indicator):
 
     data = indicator
 
-    # if indicator == 0:
-    #     data = '0'
-
     if type(indicator) == str:
         if '.' in indicator and '>' not in indicator:
             data = float(indicator)
@@ -20,8 +17,22 @@ def formatindicator(indicator):
     return data
 
 
+def timesfmt(data):
+    if isinstance(data, float):
+        num = round(data, 2)
+    elif isinstance(data, int):
+        num = data
+    else:
+        if isinstance(data, str):
+            if 'DIV' in data:
+                num = 'n/d'
+            else:
+                num = data
+    return num
+
+
 # Creates the Excel folder and add a worksheet
-workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r4.xlsx')
+workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r5.xlsx')
 worksheet = workbook.add_worksheet('SciELO Journals')
 
 
@@ -135,6 +146,7 @@ for h in [
     'scopus_sjr',
     'scimago_total_cites_3years',
     'scimago_cites_by_doc_2years',
+    'scimago_h_index',
     'jcr_total_cites',
     'jcr_journal_impact_factor',
     'jcr_impact_factor_without_journal_self_cites',
@@ -178,7 +190,11 @@ for h in [
 # cabecalho tempos entre submissao, aprovacao e publicacao
 for h in [
     'media_meses_submissao_aprovacao',
-    'media_meses_aprovacao_publicacao'
+    'desvp_meses_submissao_aprovacao',
+    'media_meses_aprovacao_pub_ahp',
+    'desvp_meses_aprovacao_pub_ahp',
+    'media_meses_aprovacao_pub_scielo',
+    'desvp_meses_aprovacao_pub_scielo'
         ]:
     worksheet.write(0, col, h)
     col += 1
@@ -564,13 +580,14 @@ for doc in scielo:
             for i in [
                 'total_cites_3years',
                 'cites_by_doc_2years',
+                'h_index'
                    ]:
                 if h in scimago and i in scimago[h]:
                     worksheet.write(row, col, formatindicator(scimago[h][i]))
                 col += 1
 
         # JCR
-        col = 84
+        col = 85
         if doc['is_jcr'] == 1:
             jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
             for i in [
@@ -595,7 +612,7 @@ for doc in scielo:
             col += 13
 
         # Affiliations_documents
-        col = 97
+        col = 98
         if 'aff' in doc:
             if h == 'anterior':
                 if 'br_ate_2007' in doc['aff']:
@@ -637,7 +654,7 @@ for doc in scielo:
             col += 5
 
         # Manuscritos
-        col = 102
+        col = 103
         if 'manuscritos' in doc:
             if h == '2014':
 
@@ -664,67 +681,70 @@ for doc in scielo:
                 col += 1
 
         # Tempos entre submissao, aprovacao e publicacao
-        col = 108
+        col = 109
         if 'times' in doc:
             if h == 'anterior':
-                if 'meses_sub_aprov_ate_2007' in doc['times']:
-                    msap = doc['times']['meses_sub_aprov_ate_2007']
-                    if isinstance(msap, float):
-                        msapr = round(msap)
-                    elif isinstance(msap, int):
-                        msapr = msap
-                    else:
-                        if isinstance(msap, str):
-                            if 'DIV' in msap:
-                                msapr = 'n/d'
-                            else:
-                                msapr = msap
-                    worksheet.write(row, col, msapr)
+
+                if 'media_meses_sub_aprov_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_aprov_ate_2007'])
+                    worksheet.write(row, col, times)
                 col += 1
 
-                if 'meses_aprov_pub_ate_2007' in doc['times']:
-                    mapp = doc['times']['meses_aprov_pub_ate_2007']
-                    if isinstance(mapp, float):
-                        mappr = round(mapp)
-                    elif isinstance(mapp, int):
-                        mappr = mapp
-                    else:
-                        if isinstance(mapp, str):
-                            if 'DIV' in mapp:
-                                mappr = 'n/d'
-                            else:
-                                mappr = mapp
-                    worksheet.write(row, col, mappr)
+                if 'desvpad_meses_sub_aprov_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_sub_aprov_ate_2007'])
+                    worksheet.write(row, col, times)
                 col += 1
+
+                if 'media_meses_aprov_pub_ahp_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvpad_meses_aprov_pub_ahp_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_ahp_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'media_meses_aprov_pub_scielo_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvpad_meses_aprov_pub_scielo_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_scielo_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
             else:
-                if 'meses_sub_aprov_'+h in doc['times']:
-                    msap = doc['times']['meses_sub_aprov_'+h]
-                    if isinstance(msap, float):
-                        msapr = round(msap)
-                    elif isinstance(msap, int):
-                        msapr = msap
-                    else:
-                        if isinstance(msap, str):
-                            if 'DIV' in msap:
-                                msapr = 'n/d'
-                            else:
-                                msapr = msap
-                    worksheet.write(row, col, msapr)
+
+                if 'media_meses_sub_aprov_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_aprov_'+h])
+                    worksheet.write(row, col, times)
                 col += 1
 
-                if 'meses_aprov_pub_'+h in doc['times']:
-                    mapp = doc['times']['meses_aprov_pub_'+h]
-                    if isinstance(mapp, float):
-                        mappr = round(mapp)
-                    elif isinstance(mapp, int):
-                        mappr = mapp
-                    else:
-                        if isinstance(mapp, str):
-                            if 'DIV' in mapp:
-                                mappr = 'n/d'
-                            else:
-                                mappr = mapp
-                    worksheet.write(row, col, mappr)
+                if 'desvpad_meses_sub_aprov_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_sub_aprov_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'media_meses_aprov_pub_ahp_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvpad_meses_aprov_pub_ahp_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_ahp_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'media_meses_aprov_pub_scielo_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvpad_meses_aprov_pub_scielo_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_scielo_'+h])
+                    worksheet.write(row, col, times)
                 col += 1
 
         # Avança ano
