@@ -32,7 +32,7 @@ def timesfmt(data):
 
 
 # Creates the Excel folder and add a worksheet
-workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r5.xlsx')
+workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r6.xlsx')
 worksheet = workbook.add_worksheet('SciELO Journals')
 
 
@@ -63,11 +63,15 @@ for h in [
     'pais_scielo',
     'pais_scopus',
     'pais_wos',
-    'tipo_instituicao', # avaliacao
+    'scholarone',  # gestao manuscritos
+    'ojs-scielo',
+    'osj-outro',
+    'outro',
+    'tipo_instituicao',  # avaliacao
     'inst_resp_nivel_1',
     'inst_resp_nivel_2',
     'inst_resp_nivel_3',
-    'editor_chefe_1', # avaliacao - revisando
+    'editor_chefe_1',  # avaliacao - revisando
     'lattes_ed_chefe_1',
     'orcid_ed_chefe_1',
     'editor_chefe_2',
@@ -77,14 +81,14 @@ for h in [
     'lattes_editor_chefe_3',
     'orcid_ed_chefe_3',
     'scielo_thematic_areas',  # thematic areas scielo
-    'scielo_agricultural sciences',
-    'scielo_applied social sciences',
-    'scielo_biological sciences',
+    'scielo_agricultural_sciences',
+    'scielo_applied_social_sciences',
+    'scielo_biological_sciences',
     'scielo_engineering',
-    'scielo_exact and earth sciences',
-    'scielo_health sciences',
-    'scielo_human sciences',
-    'scielo_linguistics letters and arts',
+    'scielo_exact_and_earth_sciences',
+    'scielo_health_sciences',
+    'scielo_human_sciences',
+    'scielo_linguistics_letters_and_arts',
     'scielo_multidisciplinary',
     'wos_categories',
     'scielo_status',  # historico
@@ -92,17 +96,21 @@ for h in [
     'data_entrada_scielo',
     'data_saida_scielo',
     'data_inicio_colecao_scielo',
-    'data_fim_coleção_scielo',
+    'data_fim_colecao_scielo',
     'cobra_apc',  # APC
     'apc_valor',
     'apc_notas',
     'apc_valores_conceitos',
     'is_scopus',  # indexacao
-    'is_wos',
     'is_jcr',
-    'is_medline',
-    'medline_db_names',
-    'ano_publicacao', # YEAR
+    'is_wos',   # WOS
+    'is_wos_scie',
+    'is_wos_ssci',
+    'is_wos_ahci',
+    'is_wos_esci',
+    'is_pubmed',  # Pumed, PMC
+    'is_pmc',
+    'ano_publicacao',  # YEAR
     'num_docs',
     'num_docs_ing',
     'num_docs_por',
@@ -136,7 +144,8 @@ for yacc in [
 
 # cabecalho SciELO CI; Google Scholar, Scopus; JCR
 for h in [
-    'scieloci_docs_count',
+    'scieloci_docs',
+    'scieloci_citable_docs',
     'scieloci_cited',
     'scieloci_wos_cited',
     'google_scholar_h5',
@@ -144,6 +153,7 @@ for h in [
     'scopus_citescore',
     'scopus_snip',
     'scopus_sjr',
+    'scimago_total_docs_3years',
     'scimago_total_cites_3years',
     'scimago_cites_by_doc_2years',
     'scimago_h_index',
@@ -191,13 +201,28 @@ for h in [
 for h in [
     'media_meses_submissao_aprovacao',
     'desvp_meses_submissao_aprovacao',
+
+    'media_meses_submissao_pub_ahp',
+    'desvp_meses_submissao_pub_ahp',
+
+    'media_meses_submissao_pub',
+    'desvp_meses_submissao_pub',
+
+    'media_meses_submissao_pub_scielo',
+    'desvp_meses_submissao_pub_scielo',
+
     'media_meses_aprovacao_pub_ahp',
     'desvp_meses_aprovacao_pub_ahp',
+
+    'media_meses_aprovacao_pub',
+    'desvp_meses_aprovacao_pub',
+
     'media_meses_aprovacao_pub_scielo',
     'desvp_meses_aprovacao_pub_scielo'
         ]:
     worksheet.write(0, col, h)
     col += 1
+
 extraction_date = models.Scielo.objects.first().extraction_date
 
 # SciELO
@@ -262,6 +287,7 @@ for doc in scielo:
                 worksheet.write(row, col, url_journal)
         col += 1
 
+        # Publisher Name
         worksheet.write(row, col, doc.publisher_name)
         col += 1
 
@@ -279,6 +305,27 @@ for doc in scielo:
             worksheet.write(row, col, wos.country)
         col += 1
 
+        # Submissions - Manager System
+        col = 14
+        submiss = models.Submissions.objects.filter(issn_list=doc.issn_scielo)
+        if submiss:
+            if 'scholarone' in submiss[0]:
+                worksheet.write(row, col, submiss[0]['scholarone'] or 0)
+            col += 1
+            if 'ojs_scielo' in submiss[0]:
+                worksheet.write(row, col, submiss[0]['ojs_scielo'] or 0)
+            col += 1
+            if 'ojs_outro' in submiss[0]:
+                worksheet.write(row, col, submiss[0]['ojs_outro'] or 0)
+            col += 1
+            if 'outro' in submiss[0]:
+                worksheet.write(row, col, submiss[0]['outro'] or 0)
+            col += 1
+        else:
+            col += 4
+
+        # SciELO Evaluation
+        col = 18
         if 'avaliacao' in doc:
             if 'tipo_inst' in doc['avaliacao']:
                 worksheet.write(row, col, doc['avaliacao']['tipo_inst'])
@@ -317,7 +364,7 @@ for doc in scielo:
             col += 13
 
         # Thematic Areas
-        col = 27
+        col = 31
         for k in [
             'title_thematic_areas',
             'title_is_agricultural_sciences',
@@ -334,11 +381,13 @@ for doc in scielo:
                 worksheet.write(row, col, doc[k])
             col += 1
 
-        # Historico
+        # Wos Categories
+        col = 41
         if 'wos_subject_areas' in doc['api']:
             worksheet.write(row, col, '; '.join(doc['api']['wos_subject_areas']))
         col += 1
 
+        # Historico
         worksheet.write(row, col, doc.title_current_status)
         col += 1
 
@@ -360,6 +409,7 @@ for doc in scielo:
         col += 1
 
         # APC
+        col = 48
         if 'apc' in doc:
             if doc['apc']['apc'] == 'Sim':
                 worksheet.write(row, col, 1)
@@ -394,28 +444,81 @@ for doc in scielo:
             col += 4
 
         # Indexacao
+        col = 52
         worksheet.write(row, col, doc.is_scopus)
-        col += 1
-
-        worksheet.write(row, col, doc.is_wos)
         col += 1
 
         worksheet.write(row, col, doc.is_jcr)
         col += 1
 
+        # WOS
+        worksheet.write(row, col, doc.is_wos)
+        col += 1
+
+        # SCIE
+        col = 55
+        scie = 0
+
+        if doc['is_jcr'] == 1:
+            jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
+            if 'SCIE' in jcr['citation_database']:
+                scie = 1
+        if 'wos_citation_indexes' in doc['api']:
+            if 'SCIE' in doc['api']['wos_citation_indexes']:
+                scie = 1
+
+        worksheet.write(row, col, scie)
+
+        # SSCI
+        col = 56
+        ssci = 0
+
+        if doc['is_jcr'] == 1:
+            jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
+            if 'SSCI' in jcr['citation_database']:
+                ssci = 1
+        elif 'wos_citation_indexes' in doc['api']:
+            if 'SSCI' in doc['api']['wos_citation_indexes']:
+                ssci = 1
+
+        worksheet.write(row, col, ssci)
+
+        # A&HCI
+        col = 57
+        ahci = 0
+        if 'wos_citation_indexes' in doc['api']:
+            if 'A&HCI' in doc['api']['wos_citation_indexes']:
+                ahci = 1
+
+        worksheet.write(row, col, ahci)
+
+        # ESCI
+        col = 58
+        esci = 0
+        if 'esci' in doc:
+            esci = 1
+
+        worksheet.write(row, col, esci)
+
+        # Pubmed, PMC
+        col = 59
         pubmed = models.Pubmedapi.objects.filter(issn_list=doc.issn_scielo)
         if pubmed:
-            worksheet.write(row, col, 1)
+            if 'pubmed' in pubmed[0]['db_name']:
+                worksheet.write(row, col, 1 or 0)
             col += 1
-            worksheet.write(row, col, '; '.join(pubmed[0]['db_name']))
+            if 'pmc' in pubmed[0]['db_name']:
+                worksheet.write(row, col, 1 or 0)
             col += 1
         else:
             worksheet.write(row, col, 0)
-            col += 2
+            col += 1
+            worksheet.write(row, col, 0)
+            col += 1
 
         # ANO DE PUBLICACAO
         if h == 'anterior':
-            year = 'ate_2007'
+            year = '2007'
         else:
             year = h
         worksheet.write(row, col, str(year))
@@ -486,9 +589,11 @@ for doc in scielo:
             else:
                 worksheet.write(row, col, 0)
             col += 1
+        else:
+            col += 12
 
         # Acessos
-        col = 66
+        col = 74
         if 'access' in doc:
             if h == 'anterior':
                 pass
@@ -529,7 +634,7 @@ for doc in scielo:
             col += 8
 
         # SciELO CI WOS cited
-        col = 74
+        col = 82
         if 'scieloci' in doc:
             if h == 'anterior':
                 pass
@@ -539,6 +644,9 @@ for doc in scielo:
                 if 'docs_'+year in doc['scieloci']:
                     worksheet.write(row, col, doc['scieloci']['docs_'+year])
                 col += 1
+                if 'citable_'+year in doc['scieloci']:
+                    worksheet.write(row, col, doc['scieloci']['citable_'+year])
+                col += 1
                 if 'scieloci_'+year in doc['scieloci']:
                     worksheet.write(row, col, doc['scieloci']['scieloci_'+year])
                 col += 1
@@ -546,10 +654,10 @@ for doc in scielo:
                     worksheet.write(row, col, doc['scieloci']['scieloci_wos_'+year])
                 col += 1
         else:
-            col += 3
+            col += 4
 
         # Google
-        col = 77
+        col = 86
         if h == 'anterior':
             pass
         else:
@@ -562,7 +670,7 @@ for doc in scielo:
             col += 1
 
         # SCOPUS
-        col = 79
+        col = 88
         if doc['is_scopus'] == 1:
             for i in [
                 'citescore',
@@ -574,10 +682,11 @@ for doc in scielo:
                 col += 1
 
         # SCIMAGO
-        col = 82
+        col = 91
         if doc['is_scimago'] == 1:
             scimago = models.Scimago.objects.filter(id=str(doc.scimago_id))[0]
             for i in [
+                'total_docs_3years',
                 'total_cites_3years',
                 'cites_by_doc_2years',
                 'h_index'
@@ -587,8 +696,12 @@ for doc in scielo:
                 col += 1
 
         # JCR
-        col = 85
+        col = 95
         if doc['is_jcr'] == 1:
+            if h == 'anterior':
+                h2 = '2007'
+            else:
+                h2 = h
             jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
             for i in [
                 'total_cites',
@@ -605,14 +718,14 @@ for doc in scielo:
                 'average_journal_impact_factor_percentile',
                 'normalized_eigenfactor'
                     ]:
-                if h in jcr and i in jcr[h]:
-                    worksheet.write(row, col, formatindicator(jcr[h][i]))
+                if h2 in jcr and i in jcr[h2]:
+                    worksheet.write(row, col, formatindicator(jcr[h2][i]))
                 col += 1
         else:
             col += 13
 
         # Affiliations_documents
-        col = 98
+        col = 108
         if 'aff' in doc:
             if h == 'anterior':
                 if 'br_ate_2007' in doc['aff']:
@@ -654,7 +767,7 @@ for doc in scielo:
             col += 5
 
         # Manuscritos
-        col = 103
+        col = 113
         if 'manuscritos' in doc:
             if h == '2014':
 
@@ -681,69 +794,162 @@ for doc in scielo:
                 col += 1
 
         # Tempos entre submissao, aprovacao e publicacao
-        col = 109
+        col = 119
         if 'times' in doc:
             if h == 'anterior':
 
+                # sub_aprov
                 if 'media_meses_sub_aprov_ate_2007' in doc['times']:
                     times = timesfmt(doc['times']['media_meses_sub_aprov_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_sub_aprov_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_sub_aprov_ate_2007'])
+                if 'desvp_meses_sub_aprov_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_aprov_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
+                # sub_pub_ahp
+                if 'media_meses_sub_pub_ahp_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_ahp_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_ahp_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_ahp_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # sub_pub
+                if 'media_meses_sub_pub_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # sub_pub_scielo
+                if 'media_meses_sub_pub_scielo_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_scielo_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_scielo_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                #  aprov_pub_ahp
                 if 'media_meses_aprov_pub_ahp_ate_2007' in doc['times']:
                     times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_aprov_pub_ahp_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_ahp_ate_2007'])
+                if 'desvp_meses_aprov_pub_ahp_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_ahp_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
+                # aprov_pub
+                if 'media_meses_aprov_pub_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_aprov_pub_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_ate_2007'])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # aprov_pub_scielo
                 if 'media_meses_aprov_pub_scielo_ate_2007' in doc['times']:
                     times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_aprov_pub_scielo_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_scielo_ate_2007'])
+                if 'desvp_meses_aprov_pub_scielo_ate_2007' in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_scielo_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
             else:
-
+                # sub_aprov
                 if 'media_meses_sub_aprov_'+h in doc['times']:
                     times = timesfmt(doc['times']['media_meses_sub_aprov_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_sub_aprov_'+h in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_sub_aprov_'+h])
+                if 'desvp_meses_sub_aprov_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_aprov_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
+                # sub_pub_ahp
+                if 'media_meses_sub_pub_ahp_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_ahp_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_ahp_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_ahp_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # sub_pub
+                if 'media_meses_sub_pub_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # sub_pub_scielo
+                if 'media_meses_sub_pub_scielo_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_sub_pub_scielo_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_sub_pub_scielo_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                #  aprov_pub_ahp
                 if 'media_meses_aprov_pub_ahp_'+h in doc['times']:
                     times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_aprov_pub_ahp_'+h in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_ahp_'+h])
+                if 'desvp_meses_aprov_pub_ahp_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_ahp_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
+                # aprov_pub
+                if 'media_meses_aprov_pub_'+h in doc['times']:
+                    times = timesfmt(doc['times']['media_meses_aprov_pub_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                if 'desvp_meses_aprov_pub_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_'+h])
+                    worksheet.write(row, col, times)
+                col += 1
+
+                # aprov_pub_scielo
                 if 'media_meses_aprov_pub_scielo_'+h in doc['times']:
                     times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
-                if 'desvpad_meses_aprov_pub_scielo_'+h in doc['times']:
-                    times = timesfmt(doc['times']['desvpad_meses_aprov_pub_scielo_'+h])
+                if 'desvp_meses_aprov_pub_scielo_'+h in doc['times']:
+                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_scielo_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 

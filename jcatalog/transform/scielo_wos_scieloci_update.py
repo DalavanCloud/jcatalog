@@ -36,12 +36,11 @@ def scieloci(filename):
 
             if data:
                 doc.modify(**data)
-                doc.save()
 
 
 def main():
     # SciELO docs counts Network xlsx
-    scieloci('data/scielo/td_wos_scieloci_2008_2017.xlsx')
+    scieloci('data/scielo/td_wos_all_downloads.xlsx')
 
 
 if __name__ == "__main__":
