@@ -9,6 +9,9 @@ EM TESTE
 # from tools import scielo_codes_oecd
 # from tools import scopus_oecd_codes
 
+# from tools import capes_loader
+# from tools import capes_update
+
 # from extractors.scimago import downloader_scimago
 
 # from transform import scielo_loader
@@ -21,6 +24,8 @@ EM TESTE
 # from transform import scielo_aff_update
 # from transform import scielo_manuscripts_update
 # from transform import scielo_times_update
+# from transform import scielo_wos_indexes_update
+# from transform import wos_indexes_loader
 
 # from transform import scopus_loader
 # from transform import scopus_update
@@ -78,6 +83,8 @@ if __name__ == "__main__":
     # scielo_aff_update.main()
     # scielo_manuscripts_update.main()
     # scielo_times_update.main()
+    # scielo_wos_indexes_update.main()
+    # wos_indexes_loader.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -115,3 +122,5 @@ if __name__ == "__main__":
     # scopus_scimago_check
     # fapesp_evaluation
     fapesp_evaluation_line
+    # capes_loader.main()
+    # capes_update.main()

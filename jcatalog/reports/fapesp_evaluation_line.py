@@ -1,4 +1,5 @@
 # coding: utf-8
+import pyexcel
 import xlsxwriter
 import models
 
@@ -32,14 +33,15 @@ def timesfmt(data):
 
 
 # Creates the Excel folder and add a worksheet
-workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r6.xlsx')
-worksheet = workbook.add_worksheet('SciELO Journals')
-
+workbook = xlsxwriter.Workbook('output/fapesp_journals_evaluation_line_r9.xlsx')
+worksheet = workbook.add_worksheet('SciELO Brasil')
+worksheet.freeze_panes(1, 0)
+worksheet.set_row(0, 50)
 
 # HEADER
 col = 0
 
-wrap = workbook.add_format({'text_wrap': True})
+wrap_header = workbook.add_format({'text_wrap': True, 'size': 9})
 wrap_blue = workbook.add_format({'text_wrap': True, 'bg_color': '#6495ED'})
 wrap_red = workbook.add_format({'text_wrap': True, 'bg_color': '#DC143C'})
 wrap_orange = workbook.add_format({'text_wrap': True, 'bg_color': '#FFA500'})
@@ -50,6 +52,8 @@ format_date_iso = workbook.add_format({'num_format': 'yyyymmdd'})
 
 for h in [
     'extraction_date',
+    'ativo_em_2018',
+    'ativo_no_ano',
     'issn',
     'issn_todos',
     'titulo_scielo',
@@ -63,7 +67,8 @@ for h in [
     'pais_scielo',
     'pais_scopus',
     'pais_wos',
-    'scholarone',  # gestao manuscritos
+    'gestao_manuscrito',  # gestao manuscritos
+    'scholarone',
     'ojs-scielo',
     'osj-outro',
     'outro',
@@ -98,7 +103,6 @@ for h in [
     'data_inicio_colecao_scielo',
     'data_fim_colecao_scielo',
     'cobra_apc',  # APC
-    'apc_valor',
     'apc_notas',
     'apc_valores_conceitos',
     'is_scopus',  # indexacao
@@ -125,7 +129,7 @@ for h in [
     'num_docs_citaveis_outros_idiomas'
         ]:
 
-    worksheet.write(0, col, h)
+    worksheet.write(0, col, h, wrap_header)
     col += 1
 
 # cabecalho Acessos
@@ -139,7 +143,7 @@ for yacc in [
     '2017',
     '2018'
         ]:
-    worksheet.write(0, col, 'accesso_'+yacc)
+    worksheet.write(0, col, 'accesso_'+yacc, wrap_header)
     col += 1
 
 # cabecalho SciELO CI; Google Scholar, Scopus; JCR
@@ -171,7 +175,7 @@ for h in [
     'jcr_average_journal_impact_factor_percentile',
     'jcr_normalized_eigenfactor'
         ]:
-    worksheet.write(0, col, h)
+    worksheet.write(0, col, h, wrap_header)
     col += 1
 
 # cabecalho Affiliations
@@ -182,7 +186,7 @@ for h in [
     'afiliacao_br_estrang',
     'afiliacao_nao_ident_todos'
         ]:
-    worksheet.write(0, col, h)
+    worksheet.write(0, col, h, wrap_header)
     col += 1
 
 # cabecalho manuscritos
@@ -194,7 +198,7 @@ for h in [
     'manuscritos_recebidos_ano',
     'manuscritos_aprovados_ano',
         ]:
-    worksheet.write(0, col, h)
+    worksheet.write(0, col, h, wrap_header)
     col += 1
 
 # cabecalho tempos entre submissao, aprovacao e publicacao
@@ -202,17 +206,11 @@ for h in [
     'media_meses_submissao_aprovacao',
     'desvp_meses_submissao_aprovacao',
 
-    'media_meses_submissao_pub_ahp',
-    'desvp_meses_submissao_pub_ahp',
-
     'media_meses_submissao_pub',
     'desvp_meses_submissao_pub',
 
     'media_meses_submissao_pub_scielo',
     'desvp_meses_submissao_pub_scielo',
-
-    'media_meses_aprovacao_pub_ahp',
-    'desvp_meses_aprovacao_pub_ahp',
 
     'media_meses_aprovacao_pub',
     'desvp_meses_aprovacao_pub',
@@ -220,12 +218,13 @@ for h in [
     'media_meses_aprovacao_pub_scielo',
     'desvp_meses_aprovacao_pub_scielo'
         ]:
-    worksheet.write(0, col, h)
+    worksheet.write(0, col, h, wrap_header)
     col += 1
 
 extraction_date = models.Scielo.objects.first().extraction_date
 
 # SciELO
+# scielo = models.Scielo.objects.filter(issn_list='0074-0276')
 scielo = models.Scielo.objects.filter(collection='scl')
 
 row = 1
@@ -251,6 +250,27 @@ for doc in scielo:
 
         worksheet.write(row, col, extraction_date, format_date_iso)
         col += 1
+
+        # ativo em 2018
+        active = 0
+        if doc.title_current_status == 'current':
+            active = 1
+        worksheet.write(row, col, active)
+        col += 1
+
+        # ativo no ano
+        ativo_y = 0
+        if 'docs' in doc:
+            if 'docs_'+h in doc['docs']:
+                # print(doc['docs']['docs_'+h])
+                if doc['docs']['docs_'+h] == '':
+                    ativo_y = 0
+                elif int(doc['docs']['docs_'+h]) > 0:
+                    ativo_y = 1
+        worksheet.write(row, col, ativo_y)
+        col += 1
+
+        # ISSN SciELO
         worksheet.write(row, col, doc.issn_scielo)
         col += 1
         worksheet.write(row, col, '; '.join(doc.issn_list))
@@ -264,8 +284,8 @@ for doc in scielo:
         col += 1
 
         if doc['is_wos'] == 1:
-            wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
-            worksheet.write(row, col, wos.title)
+            # wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
+            worksheet.write(row, col, doc['wos_indexes'][0]['title'])
         col += 1
 
         # DOI Prefix e publisher
@@ -301,14 +321,30 @@ for doc in scielo:
         col += 1
 
         if doc['is_wos'] == 1:
-            wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
-            worksheet.write(row, col, wos.country)
+            for i in doc['issn_list']:
+                wos = models.Wos.objects.filter(issn_list=i)
+                if len(wos) > 0:
+                    worksheet.write(row, col, wos[0].country)
+                else:
+                    worksheet.write(row, col, doc.country)
         col += 1
 
         # Submissions - Manager System
-        col = 14
+        col = 16
         submiss = models.Submissions.objects.filter(issn_list=doc.issn_scielo)
         if submiss:
+            # gestao man. abel - importar
+            sist = 'ND'
+            if submiss[0]['scholarone'] == 1:
+                sist = 'ScholarOne'
+            elif submiss[0]['ojs_scielo'] == 1:
+                sist = 'OJS-SciELO'
+            elif submiss[0]['ojs_outro'] == 1:
+                sist = 'OJS-Outro'
+            elif submiss[0]['outro'] == 1:
+                sist = 'Outro'
+            worksheet.write(row, col, sist)
+            col += 1
             if 'scholarone' in submiss[0]:
                 worksheet.write(row, col, submiss[0]['scholarone'] or 0)
             col += 1
@@ -322,10 +358,10 @@ for doc in scielo:
                 worksheet.write(row, col, submiss[0]['outro'] or 0)
             col += 1
         else:
-            col += 4
+            col += 5
 
         # SciELO Evaluation
-        col = 18
+        col = 21
         if 'avaliacao' in doc:
             if 'tipo_inst' in doc['avaliacao']:
                 worksheet.write(row, col, doc['avaliacao']['tipo_inst'])
@@ -364,7 +400,7 @@ for doc in scielo:
             col += 13
 
         # Thematic Areas
-        col = 31
+        col = 34
         for k in [
             'title_thematic_areas',
             'title_is_agricultural_sciences',
@@ -382,7 +418,7 @@ for doc in scielo:
             col += 1
 
         # Wos Categories
-        col = 41
+        col = 44
         if 'wos_subject_areas' in doc['api']:
             worksheet.write(row, col, '; '.join(doc['api']['wos_subject_areas']))
         col += 1
@@ -409,7 +445,7 @@ for doc in scielo:
         col += 1
 
         # APC
-        col = 48
+        col = 51
         if 'apc' in doc:
             if doc['apc']['apc'] == 'Sim':
                 worksheet.write(row, col, 1)
@@ -417,9 +453,9 @@ for doc in scielo:
                 worksheet.write(row, col, 0)
             col += 1
 
-            if doc['apc']['value']:
-                worksheet.write(row, col, doc['apc']['value'])
-            col += 1
+            # if doc['apc']['value']:
+            #     worksheet.write(row, col, doc['apc']['value'])
+            # col += 1
 
             if doc['apc']['comments']:
                 worksheet.write(row, col, doc['apc']['comments'])
@@ -444,7 +480,7 @@ for doc in scielo:
             col += 4
 
         # Indexacao
-        col = 52
+        col = 54
         worksheet.write(row, col, doc.is_scopus)
         col += 1
 
@@ -456,52 +492,47 @@ for doc in scielo:
         col += 1
 
         # SCIE
-        col = 55
+        col = 57
         scie = 0
-
-        if doc['is_jcr'] == 1:
-            jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
-            if 'SCIE' in jcr['citation_database']:
-                scie = 1
-        if 'wos_citation_indexes' in doc['api']:
-            if 'SCIE' in doc['api']['wos_citation_indexes']:
-                scie = 1
-
+        if 'wos_indexes' in doc:
+            for i in doc['wos_indexes']:
+                if 'scie' in i['index']:
+                    scie = 1
+                    break
         worksheet.write(row, col, scie)
 
         # SSCI
-        col = 56
+        col = 58
         ssci = 0
-
-        if doc['is_jcr'] == 1:
-            jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
-            if 'SSCI' in jcr['citation_database']:
-                ssci = 1
-        elif 'wos_citation_indexes' in doc['api']:
-            if 'SSCI' in doc['api']['wos_citation_indexes']:
-                ssci = 1
-
+        if 'wos_indexes' in doc:
+            for i in doc['wos_indexes']:
+                if 'ssci' in i['index']:
+                    ssci = 1
+                    break
         worksheet.write(row, col, ssci)
 
         # A&HCI
-        col = 57
+        col = 59
         ahci = 0
-        if 'wos_citation_indexes' in doc['api']:
-            if 'A&HCI' in doc['api']['wos_citation_indexes']:
-                ahci = 1
-
+        if 'wos_indexes' in doc:
+            for i in doc['wos_indexes']:
+                if 'ahci' in i['index']:
+                    ahci = 1
+                    break
         worksheet.write(row, col, ahci)
 
         # ESCI
-        col = 58
+        col = 60
         esci = 0
-        if 'esci' in doc:
-            esci = 1
-
+        if 'wos_indexes' in doc:
+            for i in doc['wos_indexes']:
+                if 'esci' in i['index']:
+                    esci = 1
+                    break
         worksheet.write(row, col, esci)
 
         # Pubmed, PMC
-        col = 59
+        col = 61
         pubmed = models.Pubmedapi.objects.filter(issn_list=doc.issn_scielo)
         if pubmed:
             if 'pubmed' in pubmed[0]['db_name']:
@@ -517,6 +548,7 @@ for doc in scielo:
             col += 1
 
         # ANO DE PUBLICACAO
+        col = 63
         if h == 'anterior':
             year = '2007'
         else:
@@ -593,7 +625,7 @@ for doc in scielo:
             col += 12
 
         # Acessos
-        col = 74
+        col = 76
         if 'access' in doc:
             if h == 'anterior':
                 pass
@@ -634,7 +666,7 @@ for doc in scielo:
             col += 8
 
         # SciELO CI WOS cited
-        col = 82
+        col = 84
         if 'scieloci' in doc:
             if h == 'anterior':
                 pass
@@ -657,7 +689,7 @@ for doc in scielo:
             col += 4
 
         # Google
-        col = 86
+        col = 88
         if h == 'anterior':
             pass
         else:
@@ -670,7 +702,7 @@ for doc in scielo:
             col += 1
 
         # SCOPUS
-        col = 88
+        col = 90
         if doc['is_scopus'] == 1:
             for i in [
                 'citescore',
@@ -682,7 +714,7 @@ for doc in scielo:
                 col += 1
 
         # SCIMAGO
-        col = 91
+        col = 93
         if doc['is_scimago'] == 1:
             scimago = models.Scimago.objects.filter(id=str(doc.scimago_id))[0]
             for i in [
@@ -696,7 +728,7 @@ for doc in scielo:
                 col += 1
 
         # JCR
-        col = 95
+        col = 97
         if doc['is_jcr'] == 1:
             if h == 'anterior':
                 h2 = '2007'
@@ -725,7 +757,7 @@ for doc in scielo:
             col += 13
 
         # Affiliations_documents
-        col = 108
+        col = 110
         if 'aff' in doc:
             if h == 'anterior':
                 if 'br_ate_2007' in doc['aff']:
@@ -767,7 +799,7 @@ for doc in scielo:
             col += 5
 
         # Manuscritos
-        col = 113
+        col = 115
         if 'manuscritos' in doc:
             if h == '2014':
 
@@ -794,7 +826,7 @@ for doc in scielo:
                 col += 1
 
         # Tempos entre submissao, aprovacao e publicacao
-        col = 119
+        col = 121
         if 'times' in doc:
             if h == 'anterior':
 
@@ -806,17 +838,6 @@ for doc in scielo:
 
                 if 'desvp_meses_sub_aprov_ate_2007' in doc['times']:
                     times = timesfmt(doc['times']['desvp_meses_sub_aprov_ate_2007'])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                # sub_pub_ahp
-                if 'media_meses_sub_pub_ahp_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['media_meses_sub_pub_ahp_ate_2007'])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                if 'desvp_meses_sub_pub_ahp_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['desvp_meses_sub_pub_ahp_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
@@ -839,17 +860,6 @@ for doc in scielo:
 
                 if 'desvp_meses_sub_pub_scielo_ate_2007' in doc['times']:
                     times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_ate_2007'])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                #  aprov_pub_ahp
-                if 'media_meses_aprov_pub_ahp_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_ate_2007'])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                if 'desvp_meses_aprov_pub_ahp_ate_2007' in doc['times']:
-                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_ahp_ate_2007'])
                     worksheet.write(row, col, times)
                 col += 1
 
@@ -887,17 +897,6 @@ for doc in scielo:
                     worksheet.write(row, col, times)
                 col += 1
 
-                # sub_pub_ahp
-                if 'media_meses_sub_pub_ahp_'+h in doc['times']:
-                    times = timesfmt(doc['times']['media_meses_sub_pub_ahp_'+h])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                if 'desvp_meses_sub_pub_ahp_'+h in doc['times']:
-                    times = timesfmt(doc['times']['desvp_meses_sub_pub_ahp_'+h])
-                    worksheet.write(row, col, times)
-                col += 1
-
                 # sub_pub
                 if 'media_meses_sub_pub_'+h in doc['times']:
                     times = timesfmt(doc['times']['media_meses_sub_pub_'+h])
@@ -917,17 +916,6 @@ for doc in scielo:
 
                 if 'desvp_meses_sub_pub_scielo_'+h in doc['times']:
                     times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_'+h])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                #  aprov_pub_ahp
-                if 'media_meses_aprov_pub_ahp_'+h in doc['times']:
-                    times = timesfmt(doc['times']['media_meses_aprov_pub_ahp_'+h])
-                    worksheet.write(row, col, times)
-                col += 1
-
-                if 'desvp_meses_aprov_pub_ahp_'+h in doc['times']:
-                    times = timesfmt(doc['times']['desvp_meses_aprov_pub_ahp_'+h])
                     worksheet.write(row, col, times)
                 col += 1
 
@@ -958,6 +946,31 @@ for doc in scielo:
 
 # Avança journal
 row += 1
+
+
+# Creates 'descricao rotulos' worksheet
+worksheet2 = workbook.add_worksheet('Descrição dos rótulos')
+worksheet2.set_column(0, 0, 30)
+worksheet2.set_column(1, 1, 70)
+
+wrap_rotulo = workbook.add_format({'text_wrap': False, 'size': 9})
+
+sheet2 = pyexcel.get_sheet(
+        file_name='data/scielo/fapesp_journals_evaluation_line_header.xlsx',
+        sheet_name='rotulos',
+        name_columns_by_row=0)
+
+sheet2_json = sheet2.to_records()
+
+worksheet2.write(0, 0, 'Rótulo')
+worksheet2.write(0, 1, 'Descrição')
+row = 1
+for line in sheet2_json:
+    col = 0
+    worksheet2.write(row, col, line['rotulo'], wrap_rotulo)
+    col += 1
+    worksheet2.write(row, col, line['descricao'], wrap_rotulo)
+    row += 1
 
 # Grava planilha Excel
 workbook.close()
