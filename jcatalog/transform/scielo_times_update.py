@@ -38,7 +38,7 @@ def times(filename):
 
 
 def main():
-    times('data/scielo/td_documents_dates_180310.xlsx')
+    times('data/scielo/td_documents_dates_abel_entrada_scielo_mi.xlsx')
 
 
 if __name__ == "__main__":
