@@ -25,17 +25,19 @@ def scieloci(filename):
     for rec in access_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
-        print(rec['issn_scielo'])
-        query = models.Scielo.objects.filter(issn_scielo=rec['issn_scielo'])
+        print('\n')
 
+        query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
         if len(query) == 1:
             doc = query[0]
             print(query[0]['issn_scielo'])
             data = {'scieloci': {}}
             data['scieloci'] = dict(rec)
+        else:
+            print('não encontrou: ' + str(rec['issn_scielo']))
 
-            if data:
-                doc.modify(**data)
+        if data:
+            doc.modify(**data)
 
 
 def main():
