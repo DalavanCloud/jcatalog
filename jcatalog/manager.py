@@ -8,6 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd
 # from tools import scopus_oecd_codes
+# from tools import sender
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -26,6 +27,10 @@ EM TESTE
 # from transform import scielo_times_update
 # from transform import scielo_wos_indexes_update
 # from transform import wos_indexes_loader
+# from transform import scielo_avaliacao_tipo_inst_update
+# from transform import scielo_orcid_update
+# from transform import scielo_citations_update
+# from transform import scielo_dates_loader
 
 # from transform import scopus_loader
 # from transform import scopus_update
@@ -63,6 +68,8 @@ EM TESTE
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
 from reports import fapesp_evaluation_line
+# from reports import list_send
+
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -85,6 +92,10 @@ if __name__ == "__main__":
     # scielo_times_update.main()
     # scielo_wos_indexes_update.main()
     # wos_indexes_loader.main()
+    # scielo_avaliacao_tipo_inst_update.main()
+    # scielo_orcid_update.main()
+    # scielo_citations_update.main()
+    # scielo_dates_loader.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -121,6 +132,11 @@ if __name__ == "__main__":
     # invite_scielo_20
     # scopus_scimago_check
     # fapesp_evaluation
-    fapesp_evaluation_line
+    fapesp_evaluation_line.main()
+    # list_send
+
+    # Denise
     # capes_loader.main()
     # capes_update.main()
+
+    # sender
