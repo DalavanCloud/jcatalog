@@ -53,19 +53,17 @@ def timesfmt(data):
     return num
 
 
-def journal(issn, query, sheetname):
+def journal(query, filename, sheetname, issn):
     # Creates the Excel folder and add a worksheet
     if issn:
-        file_name = 'avaliacao_scielo_'+issn+'.xlsx'
-        workbook = xlsxwriter.Workbook('output/journals/'+file_name)
+        workbook = xlsxwriter.Workbook('output/journals/'+filename)
         worksheet = workbook.add_worksheet(sheetname)
     else:
-        file_name = 'fapesp_journals_evaluation_line_r13.xlsx'
-        workbook = xlsxwriter.Workbook('output/'+file_name)
-        worksheet = workbook.add_worksheet('SciELO Brasil')
+        workbook = xlsxwriter.Workbook('output/'+filename)
+        worksheet = workbook.add_worksheet(sheetname)
 
     worksheet.freeze_panes(1, 0)
-    worksheet.set_row(0, 50)
+    worksheet.set_row(0, 60)
 
     # HEADER
     col = 0
@@ -78,181 +76,6 @@ def journal(issn, query, sheetname):
 
     format_date = workbook.add_format({'num_format': 'dd/mm/yyyy'})
     format_date_iso = workbook.add_format({'num_format': 'yyyymmdd'})
-
-    # for h in [
-    #     'extraction_date',
-    #     'ativo_em_2018',
-    #     'ativo_no_ano',
-    #     'issn',
-    #     'issn_todos',
-    #     'titulo_scielo',
-    #     'titulo_scopus',
-    #     'titulo_wos',
-    #     'doi_prefix',
-    #     'doi_publisher',
-    #     'url_scielo',
-    #     'url_journal',
-    #     'publisher_name',
-    #     'pais_scielo',
-    #     'pais_scopus',
-    #     'pais_wos',
-    #     'gestao_manuscrito',  # gestao manuscritos
-    #     'scholarone',
-    #     'ojs-scielo',
-    #     'osj-outro',
-    #     'outro',
-    #     'tipo_instituicao',  # avaliacao
-    #     'tipo_1',
-    #     'tipo_2',
-    #     'tipo_3',
-    #     'tipo_4',
-    #     'inst_resp_nivel_1',
-    #     'inst_resp_nivel_2',
-    #     'inst_resp_nivel_3',
-    #     'editor_chefe_1',  # avaliacao - revisando
-    #     'lattes_ed_chefe_1',
-    #     'orcid_ed_chefe_1',
-    #     'editor_chefe_2',
-    #     'lattes_editor_chefe_2',
-    #     'orcid_ed_chefe_2',
-    #     'editor_chefe_3',
-    #     'lattes_editor_chefe_3',
-    #     'orcid_ed_chefe_3',
-    #     'scielo_thematic_areas',  # thematic areas scielo
-    #     'scielo_agricultural_sciences',
-    #     'scielo_applied_social_sciences',
-    #     'scielo_biological_sciences',
-    #     'scielo_engineering',
-    #     'scielo_exact_and_earth_sciences',
-    #     'scielo_health_sciences',
-    #     'scielo_human_sciences',
-    #     'scielo_linguistics_letters_and_arts',
-    #     'scielo_multidisciplinary',
-    #     'wos_categories',
-    #     'scielo_status',  # historico
-    #     'data_de_criacao_do_periodico',
-    #     'data_entrada_scielo',
-    #     'data_saida_scielo',
-    #     'data_inicio_colecao_scielo',
-    #     'data_fim_colecao_scielo',
-    #     'cobra_apc',  # APC
-    #     'apc_notas',
-    #     'apc_valores_conceitos',
-    #     'is_scopus',  # indexacao
-    #     'is_jcr',
-    #     'is_wos',   # WOS
-    #     'is_wos_scie',
-    #     'is_wos_ssci',
-    #     'is_wos_ahci',
-    #     'is_wos_esci',
-    #     'is_pubmed',  # Pumed, PMC
-    #     'is_pmc',
-    #     'ano_publicacao',  # YEAR
-    #     'num_docs',
-    #     'num_docs_ing',
-    #     'num_docs_por',
-    #     'num_docs_esp',
-    #     'num_docs_2_mais_idiomas',
-    #     'num_docs_outros_idiomas',
-    #     'num_docs_citaveis',
-    #     'num_docs_citaveis_ing',
-    #     'num_docs_citaveis_por',
-    #     'num_docs_citaveis_esp',
-    #     'num_docs_citaveis_2_mais_idiomas',
-    #     'num_docs_citaveis_outros_idiomas'
-    #         ]:
-
-    #     worksheet.write(0, col, h, wrap_header)
-    #     col += 1
-
-    # # cabecalho Acessos
-    # for yacc in [
-    #     'ate_2011',
-    #     '2012',
-    #     '2013',
-    #     '2014',
-    #     '2015',
-    #     '2016',
-    #     '2017',
-    #     '2018'
-    #         ]:
-    #     worksheet.write(0, col, 'accesso_'+yacc, wrap_header)
-    #     col += 1
-
-    # # cabecalho SciELO CI; Google Scholar, Scopus; JCR
-    # for h in [
-    #     'scieloci_docs',
-    #     'scieloci_citable_docs',
-    #     'scieloci_cited',
-    #     'scieloci_wos_cited',
-    #     'google_scholar_h5',
-    #     'google_scholar_m5',
-    #     'scopus_citescore',
-    #     'scopus_snip',
-    #     'scimago_sjr',
-    #     'scimago_total_docs_3years',
-    #     'scimago_total_cites_3years',
-    #     'scimago_cites_by_doc_2years',
-    #     'scimago_h_index',
-    #     'jcr_total_cites',
-    #     'jcr_journal_impact_factor',
-    #     'jcr_impact_factor_without_journal_self_cites',
-    #     'jcr_five_year_impact_factor',
-    #     'jcr_immediacy_index',
-    #     'jcr_citable_items',
-    #     'jcr_cited_half_life',
-    #     'jcr_citing_half_life',
-    #     'jcr_eigenfactor_score',
-    #     'jcr_article_influence_score',
-    #     'jcr_percentage_articles_in_citable_items',
-    #     'jcr_average_journal_impact_factor_percentile',
-    #     'jcr_normalized_eigenfactor'
-    #         ]:
-    #     worksheet.write(0, col, h, wrap_header)
-    #     col += 1
-
-    # # cabecalho Affiliations
-    # for h in [
-    #     'afiliacao_br',
-    #     'afiliacao_estrang',
-    #     'afiliacao_nao_ident',
-    #     'afiliacao_br_estrang',
-    #     'afiliacao_nao_ident_todos'
-    #         ]:
-    #     worksheet.write(0, col, h, wrap_header)
-    #     col += 1
-
-    # # cabecalho manuscritos
-    # for h in [
-    #     'manuscritos_recebidos_1sem',
-    #     'manuscritos_aprovados_1sem',
-    #     'manuscritos_recebidos_2sem',
-    #     'manuscritos_aprovados_2sem',
-    #     'manuscritos_recebidos_ano',
-    #     'manuscritos_aprovados_ano',
-    #         ]:
-    #     worksheet.write(0, col, h, wrap_header)
-    #     col += 1
-
-    # # cabecalho tempos entre submissao, aprovacao e publicacao
-    # for h in [
-    #     'media_meses_submissao_aprovacao',
-    #     'desvp_meses_submissao_aprovacao',
-
-    #     'media_meses_submissao_pub',
-    #     'desvp_meses_submissao_pub',
-
-    #     'media_meses_submissao_pub_scielo',
-    #     'desvp_meses_submissao_pub_scielo',
-
-    #     'media_meses_aprovacao_pub',
-    #     'desvp_meses_aprovacao_pub',
-
-    #     'media_meses_aprovacao_pub_scielo',
-    #     'desvp_meses_aprovacao_pub_scielo'
-    #         ]:
-    #     worksheet.write(0, col, h, wrap_header)
-    #     col += 1
 
     sheet_header = pyexcel.get_sheet(
             file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
@@ -417,8 +240,21 @@ def journal(issn, query, sheetname):
                 worksheet.write(row, col, 1)
                 col += 1
 
-            # SciELO Evaluation
+            # Adocao de ORCID
             col = 21
+            if 'orcid' in doc:
+                worksheet.write(row, col, 1)
+                col += 1
+                worksheet.write(row, col, 0)
+                col += 1
+            else:
+                worksheet.write(row, col, 0)
+                col += 1
+                worksheet.write(row, col, 0)
+                col += 1
+
+            # SciELO Avaliacao - tipo de instituicao
+            col = 23
             if 'avaliacao' in doc:
                 if 'tipo_inst' in doc['avaliacao']:
                     worksheet.write(row, col, doc['avaliacao']['tipo_inst'])
@@ -486,7 +322,7 @@ def journal(issn, query, sheetname):
                 col += 17
 
             # Thematic Areas
-            col = 38
+            col = 40
             for k in [
                 'title_thematic_areas',
                 'title_is_agricultural_sciences',
@@ -504,7 +340,7 @@ def journal(issn, query, sheetname):
                 col += 1
 
             # Wos Categories
-            col = 48
+            col = 50
             if 'wos_subject_areas' in doc['api']:
                 worksheet.write(row, col, '; '.join(doc['api']['wos_subject_areas']))
             col += 1
@@ -531,7 +367,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # APC
-            col = 55
+            col = 57
             if 'apc' in doc:
                 if doc['apc']['apc'] == 'Sim':
                     worksheet.write(row, col, 1)
@@ -566,7 +402,7 @@ def journal(issn, query, sheetname):
                 col += 4
 
             # Indexacao
-            col = 58
+            col = 60
             worksheet.write(row, col, doc.is_scopus)
             col += 1
 
@@ -578,7 +414,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # SCIE
-            #col = 57
+            # col = 57
             scie = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -589,7 +425,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # SSCI
-            #col = 58
+            # col = 58
             ssci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -600,7 +436,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # A&HCI
-            #col = 59
+            # col = 59
             ahci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -611,7 +447,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # ESCI
-            #col = 60
+            # col = 60
             esci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -622,7 +458,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # Pubmed, PMC
-            col = 65
+            col = 67
             pubmed = models.Pubmedapi.objects.filter(issn_list=doc.issn_scielo)
             if pubmed:
                 if 'pubmed' in pubmed[0]['db_name']:
@@ -638,7 +474,7 @@ def journal(issn, query, sheetname):
                 col += 1
 
             # ANO DE PUBLICACAO
-            col = 67
+            col = 69
             if h == 'anterior':
                 year = '2007'
             else:
@@ -653,12 +489,10 @@ def journal(issn, query, sheetname):
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-
                 if 'document_en_'+h in doc['docs']:
                     worksheet.write(row, col, doc['docs']['document_en_'+h] or 0)
                 else:
                     worksheet.write(row, col, 0)
-
                 col += 1
                 if 'document_pt_'+h in doc['docs']:
                     worksheet.write(row, col, doc['docs']['document_pt_'+h] or 0)
@@ -683,6 +517,11 @@ def journal(issn, query, sheetname):
                 # CITABLES
                 if 'is_citable_'+h in doc['docs']:
                     worksheet.write(row, col, doc['docs']['is_citable_'+h] or 0)
+                else:
+                    worksheet.write(row, col, 0)
+                col += 1
+                if 'tipo_review_'+h in doc['docs']:
+                    worksheet.write(row, col, doc['docs']['tipo_review_'+h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
@@ -712,10 +551,10 @@ def journal(issn, query, sheetname):
                     worksheet.write(row, col, 0)
                 col += 1
             else:
-                col += 12
+                col += 13
 
             # Acessos
-            col = 80
+            col = 83
             if 'access' in doc:
                 if h == 'anterior':
                     pass
@@ -756,7 +595,7 @@ def journal(issn, query, sheetname):
                 col += 8
 
             # SciELO CI WOS cited
-            col = 88
+            col = 91
             if 'scieloci' in doc:
                 if h == 'anterior':
                     pass
@@ -779,7 +618,7 @@ def journal(issn, query, sheetname):
                 col += 4
 
             # Google (volta 1 ano)
-            col = 92
+            col = 95
             if h == 'anterior':
                 pass
             else:
@@ -792,14 +631,14 @@ def journal(issn, query, sheetname):
                 col += 1
 
             # SCOPUS - CiteScore
-            col = 94
+            col = 97
             if doc['is_scopus'] == 1:
                 if h in scopus and 'citescore' in scopus[h]:
                     worksheet.write(row, col, formatindicator(scopus[h]['citescore']))
                 col += 1
 
-            # CWTS - SNIP - APLICAR PARA 2007 (SEM ACUMULAR MESMO)
-            col = 95
+            # Scopus - SNIP - APLICAR PARA 2007 (SEM ACUMULAR MESMO)
+            col = 98
             h2 = None
             if h == 'anterior':
                 h2 = '2007'
@@ -821,7 +660,7 @@ def journal(issn, query, sheetname):
             col += 1
 
             # SCIMAGO - SJR, tt_docs, tt_cites, cites_by_docs, h_index
-            col = 96
+            col = 99
             h2 = None
             if h == 'anterior':
                 h2 = '2007'
@@ -841,7 +680,7 @@ def journal(issn, query, sheetname):
                     col += 1
 
             # JCR
-            col = 101
+            col = 104
             if doc['is_jcr'] == 1:
                 if h == 'anterior':
                     h2 = '2007'
@@ -870,7 +709,7 @@ def journal(issn, query, sheetname):
                 col += 13
 
             # Affiliations_documents
-            col = 114
+            col = 117
             if 'aff' in doc:
                 if h == 'anterior':
                     if 'br_ate_2007' in doc['aff']:
@@ -912,7 +751,7 @@ def journal(issn, query, sheetname):
                 col += 5
 
             # Manuscritos
-            col = 119
+            col = 122
             if 'manuscritos' in doc:
                 if h == '2014':
 
@@ -939,7 +778,7 @@ def journal(issn, query, sheetname):
                     col += 1
 
             # Tempos entre submissao, aprovacao e publicacao
-            col = 125
+            col = 128
             if 'times' in doc:
                 if h == 'anterior':
 
@@ -1054,6 +893,38 @@ def journal(issn, query, sheetname):
                         worksheet.write(row, col, times)
                     col += 1
 
+            # SciELO - Citações Concedidass
+            col = 138
+            if 'citations' in doc:
+                for cit in doc['citations']:
+                    if h in cit:
+                        # print(cit[h])
+                        for label in [
+                            'total_citgrant',
+                            'total_citgrant_journals',
+                            'total_citgrant_autocit',
+                            'citgrant_journal_scielo',
+                            'citgrant_journal_scielo_wos',
+                            'citgrant_journal_wos',
+                            'citgrant_journal_other',
+                            'citgrant_other_docs',
+                            'citgrant_books',
+                            'cit_pub_year',
+                            'cit_pubyear_minus1',
+                            'cit_pubyear_minus2',
+                            'cit_pubyear_minus3',
+                            'cit_pubyear_minus4',
+                            'cit_pubyear_minus5',
+                            'cit_pubyear_minus6',
+                            'cit_pubyear_minus7',
+                            'cit_pubyear_minus8',
+                            'cit_pubyear_minus9',
+                            'cit_pubyear_minus10'
+                        ]:
+                            citation = cit[h][label]
+                            worksheet.write(row, col, citation or '')
+                            col += 1
+
             # Avança ano
             row += 1
 
@@ -1068,8 +939,8 @@ def journal(issn, query, sheetname):
     worksheet3.set_row(0, 50)
 
     sheet3 = pyexcel.get_sheet(
-            file_name='data/scielo/fapesp_journals_evaluation_line_r12-com-indicadores por AT e Total-a3_import.xlsx',
-            sheet_name='scielobr_at_2016plus_import',
+            file_name='data/scielo/fapesp_journals_evaluation_line_r14-com-indicadores por AT e Total-a3-import.xlsx',
+            sheet_name='import',
             name_columns_by_row=0)
 
     sheet3_json = sheet3.to_records()
@@ -1118,61 +989,82 @@ def journal(issn, query, sheetname):
 
 
 def alljournals():
-
     scielo = models.Scielo.objects.filter(collection='scl')
-    journal(issn=None, query=scielo, journal=None)
+    filename = 'fapesp_journals_evaluation_line_r15.xlsx'
+    sheetname = 'SciELO Brasil'
+    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
+
+
+def activethisyear():
+    scielo = models.Scielo.objects.filter(
+        collection='scl',
+        title_current_status='current')
+    filename = 'fapesp_journals_evaluation_ativos_2018_r15.xlsx'
+    sheetname = 'SciELO Brasil - ativos em 2018'
+    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
 
 
 def onejournal():
-    # query = models.Scielo.objects.filter(
-    #     title_current_status='current',
-    #     collection='scl')
-    # counter = 0
+    query = models.Scielo.objects.filter(
+        title_current_status='current',
+        collection='scl')
+    counter = 0
 
-    # for j in query:
-    #     docs16 = 0
-    #     entrada = 0
-    #     ativo_y = 0
+    for j in query:
+        docs16 = 0
+        entrada = 0
+        ativo_y = 0
 
-    #     if 'docs' in j:
-    #         if j['docs']['docs_2016'] == '':
-    #             pass
-    #         elif j['docs']['docs_2016'] > 0:
-    #             docs16 = 1
+        if 'docs' in j:
+            if j['docs']['docs_2016'] == '':
+                pass
+            elif j['docs']['docs_2016'] > 0:
+                docs16 = 1
 
-    #         for year in range(2007, 2019):
-    #             y = str(year)
-    #             if 'docs_'+y in j['docs']:
-    #                 if j['docs']['docs_'+y] == '':
-    #                     pass
-    #                 elif int(j['docs']['docs_'+y]) > 0:
-    #                     ativo_y = 1
-    #                     break
+            for year in range(2007, 2019):
+                y = str(year)
+                if 'docs_'+y in j['docs']:
+                    if j['docs']['docs_'+y] == '':
+                        pass
+                    elif int(j['docs']['docs_'+y]) > 0:
+                        ativo_y = 1
+                        break
 
-    #     if j['inclusion_year_at_scielo'] < 2016:
-    #         entrada = 1
+        if j['inclusion_year_at_scielo'] < 2016:
+            entrada = 1
 
-    #     if docs16 == 1 and entrada == 1 and ativo_y == 1:
-    #         counter += 1
-    #         issn = j['issn_scielo']
-    #         queryj = models.Scielo.objects.filter(issn_list=issn)
-    #         short_title = accent_remover(j['short_title_scielo'])
-    #         newtitle = re.sub(r'[\[\]:*?/\\]', "", short_title)
-    #         title = 'título-' + newtitle
-    #         # acronym = j['api']['acronym']
-    #         print(newtitle.lower())
-    #         journal(issn=issn, query=queryj, sheetname=title[0:30])
+        if docs16 == 1 and entrada == 1 and ativo_y == 1:
+            counter += 1
+            issn = j['issn_scielo']
+            queryj = models.Scielo.objects.filter(issn_list=issn)
+            short_title = accent_remover(j['short_title_scielo'])
+            newtitle = re.sub(r'[\[\]:*?/\\]', "", short_title)
+            title = 'título-' + newtitle
+            # acronym = j['api']['acronym']
+            print(newtitle.lower())
+            filename = 'avaliacao_scielo_'+issn+'.xlsx'
+            journal(query=queryj, filename=filename, sheetname=title[0:30], issn=issn)
 
-    # print(counter)
+    print(counter)
 
     # teste MIOC
-    queryj = models.Scielo.objects.filter(issn_list='0074-0276')
-    journal(issn='0074-0276', query=queryj, sheetname="título-Mem. Inst. Oswaldo Cruz")
+    # queryj = models.Scielo.objects.filter(issn_list='0074-0276')
+    # issn = '0074-0276'
+    # filename = 'avaliacao_scielo_'+issn+'.xlsx'
+    # sheetname = 'título-Mem. Inst. Oswaldo Cruz'
+
+    # journal(query=queryj, filename=filename, sheetname=sheetname, issn=issn)
 
 
 def main():
-    onejournal()
+    # Todos os periodicos
     # alljournals()
+
+    # Ativos em 2018
+    # activethisyear()
+
+    # ativos
+    onejournal()
 
 
 if __name__ == "__main__":

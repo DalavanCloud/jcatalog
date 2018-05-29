@@ -58,8 +58,8 @@ class Scielobk1(DynamicDocument):
     # Indexes
     meta = {
         'indexes': [
-            'issn_list',
-            'title_country'
+            'pid',
+            'collection'
         ]
     }
 
@@ -251,5 +251,23 @@ class Wosindexes(DynamicDocument):
         'indexes': [
             'issn_list',
             'title_country'
+        ]
+    }
+
+
+class Ztests(DynamicDocument):
+    pass
+
+
+class Scielodates(DynamicDocument):
+    # creation_date = DateTimeField(default=datetime.datetime.now)
+    # updated_at = DateTimeField()
+    issn_list = ListField()
+    # Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'issn_scielo',
+            'pid'
         ]
     }
