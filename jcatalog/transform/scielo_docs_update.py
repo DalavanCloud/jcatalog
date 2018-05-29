@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 def docs(filename):
     access = pyexcel.get_sheet(
         file_name=filename,
-        sheet_name='docs_count',
+        sheet_name='import',
         name_columns_by_row=0)
 
     access_json = access.to_records()
@@ -25,8 +25,8 @@ def docs(filename):
     for rec in access_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
-        print(rec['issn'])
-        query = models.Scielo.objects.filter(issn_scielo=rec['issn'])
+        print(rec['issn_scielo'])
+        query = models.Scielo.objects.filter(issn_scielo=rec['issn_scielo'])
 
         if len(query) == 1:
             doc = query[0]
@@ -41,7 +41,7 @@ def docs(filename):
 
 def main():
     # SciELO docs counts Network xlsx
-    docs('data/scielo/td_documents_languages_network_dados_180317.xlsx')
+    docs('data/scielo/td_documents_languages_network_180317.xlsx')
 
 
 if __name__ == "__main__":
