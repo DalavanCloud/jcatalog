@@ -32,6 +32,8 @@ EM TESTE
 # from transform import scielo_citations_update
 # from transform import scielo_dates_loader
 
+# from transform import scielo_inclusion_beforer_year_update
+
 # from transform import scopus_loader
 # from transform import scopus_update
 
@@ -96,6 +98,7 @@ if __name__ == "__main__":
     # scielo_orcid_update.main()
     # scielo_citations_update.main()
     # scielo_dates_loader.main()
+    # scielo_inclusion_beforer_year_update.main()
 
     # scopus_loader.main()
     # scopus_update.main()

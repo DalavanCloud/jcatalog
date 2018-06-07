@@ -3,6 +3,7 @@ import pyexcel
 import xlsxwriter
 import models
 import re
+import datetime
 from accent_remover import *
 
 
@@ -990,8 +991,9 @@ def journal(query, filename, sheetname, issn):
 
 def alljournals():
     scielo = models.Scielo.objects.filter(collection='scl')
-    filename = 'fapesp_journals_evaluation_line_r15.xlsx'
-    sheetname = 'SciELO Brasil'
+    today = datetime.datetime.now().strftime('%Y%m%d')
+    filename = 'Fapesp-avaliação-SciELO-todos-'+today+'.xlsx'
+    sheetname = 'SciELO-todos'
     journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
 
 
@@ -999,51 +1001,41 @@ def activethisyear():
     scielo = models.Scielo.objects.filter(
         collection='scl',
         title_current_status='current')
-    filename = 'fapesp_journals_evaluation_ativos_2018_r15.xlsx'
-    sheetname = 'SciELO Brasil - ativos em 2018'
+    today = datetime.datetime.now().strftime('%Y%m%d')
+    filename = 'Fapesp-avaliação-SciELO-ativos2018-'+today+'.xlsx'
+    sheetname = 'SciELO-ativos2018'
+    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
+
+
+# Ativos neste ano e inclusos antes de 2016,
+def activethisyear_inclusion_before():
+    # já considera:
+    # title_current_status='current'
+    # collection='scl'
+    scielo = models.Scielo.objects.filter(activethisyear_inclusion_before=2016)
+    today = datetime.datetime.now().strftime('%Y%m%d')
+    filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015'+today+'.xlsx'
+    sheetname = 'SciELO-ativos2018-ate2015'
+
     journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
 
 
 def onejournal():
-    query = models.Scielo.objects.filter(
-        title_current_status='current',
-        collection='scl')
+    scielo = models.Scielo.objects.filter(activethisyear_inclusion_before=2016)
     counter = 0
 
-    for j in query:
-        docs16 = 0
-        entrada = 0
-        ativo_y = 0
-
-        if 'docs' in j:
-            if j['docs']['docs_2016'] == '':
-                pass
-            elif j['docs']['docs_2016'] > 0:
-                docs16 = 1
-
-            for year in range(2007, 2019):
-                y = str(year)
-                if 'docs_'+y in j['docs']:
-                    if j['docs']['docs_'+y] == '':
-                        pass
-                    elif int(j['docs']['docs_'+y]) > 0:
-                        ativo_y = 1
-                        break
-
-        if j['inclusion_year_at_scielo'] < 2016:
-            entrada = 1
-
-        if docs16 == 1 and entrada == 1 and ativo_y == 1:
-            counter += 1
-            issn = j['issn_scielo']
-            queryj = models.Scielo.objects.filter(issn_list=issn)
-            short_title = accent_remover(j['short_title_scielo'])
-            newtitle = re.sub(r'[\[\]:*?/\\]', "", short_title)
-            title = 'título-' + newtitle
-            # acronym = j['api']['acronym']
-            print(newtitle.lower())
-            filename = 'avaliacao_scielo_'+issn+'.xlsx'
-            journal(query=queryj, filename=filename, sheetname=title[0:30], issn=issn)
+    for j in scielo:
+        counter += 1
+        issn = j['issn_scielo']
+        queryj = models.Scielo.objects.filter(issn_list=issn)
+        short_title = accent_remover(j['short_title_scielo'])
+        newtitle = re.sub(r'[\[\]:*?/\\]', "", short_title)
+        title = 'título-' + newtitle
+        # acronym = j['api']['acronym']
+        print(newtitle.lower())
+        today = datetime.datetime.now().strftime('%Y%m%d')
+        filename = 'Fapesp-avaliacao-SciELO-'+today+issn+'.xlsx'
+        journal(query=queryj, filename=filename, sheetname=title[0:30], issn=issn)
 
     print(counter)
 
@@ -1058,13 +1050,16 @@ def onejournal():
 
 def main():
     # Todos os periodicos
-    # alljournals()
+    alljournals()
 
     # Ativos em 2018
-    # activethisyear()
+    activethisyear()
+
+    # Antes de 2015
+    activethisyear_inclusion_before()
 
     # ativos
-    onejournal()
+    # onejournal()
 
 
 if __name__ == "__main__":
