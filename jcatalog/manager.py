@@ -8,7 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd
 # from tools import scopus_oecd_codes
-# from tools import sender
+from tools import sender
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -21,16 +21,17 @@ EM TESTE
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
 # from transform import scielo_avaliacao_update
+# from transform import scielo_avaliacao_tipo_inst_update
 # from transform import scielo_apc_update
 # from transform import scielo_aff_update
 # from transform import scielo_manuscripts_update
 # from transform import scielo_times_update
 # from transform import scielo_wos_indexes_update
 # from transform import wos_indexes_loader
-# from transform import scielo_avaliacao_tipo_inst_update
 # from transform import scielo_orcid_update
 # from transform import scielo_citations_update
 # from transform import scielo_dates_loader
+# from transform import scielo_toform_loader
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -62,6 +63,7 @@ EM TESTE
 # from transform import noscielo
 
 # from reports import jcatalog
+# from reports import jcatalog_small
 
 # Abel
 # from reports import scopus_list2
@@ -69,7 +71,9 @@ EM TESTE
 # from reports import invite_scielo_20
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-from reports import fapesp_evaluation_line
+# from reports import fapesp_evaluation_line
+# from reports import fapesp_evaluation_toform
+
 # from reports import list_send
 
 
@@ -88,17 +92,18 @@ if __name__ == "__main__":
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
     # scielo_avaliacao_update.main()
+    # scielo_avaliacao_tipo_inst_update.main()
     # scielo_apc_update.main()
     # scielo_aff_update.main()
     # scielo_manuscripts_update.main()
     # scielo_times_update.main()
     # scielo_wos_indexes_update.main()
     # wos_indexes_loader.main()
-    # scielo_avaliacao_tipo_inst_update.main()
     # scielo_orcid_update.main()
     # scielo_citations_update.main()
     # scielo_dates_loader.main()
     # scielo_inclusion_beforer_year_update.main()
+    # scielo_toform_loader.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -128,6 +133,7 @@ if __name__ == "__main__":
     # noscielo
 
     # jcatalog.main()
+    # jcatalog_small.main()
 
     # Abel
     # scopus_list2
@@ -135,11 +141,12 @@ if __name__ == "__main__":
     # invite_scielo_20
     # scopus_scimago_check
     # fapesp_evaluation
-    fapesp_evaluation_line.main()
+    # fapesp_evaluation_line.main()
+    # fapesp_evaluation_toform.main()
     # list_send
 
     # Denise
     # capes_loader.main()
     # capes_update.main()
 
-    # sender
+    sender
