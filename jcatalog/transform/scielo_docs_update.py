@@ -36,12 +36,11 @@ def docs(filename):
 
             if data:
                 doc.modify(**data)
-                doc.save()
 
 
 def main():
     # SciELO docs counts Network xlsx
-    docs('data/scielo/td_documents_languages_network_180317.xlsx')
+    docs('data/scielo/documents_languages_network_180317.xlsx')
 
 
 if __name__ == "__main__":
