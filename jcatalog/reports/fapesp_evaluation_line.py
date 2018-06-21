@@ -54,7 +54,7 @@ def timesfmt(data):
     return num
 
 
-def journal(query, filename, sheetname, issn):
+def journal(query, filename, sheetname, issn, atfile):
     # Creates the Excel folder and add a worksheet
     if issn:
         workbook = xlsxwriter.Workbook('output/journals/'+filename)
@@ -80,7 +80,7 @@ def journal(query, filename, sheetname, issn):
 
     sheet_header = pyexcel.get_sheet(
             file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
-            sheet_name='rotulos_dados_periodicos_import',
+            sheet_name='rotulos_dados_periodicos',
             name_columns_by_row=0)
 
     headers = sheet_header.to_records()
@@ -92,7 +92,6 @@ def journal(query, filename, sheetname, issn):
 
     # SciELO
     scielo = query
-    # scielo = models.Scielo.objects.filter(collection='scl')
 
     row = 1
 
@@ -415,7 +414,6 @@ def journal(query, filename, sheetname, issn):
             col += 1
 
             # SCIE
-            # col = 57
             scie = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -426,7 +424,6 @@ def journal(query, filename, sheetname, issn):
             col += 1
 
             # SSCI
-            # col = 58
             ssci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -437,7 +434,6 @@ def journal(query, filename, sheetname, issn):
             col += 1
 
             # A&HCI
-            # col = 59
             ahci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -448,7 +444,6 @@ def journal(query, filename, sheetname, issn):
             col += 1
 
             # ESCI
-            # col = 60
             esci = 0
             if 'wos_indexes' in doc:
                 for i in doc['wos_indexes']:
@@ -606,8 +601,8 @@ def journal(query, filename, sheetname, issn):
                     if 'docs_'+year in doc['scieloci']:
                         worksheet.write(row, col, doc['scieloci']['docs_'+year])
                     col += 1
-                    if 'citable_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['citable_'+year])
+                    if 'is_citable_'+year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci']['is_citable_'+year])
                     col += 1
                     if 'scieloci_cited_'+year in doc['scieloci']:
                         worksheet.write(row, col, doc['scieloci']['scieloci_cited_'+year])
@@ -615,11 +610,17 @@ def journal(query, filename, sheetname, issn):
                     if 'scieloci_wos_cited_'+year in doc['scieloci']:
                         worksheet.write(row, col, doc['scieloci']['scieloci_wos_cited_'+year])
                     col += 1
+                    if 'one_o_more_scielo_cited_'+year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci']['one_o_more_scielo_cited_'+year])
+                    col += 1
+                    if 'one_o_more_wos_cited_'+year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci']['one_o_more_wos_cited_'+year])
+                    col += 1
             else:
-                col += 4
+                col += 6
 
             # Google (volta 1 ano)
-            col = 95
+            col = 97
             if h == 'anterior':
                 pass
             else:
@@ -632,14 +633,14 @@ def journal(query, filename, sheetname, issn):
                 col += 1
 
             # SCOPUS - CiteScore
-            col = 97
+            col = 99
             if doc['is_scopus'] == 1:
                 if h in scopus and 'citescore' in scopus[h]:
                     worksheet.write(row, col, formatindicator(scopus[h]['citescore']))
                 col += 1
 
             # Scopus - SNIP - APLICAR PARA 2007 (SEM ACUMULAR MESMO)
-            col = 98
+            col = 100
             h2 = None
             if h == 'anterior':
                 h2 = '2007'
@@ -661,7 +662,7 @@ def journal(query, filename, sheetname, issn):
             col += 1
 
             # SCIMAGO - SJR, tt_docs, tt_cites, cites_by_docs, h_index
-            col = 99
+            col = 101
             h2 = None
             if h == 'anterior':
                 h2 = '2007'
@@ -681,7 +682,7 @@ def journal(query, filename, sheetname, issn):
                     col += 1
 
             # JCR
-            col = 104
+            col = 106
             if doc['is_jcr'] == 1:
                 if h == 'anterior':
                     h2 = '2007'
@@ -710,7 +711,7 @@ def journal(query, filename, sheetname, issn):
                 col += 13
 
             # Affiliations_documents
-            col = 117
+            col = 119
             if 'aff' in doc:
                 if h == 'anterior':
                     if 'br_ate_2007' in doc['aff']:
@@ -752,7 +753,7 @@ def journal(query, filename, sheetname, issn):
                 col += 5
 
             # Manuscritos
-            col = 122
+            col = 124
             if 'manuscritos' in doc:
                 if h == '2014':
 
@@ -779,7 +780,7 @@ def journal(query, filename, sheetname, issn):
                     col += 1
 
             # Tempos entre submissao, aprovacao e publicacao
-            col = 128
+            col = 130
             if 'times' in doc:
                 if h == 'anterior':
 
@@ -895,7 +896,7 @@ def journal(query, filename, sheetname, issn):
                     col += 1
 
             # SciELO - Citações Concedidass
-            col = 138
+            col = 140
             if 'citations' in doc:
                 for cit in doc['citations']:
                     if h in cit:
@@ -935,12 +936,12 @@ def journal(query, filename, sheetname, issn):
     # Creates 'areas tematicas' worksheet
     formatline = workbook.add_format({'text_wrap': False, 'size': 9})
 
-    worksheet3 = workbook.add_worksheet('dados agregados - todos e AT')
+    worksheet3 = workbook.add_worksheet('dados agregados - AT')
     worksheet3.freeze_panes(1, 0)
-    worksheet3.set_row(0, 50)
+    worksheet3.set_row(0, 60)
 
     sheet3 = pyexcel.get_sheet(
-            file_name='data/scielo/fapesp_journals_evaluation_line_r14-com-indicadores por AT e Total-a3-import.xlsx',
+            file_name=atfile,
             sheet_name='import',
             name_columns_by_row=0)
 
@@ -970,7 +971,7 @@ def journal(query, filename, sheetname, issn):
 
     sheet2 = pyexcel.get_sheet(
             file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
-            sheet_name='rotulos_dados_periodicos_import',
+            sheet_name='rotulos_dados_periodicos',
             name_columns_by_row=0)
 
     sheet2_json = sheet2.to_records()
@@ -994,7 +995,13 @@ def alljournals():
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'Fapesp-avaliação-SciELO-todos-'+today+'.xlsx'
     sheetname = 'SciELO-todos'
-    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
+    atfile = 'data/scielo/Fapesp-avaliação-SciELO-todos-AT.xlsx'
+    journal(
+        query=scielo,
+        filename=filename,
+        sheetname=sheetname,
+        issn=None,
+        atfile=atfile)
 
 
 def activethisyear():
@@ -1004,7 +1011,13 @@ def activethisyear():
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'Fapesp-avaliação-SciELO-ativos2018-'+today+'.xlsx'
     sheetname = 'SciELO-ativos2018'
-    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
+    atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-AT.xlsx'
+    journal(
+        query=scielo,
+        filename=filename,
+        sheetname=sheetname,
+        issn=None,
+        atfile=atfile)
 
 
 # Ativos neste ano e inclusos antes de 2016,
@@ -1014,10 +1027,15 @@ def activethisyear_inclusion_before():
     # collection='scl'
     scielo = models.Scielo.objects.filter(activethisyear_inclusion_before=2016)
     today = datetime.datetime.now().strftime('%Y%m%d')
-    filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015'+today+'.xlsx'
+    filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015-'+today+'.xlsx'
     sheetname = 'SciELO-ativos2018-ate2015'
-
-    journal(query=scielo, filename=filename, sheetname=sheetname, issn=None)
+    atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
+    journal(
+        query=scielo,
+        filename=filename,
+        sheetname=sheetname,
+        issn=None,
+        atfile=atfile)
 
 
 def onejournal():
@@ -1029,13 +1047,18 @@ def onejournal():
         issn = j['issn_scielo']
         queryj = models.Scielo.objects.filter(issn_list=issn)
         short_title = accent_remover(j['short_title_scielo'])
-        newtitle = re.sub(r'[\[\]:*?/\\]', "", short_title)
-        title = 'título-' + newtitle
+        title = re.sub(r'[\[\]:*?/\\]', "", short_title)
         # acronym = j['api']['acronym']
-        print(newtitle.lower())
+        print(title.lower())
         today = datetime.datetime.now().strftime('%Y%m%d')
-        filename = 'Fapesp-avaliacao-SciELO-'+today+issn+'.xlsx'
-        journal(query=queryj, filename=filename, sheetname=title[0:30], issn=issn)
+        filename = 'Fapesp-avaliacao-SciELO-'+issn+'-'+today+'.xlsx'
+        atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
+        journal(
+            query=queryj,
+            filename=filename,
+            sheetname=title[0:30],
+            issn=issn,
+            atfile=atfile)
 
     print(counter)
 
@@ -1043,23 +1066,24 @@ def onejournal():
     # queryj = models.Scielo.objects.filter(issn_list='0074-0276')
     # issn = '0074-0276'
     # filename = 'avaliacao_scielo_'+issn+'.xlsx'
-    # sheetname = 'título-Mem. Inst. Oswaldo Cruz'
+    # sheetname = 'Mem. Inst. Oswaldo Cruz'
+    # atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
 
-    # journal(query=queryj, filename=filename, sheetname=sheetname, issn=issn)
+    # journal(query=queryj, filename=filename, sheetname=sheetname, issn=issn, atfile=atfile)
 
 
 def main():
     # Todos os periodicos
-    alljournals()
+    # alljournals()
 
     # Ativos em 2018
-    activethisyear()
+    # activethisyear()
 
     # Antes de 2015
-    activethisyear_inclusion_before()
+    # activethisyear_inclusion_before()
 
     # ativos
-    # onejournal()
+    onejournal()
 
 
 if __name__ == "__main__":
