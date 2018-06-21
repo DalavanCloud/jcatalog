@@ -58,7 +58,6 @@ def avaliacao(filename):
 
             if data:
                 doc.modify(**data)
-                doc.save()
         else:
             if len(query) == 1:
 
@@ -90,12 +89,13 @@ def avaliacao(filename):
                 data['avaliacao']['contatos'].append(contato)
 
                 if data:
-                    doc.update(**data)
+                    doc.modify(**data)
 
 
 def main():
     # SciELO avaliacao xlsx
-    avaliacao('data/scielo/avaliacao/20180300_Editores SciELO areas mailchimp.xlsx')
+    avaliacao(
+        'data/scielo/avaliacao/20180300_Editores SciELO areas mailchimp.xlsx')
 
 
 if __name__ == "__main__":
