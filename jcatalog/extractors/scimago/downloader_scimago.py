@@ -48,7 +48,7 @@ def downloader(scielo):
 
         initial_year = 1999
 
-        last_year = 2016
+        last_year = 2017
 
         while (initial_year <= last_year):
 
