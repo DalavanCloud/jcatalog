@@ -1,0 +1,36 @@
+# coding: utf-8
+
+scielo_headers = [
+ 'Extraction date',
+ 'SciELO or Scopus or WOS',
+ 'SciELO',
+ 'Scopus',
+ 'WOS',
+ 'SciELO, Scopus and WOS',
+ 'SciELO and Scopus',
+ 'SciELO and WOS',
+ 'Scopus and WOS',
+ 'SciELO or Scopus',
+ 'Scopus or WOS',
+ 'SciELO or WOS',
+ 'SciELO and (Scopus ou WOS)',
+ 'SciELO and not (Scopus)',
+ '(Scopus or WOS) and not SciELO',
+ 'Title (SciELO-Scopus-WOS)',
+
+ # [Dados de SciELO]
+ 'ISSNs',
+ 'SciELO ISSN',
+ 'SciELO Status (current = 1; not current = 0)',
+ 'SciELO title thematic areas',
+ 'SciELO title is agricultural sciences',
+ 'SciELO title is applied social sciences',
+ 'SciELO title is biological sciences',
+ 'SciELO title is engineering',
+ 'SciELO title is exact and earth sciences',
+ 'SciELO title is health sciences',
+ 'SciELO title is human sciences',
+ 'SciELO title is linguistics, letters and arts',
+ 'SciELO title is multidisciplinary',
+ 'SciELO inclusion year',
+ 'SciELO stopping year']
