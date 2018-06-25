@@ -64,7 +64,7 @@ def journal(query, filename, sheetname, issn, atfile):
         worksheet = workbook.add_worksheet(sheetname)
 
     worksheet.freeze_panes(1, 0)
-    worksheet.set_row(0, 60)
+    worksheet.set_row(0, 70)
 
     # HEADER
     col = 0
@@ -926,6 +926,36 @@ def journal(query, filename, sheetname, issn, atfile):
                             citation = cit[h][label]
                             worksheet.write(row, col, citation or '')
                             col += 1
+            else:
+                col += 20
+
+            # Access - Google Analytics
+            col = 160
+            if 'ga_access' in doc:
+                if h == '2017':
+                    for label in [
+                        'total_access',
+                        'porcent_americas',
+                        'porcent_brazil',
+                        'porcent_united_states',
+                        'porcent_asia',
+                        'porcent_china',
+                        'porcent_india',
+                        'porcent_europe',
+                        'porcent_spain',
+                        'porcent_portugal',
+                        'porcent_africa',
+                        'porcent_south_africa',
+                        'porcent_palop',
+                        'porcent_oceania',
+                        'porcent_others'
+                    ]:
+                        if label in doc['ga_access']:
+                            ga_access = doc['ga_access'][label]
+                            worksheet.write(row, col, ga_access)
+                            col += 1
+            else:
+                col += 15
 
             # Avança ano
             row += 1
@@ -1020,7 +1050,7 @@ def activethisyear():
         atfile=atfile)
 
 
-# Ativos neste ano e inclusos antes de 2016,
+# Ativos neste ano e inclusos antes de 2016
 def activethisyear_inclusion_before():
     # já considera:
     # title_current_status='current'
@@ -1074,16 +1104,16 @@ def onejournal():
 
 def main():
     # Todos os periodicos
-    # alljournals()
+    alljournals()
 
     # Ativos em 2018
-    # activethisyear()
+    activethisyear()
 
     # Antes de 2015
-    # activethisyear_inclusion_before()
+    activethisyear_inclusion_before()
 
     # ativos
-    onejournal()
+    # onejournal()
 
 
 if __name__ == "__main__":
