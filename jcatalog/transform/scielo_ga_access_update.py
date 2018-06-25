@@ -7,21 +7,20 @@ import logging
 
 import models
 
-
-logging.basicConfig(filename='logs/access.info.txt', level=logging.INFO)
+logging.basicConfig(filename='logs/ga_access.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 # Add Access count for journals
-def scieloaccess(filename):
-    access = pyexcel.get_sheet(
+def scielogaaccess(filename):
+    ga_access = pyexcel.get_sheet(
         file_name=filename,
-        sheet_name='access_count',
+        sheet_name='import',
         name_columns_by_row=0)
 
-    access_json = access.to_records()
+    ga_access_json = ga_access.to_records()
 
-    for rec in access_json:
+    for rec in ga_access_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
         print(rec['issn'])
@@ -30,16 +29,16 @@ def scieloaccess(filename):
         if len(query) == 1:
             doc = query[0]
             print(query[0]['issn_scielo'])
-            data = {'access': {}}
-            data['access'] = dict(rec)
+            data = {'ga_access': {}}
+            data['ga_access'] = dict(rec)
 
             if data:
                 doc.modify(**data)
 
 
 def main():
-    # SciELO access counts xlsx
-    scieloaccess('data/scielo/accesses_by_journals_network_180317.xlsx')
+    # Google Analytics access counts
+    scielogaaccess('data/scielo/ga_scielo_year2017_20180621-a1.xlsx')
 
 
 if __name__ == "__main__":

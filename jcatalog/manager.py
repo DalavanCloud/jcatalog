@@ -8,7 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd
 # from tools import scopus_oecd_codes
-from tools import sender
+# from tools import sender
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -32,6 +32,7 @@ from tools import sender
 # from transform import scielo_citations_update
 # from transform import scielo_dates_loader
 # from transform import scielo_toform_loader
+# from transform import scielo_ga_access_update
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -71,7 +72,7 @@ from tools import sender
 # from reports import invite_scielo_20
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-# from reports import fapesp_evaluation_line
+from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -104,6 +105,7 @@ if __name__ == "__main__":
     # scielo_dates_loader.main()
     # scielo_inclusion_beforer_year_update.main()
     # scielo_toform_loader.main()
+    # scielo_ga_access_update.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -141,7 +143,7 @@ if __name__ == "__main__":
     # invite_scielo_20
     # scopus_scimago_check
     # fapesp_evaluation
-    # fapesp_evaluation_line.main()
+    fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
@@ -149,4 +151,4 @@ if __name__ == "__main__":
     # capes_loader.main()
     # capes_update.main()
 
-    sender
+    # sender
