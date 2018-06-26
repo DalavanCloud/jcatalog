@@ -35,35 +35,6 @@ class Scielo(DynamicDocument):
     }
 
 
-class Scielobk1(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    extraction_date = DateTimeField()
-    issn_list = ListField()
-    date_of_the_first_document = DateTimeField()
-    date_of_the_last_document = DateTimeField()
-    scholarone = IntField(required=True, min_value=0, default=0)
-    ojs_scielo = IntField(required=True, min_value=0, default=0)
-    is_submissions = IntField(required=True, min_value=0, default=0)
-    is_scielo = IntField(required=True, min_value=1, default=1)
-    is_scimago = IntField(required=True, min_value=0, default=0)
-    is_scopus = IntField(required=True, min_value=0, default=0)
-    is_jcr = IntField(required=True, min_value=0, default=0)
-    is_cwts = IntField(required=True, min_value=0, default=0)
-    is_doaj = IntField(required=True, min_value=0, default=0)
-    is_capes = IntField(required=True, min_value=0, default=0)
-    is_pubmed = IntField(required=True, min_value=0, default=0)
-    is_pmc = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=0, default=0)
-    # Indexes
-    meta = {
-        'indexes': [
-            'pid',
-            'collection'
-        ]
-    }
-
-
 class Scimago(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
@@ -255,10 +226,6 @@ class Wosindexes(DynamicDocument):
     }
 
 
-class Ztests(DynamicDocument):
-    pass
-
-
 class Scielodates(DynamicDocument):
     # creation_date = DateTimeField(default=datetime.datetime.now)
     # updated_at = DateTimeField()
@@ -271,3 +238,7 @@ class Scielodates(DynamicDocument):
             'pid'
         ]
     }
+
+
+class Ztests(DynamicDocument):
+    pass

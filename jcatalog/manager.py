@@ -70,9 +70,10 @@ EM TESTE
 # from reports import scopus_list2
 # from transform import oecd_loader
 # from reports import invite_scielo_20
+from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-from reports import fapesp_evaluation_line
+# from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -141,9 +142,10 @@ if __name__ == "__main__":
     # scopus_list2
     # oecd_loader
     # invite_scielo_20
+    orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
-    fapesp_evaluation_line.main()
+    # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
