@@ -8,11 +8,11 @@ import logging
 import models
 from accent_remover import *
 
-logging.basicConfig(filename='logs/times.info.txt', level=logging.INFO)
+logging.basicConfig(filename='logs/orcid.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def scielocitations(filename):
+def orcid(filename):
     sheet = pyexcel.get_sheet(
         file_name=filename,
         sheet_name='import',
@@ -21,7 +21,7 @@ def scielocitations(filename):
     sheet_json = sheet.to_records()
 
     for rec in sheet_json:
-        query = models.Scielobk1.objects.filter(issn_list=rec['issn'])
+        query = models.Scielo.objects.filter(collection='scl', title=rec['title'])
 
         if len(query) == 1:
             doc = query[0]
@@ -34,7 +34,7 @@ def scielocitations(filename):
 
 
 def main():
-    scielocitations('data/scielo/SciELO-ScholarOne-ORCID.xlsx')
+    orcid('data/scielo/SciELO-ScholarOne-ORCID.xlsx')
 
 
 if __name__ == "__main__":
