@@ -108,7 +108,7 @@ def orcid(pid_col_tuples):
                 col = 0
 
                 d.journal.scielo_issn
-                worksheet.write(row, col, '2018-05-17', format_date)
+                worksheet.write(row, col, today, format_date)
                 col += 1
                 worksheet.write(row, col, d.journal.title)
                 col += 1
