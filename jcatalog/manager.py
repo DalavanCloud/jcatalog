@@ -32,7 +32,7 @@ EM TESTE
 # from transform import scielo_citations_update
 # from transform import scielo_dates_loader
 # from transform import scielo_toform_loader
-# from transform import scielo_ga_access_update
+from transform import scielo_ga_access_update
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -70,7 +70,7 @@ EM TESTE
 # from reports import scopus_list2
 # from transform import oecd_loader
 # from reports import invite_scielo_20
-from reports import orcid_list
+# from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
 # from reports import fapesp_evaluation_line
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # scielo_dates_loader.main()
     # scielo_inclusion_beforer_year_update.main()
     # scielo_toform_loader.main()
-    # scielo_ga_access_update.main()
+    scielo_ga_access_update.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     # scopus_list2
     # oecd_loader
     # invite_scielo_20
-    orcid_list.main()
+    # orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
     # fapesp_evaluation_line.main()
