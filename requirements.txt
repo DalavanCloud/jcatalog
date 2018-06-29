@@ -3,6 +3,6 @@ ipython
 mongoengine
 pyexcel
 pyexcel-xlsx
-requests
+requests==2.19.1
 xlsxwriter
 wget
