@@ -1,4 +1,4 @@
-articlemetaapi
+articlemetaapi==1.26.2
 ipython
 mongoengine
 pyexcel
