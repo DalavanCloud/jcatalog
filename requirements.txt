@@ -5,4 +5,4 @@ pyexcel
 pyexcel-xlsx
 requests
 xlsxwriter
-wget
+wget==3.2
