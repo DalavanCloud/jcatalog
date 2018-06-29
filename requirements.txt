@@ -1,7 +1,7 @@
 articlemetaapi
 ipython
 mongoengine
-pyexcel
+pyexcel==0.5.8
 pyexcel-xlsx
 requests
 xlsxwriter
