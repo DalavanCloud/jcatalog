@@ -6,14 +6,14 @@ EM TESTE
 # from tools import data_corrections
 
 # Sempre apos o match scielo x jcr
-# from tools import scielo_codes_oecd
-# from tools import scopus_oecd_codes
-# from tools import sender
+# from tools import scielo_codes_oecd <-----
+# from tools import scopus_oecd_codes <-----
+from tools.sender import sender
 
 # from tools import capes_loader
 # from tools import capes_update
 
-# from tools import scielo_rename_pdfs
+# from tools import scielo_rename_pdfs <-----
 
 # from extractors.scimago import downloader_scimago
 
@@ -76,7 +76,7 @@ EM TESTE
 # from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-from reports import fapesp_evaluation_line
+# from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -93,6 +93,7 @@ if __name__ == "__main__":
     # downloader_scimago.main()
 
     # scielo_loader.main()
+    # scielo_update.main()
     # scielo_access_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
@@ -149,7 +150,7 @@ if __name__ == "__main__":
     # orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
-    fapesp_evaluation_line.main()
+    # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
@@ -157,5 +158,5 @@ if __name__ == "__main__":
     # capes_loader.main()
     # capes_update.main()
 
-    # sender
+    sender
     # scielo_rename_pdfs.main()

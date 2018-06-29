@@ -11,6 +11,7 @@ output/
 extractors/wos/download/
 
 config.py
+sender_config.py
 
 # Logs
 logs/
