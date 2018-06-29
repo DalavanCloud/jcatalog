@@ -8,7 +8,8 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
-from tools.sender import sender
+# from sender import sender
+from sender import files_renamer
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -158,5 +159,5 @@ if __name__ == "__main__":
     # capes_loader.main()
     # capes_update.main()
 
-    sender
-    # scielo_rename_pdfs.main()
+    # sender
+    files_renamer.main()

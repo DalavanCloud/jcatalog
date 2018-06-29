@@ -1,8 +1,8 @@
 # coding: utf-8
 import os
 import sys
-from tools.sender import sender_config
-from tools.sender import sender_msg_atualizacao
+from sender import sender_config
+from sender import sender_msg_atualizacao
 import models
 
 import logging
