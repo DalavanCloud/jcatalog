@@ -8,8 +8,11 @@ This script collects and store data from various external sources to compose the
 
 # Requirements
 
-- pyexcel==0.5.4
-- pyexcel-xlsx==0.5.0.1
-- xlsxwriter==1.0.0
-- mongoengine==0.14.3
-- wget==3.2
+- articlemetaapi
+- ipython
+- mongoengine
+- pyexcel
+- pyexcel-xlsx
+- requests
+- xlsxwriter
+- wget
