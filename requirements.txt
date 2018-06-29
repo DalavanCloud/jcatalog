@@ -1,6 +1,6 @@
 articlemetaapi
 ipython
-mongoengine
+mongoengine==0.15.0
 pyexcel
 pyexcel-xlsx
 requests
