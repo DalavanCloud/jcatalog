@@ -1,5 +1,5 @@
 articlemetaapi
-ipython
+ipython==6.4.0
 mongoengine
 pyexcel
 pyexcel-xlsx
