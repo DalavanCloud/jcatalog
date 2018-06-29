@@ -4,5 +4,5 @@ mongoengine
 pyexcel
 pyexcel-xlsx
 requests
-xlsxwriter
+xlsxwriter==1.0.5
 wget
