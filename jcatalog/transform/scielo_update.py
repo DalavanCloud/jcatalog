@@ -43,32 +43,45 @@ def scieloupdate():
     scielo_json = scielo_sheet.to_records()
 
     for rec in scielo_json:
+        # remove empty keys
+        rec = {k: v for k, v in rec.items() if v or v == 0}
+        print(rec['issn_scielo'])
+        # print(rec)
 
         rec['title'] = rec['title_at_scielo']
 
-        # convert issn int type to str type
-        if type(rec['issns']) != str:
-            rec['issns'] = Issn().issn_hifen(rec['issns'])
-            msg = u'issn converted: %s - %s' % (rec['issns'], rec['title'])
-            logger.info(msg)
+        if 'issns' in rec:
+            # convert issn int type to str type
+            if type(rec['issns']) != str:
+                rec['issns'] = Issn().issn_hifen(rec['issns'])
+                msg = u'issn converted: %s - %s' % (rec['issns'], rec['title'])
+                logger.info(msg)
 
-        # convert in list
-        if type(rec['issns']) == str:
-            rec['issns'] = rec['issns'].split(';')
-            rec['issn_list'] = []
-            rec['issn_list'].append(rec['issn_scielo'])
-            for i in rec['issns']:
-                if i not in rec['issn_scielo']:
-                    rec['issn_list'].append(i)
+            # convert in list
+            if type(rec['issns']) == str:
+                rec['issns'] = rec['issns'].split(';')
+                rec['issn_list'] = []
+                rec['issn_list'].append(rec['issn_scielo'])
+                for i in rec['issns']:
+                    if i not in rec['issn_scielo']:
+                        rec['issn_list'].append(i)
+        # transform data in datetime type
+        if 'date_of_the_first_document' in rec:
+            rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
+        if 'date_of_the_last_document' in rec:
+            rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
+
 
         # UPDATE or SAVE
         if rec['collection'] not in ['sss', 'rve', 'psi', 'rvt']:
-            query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
+            query = models.Scielotest.objects.filter(issn_list=rec['issn_scielo'])
             if query:
-                rec del 'collection'
-                rec del 'region'
-                rec del 'country'
-                query[0].modify(**rec)
+                del rec['collection']
+                # del rec['region']
+                # del rec['country']
+                doc = query[0]
+                # print(rec)
+                doc.modify(**rec)
             else:
                 if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt']:
 
@@ -81,23 +94,22 @@ def scieloupdate():
                     rec['title_country'] = '%s-%s' % (
                         accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
                         rec['country'].lower())
-                models.Scielo(**rec).save()
+
+                    # # transform data in datetime type
+                    # if 'date_of_the_first_document' in rec:
+                    #     rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
+                    # if 'date_of_the_last_document' in rec:
+                    #     rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
+
+                    rec['collections'] = []
+                    rec['collections'].append(rec['collection'])
+
+                    rec['updated_at'] = datetime.datetime.now()
 
 
-        # transform data in datetime type
-        rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
-        rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
+                    models.Scielotest(**rec).save()
 
-        # rec['collections'] = []
-        # rec['collections'].append(rec['collection'])
-
-        rec['updated_at'] = datetime.datetime.now()
-        # remove empty keys
-        rec = {k: v for k, v in rec.items() if v or v == 0}
-
-
-
-    num_posts = models.Scielo.objects().count()
+    num_posts = models.Scielotest.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
     logger.info(msg)
     print(msg)
