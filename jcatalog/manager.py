@@ -40,7 +40,7 @@ EM TESTE
 
 # from transform import scielo_inclusion_beforer_year_update
 
-# from transform import scopus_loader
+from transform import scopus_loader
 # from transform import scopus_update
 
 # from transform import scimago_loader
@@ -50,7 +50,7 @@ EM TESTE
 # from transform import wos_update
 # from transform import wos_oecd_codes
 
-from transform import jcr_loader
+# from transform import jcr_loader
 # from transform import jcr_update
 # from transform import jcr_oecd_codes
 
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     # scielo_ga_access_update.main()
     # scielo_fapesp_evaluation_update.main()
 
-    # scopus_loader.main()
+    scopus_loader.main()
     # scopus_update.main()
     # scopus_oecd_codes
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # wos_update.main()
     # wos_oecd_codes
 
-    jcr_loader
+    # jcr_loader
     # jcr_update.main()
     # jcr_oecd_codes
 

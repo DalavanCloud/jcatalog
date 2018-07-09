@@ -182,7 +182,7 @@ scimago_columns_names = [
 
 
 # Scopus
-# period from 2014 to 2016
+# period from 2015 to 2017
 scopus_columns_names = [
  'sourcerecord_id',
  'title',
@@ -191,15 +191,15 @@ scopus_columns_names = [
  'active_or_inactive',
  'coverage',
  'article_language_source_iso_codes',
- 'citescore_2014',
- 'sjr_2014',
- 'snip_2014',
  'citescore_2015',
  'sjr_2015',
  'snip_2015',
  'citescore_2016',
  'sjr_2016',
  'snip_2016',
+ 'citescore_2017',
+ 'sjr_2017',
+ 'snip_2017',
  'medline_sourced_title',
  'open_acces_status',
  'articles_in_press_included',

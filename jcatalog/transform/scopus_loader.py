@@ -4,6 +4,7 @@ This script reads data from Scopus xlsx files to process and laod in MongoDB.
 '''
 import logging
 import pyexcel
+import datetime
 
 import models
 import keycorrection
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def scopus_loader(file_name, keycorrection):
 
-    models.Scopus.drop_collection()
+    # models.Scopus.drop_collection()
 
     sheet = pyexcel.get_sheet(file_name=file_name, name_columns_by_row=0)
 
@@ -49,7 +50,9 @@ def scopus_loader(file_name, keycorrection):
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}
 
-        for year in ['2014', '2015', '2016']:
+        rec['updated_at'] = datetime.datetime.now()
+
+        for year in ['2015', '2016', '2017']:
 
             for k in ['citescore', 'sjr', 'snip']:
 
@@ -71,9 +74,20 @@ def scopus_loader(file_name, keycorrection):
                 codes.pop()
         rec['asjc_code_list'] = codes
 
-        # Save data
-        mdata = models.Scopus(**rec)
-        mdata.save()
+        # Update or Save data
+        if 'issn_list' in rec:
+            for issn in rec['issn_list']:
+                query = models.Scopus.objects.filter(issn_list=issn)
+                if len(query) == 0:
+                    # Save new
+                    print('new - '+ rec['title'])
+                    mdata = models.Scopus(**rec)
+                    mdata.save()
+                if len(query) > 0:
+                    for q in query:
+                        # Update
+                        print('old - '+rec['title'])
+                        q.modify(**rec)
 
     num_posts = models.Scopus.objects().count()
     msg = u'Registred %d posts in Scopus collection' % num_posts
@@ -88,7 +102,7 @@ def main():
     keycorrection = dict name of keycorrection module
     '''
     scopus_loader(
-        'data/scopus/ext_list_October_2017.xlsx',
+        'data/scopus/scopus.xlsx',
         keycorrection.scopus_columns_names)
 
 
