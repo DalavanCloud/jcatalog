@@ -614,17 +614,17 @@ def journal(query, filename, sheetname, issn, atfile):
             else:
                 col += 6
 
-            # Google (volta 1 ano)
+            # Google
             col = 97
             if h == 'anterior':
                 pass
             else:
-                h2 = int(h)-1
-                if 'google_scholar_h5_'+str(h2) in doc:
-                    worksheet.write(row, col, doc['google_scholar_h5_'+str(h2)])
+                year = str(h)
+                if 'google_scholar_h5_'+year in doc:
+                    worksheet.write(row, col, doc['google_scholar_h5_'+year])
                 col += 1
-                if 'google_scholar_m5_'+str(h2) in doc:
-                    worksheet.write(row, col, doc['google_scholar_m5_'+str(h2)])
+                if 'google_scholar_m5_'+year in doc:
+                    worksheet.write(row, col, doc['google_scholar_m5_'+year])
                 col += 1
 
             # SCOPUS - CiteScore

@@ -19,9 +19,9 @@ logging.basicConfig(filename='logs/scielo_update.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def scieloupdate():
+def scieloupdate():    
     scielo_sheet = pyexcel.get_sheet(
-        file_name='data/scielo/journals_net_180628.csv',
+        file_name='data/scielo/journals_net.csv',
         name_columns_by_row=0)
 
     # Edit labels
@@ -46,7 +46,6 @@ def scieloupdate():
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}
         print(rec['issn_scielo'])
-        # print(rec)
 
         rec['title'] = rec['title_at_scielo']
 
@@ -65,22 +64,24 @@ def scieloupdate():
                 for i in rec['issns']:
                     if i not in rec['issn_scielo']:
                         rec['issn_list'].append(i)
+
         # transform data in datetime type
         if 'date_of_the_first_document' in rec:
             rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
         if 'date_of_the_last_document' in rec:
             rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
 
+        rec['updated_at'] = datetime.datetime.now()
 
         # UPDATE or SAVE
         if rec['collection'] not in ['sss', 'rve', 'psi', 'rvt']:
-            query = models.Scielotest.objects.filter(issn_list=rec['issn_scielo'])
+            query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
             if query:
+
                 del rec['collection']
-                # del rec['region']
-                # del rec['country']
+
                 doc = query[0]
-                # print(rec)
+
                 doc.modify(**rec)
             else:
                 if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt']:
@@ -88,28 +89,19 @@ def scieloupdate():
                     rec['country'] = collections_scielo.collection[rec['collection']]
 
                     if 'region' not in rec and 'country' in rec:
-                        # data = {}
+
                         rec['region'] = collections_scielo.region[rec['country']]
 
                     rec['title_country'] = '%s-%s' % (
                         accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
                         rec['country'].lower())
 
-                    # # transform data in datetime type
-                    # if 'date_of_the_first_document' in rec:
-                    #     rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
-                    # if 'date_of_the_last_document' in rec:
-                    #     rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
-
                     rec['collections'] = []
                     rec['collections'].append(rec['collection'])
 
-                    rec['updated_at'] = datetime.datetime.now()
+                    models.Scielo(**rec).save()
 
-
-                    models.Scielotest(**rec).save()
-
-    num_posts = models.Scielotest.objects().count()
+    num_posts = models.Scielo.objects().count()
     msg = u'Registred %d posts in SciELO collection' % num_posts
     logger.info(msg)
     print(msg)

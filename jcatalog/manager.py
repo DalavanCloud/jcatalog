@@ -9,7 +9,7 @@ EM TESTE
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
 # from sender import sender
-from sender import files_renamer
+# from sender import files_renamer
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -77,7 +77,7 @@ from sender import files_renamer
 # from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-# from reports import fapesp_evaluation_line
+from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     # orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
-    # fapesp_evaluation_line.main()
+    fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
@@ -160,4 +160,4 @@ if __name__ == "__main__":
     # capes_update.main()
 
     # sender
-    files_renamer.main()
+    # files_renamer.main()
