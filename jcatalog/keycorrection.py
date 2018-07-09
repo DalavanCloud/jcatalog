@@ -286,7 +286,6 @@ jcr_columns_names = [
  'eigenfactor_score',
  'article_influence_score',
  'percentage_articles_in_citable_items',
- 'empty',
  'average_journal_impact_factor_percentile',
  'normalized_eigenfactor']
 

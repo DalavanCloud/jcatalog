@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 filelist = [f for f in os.listdir('data/jcr/jcr_all/')]
 filelist.sort()
 
-models.Jcr.drop_collection()
+# models.Jcr.drop_collection()
 
 for f in filelist:
 

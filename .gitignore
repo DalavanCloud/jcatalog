@@ -8,7 +8,7 @@ data/
 docs/
 tools/
 output/
-extractors/wos/download/
+extractors/jcr/download/
 
 config.py
 sender_config.py

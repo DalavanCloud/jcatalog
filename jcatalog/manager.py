@@ -50,7 +50,7 @@ EM TESTE
 # from transform import wos_update
 # from transform import wos_oecd_codes
 
-# from transform import jcr_loader
+from transform import jcr_loader
 # from transform import jcr_update
 # from transform import jcr_oecd_codes
 
@@ -77,7 +77,7 @@ EM TESTE
 # from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-from reports import fapesp_evaluation_line
+# from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # wos_update.main()
     # wos_oecd_codes
 
-    # jcr_loader
+    jcr_loader
     # jcr_update.main()
     # jcr_oecd_codes
 
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     # orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
-    fapesp_evaluation_line.main()
+    # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
