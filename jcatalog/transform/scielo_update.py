@@ -18,6 +18,8 @@ from articlemeta.client import ThriftClient
 logging.basicConfig(filename='logs/scielo_update.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+client = ThriftClient()
+
 
 def scieloupdate():    
     scielo_sheet = pyexcel.get_sheet(
@@ -71,6 +73,8 @@ def scieloupdate():
         if 'date_of_the_last_document' in rec:
             rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
 
+        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+
         rec['updated_at'] = datetime.datetime.now()
 
         # UPDATE or SAVE
@@ -107,35 +111,28 @@ def scieloupdate():
     print(msg)
 
 
-def scieloapi():
+def scieloapi(col, issn):
 
-    client = ThriftClient()
+    journal = client.journal(collection=col, code=issn)
 
-    for journal in client.journals():
+    if journal:
+        print('api: ' + journal.scielo_issn)
+        data = {}
 
-        query = models.Scielo.objects.filter(issn_scielo=journal.scielo_issn)
+        for label in keycorrection.scielo_api:
 
-        if query:
+            try:
+                if label == 'url':
+                    jdata = getattr(journal, label)()
+                else:
+                    jdata = getattr(journal, label)
+                if jdata and jdata is not None:
+                    data[label] = jdata
+            except ValueError:
+                continue
 
-            for doc in query:
-                print('api: ' + journal.scielo_issn)
-                data = {'api': {}}
-
-                for label in keycorrection.scielo_api:
-
-                    try:
-                        if label == 'url':
-                            jdata = getattr(journal, label)()
-                        else:
-                            jdata = getattr(journal, label)
-                        if jdata and jdata is not None:
-                            data['api'][label] = jdata
-                    except ValueError:
-                        continue
-
-                if data:
-                    doc.modify(**data)
-                    doc.save()
+        if data:
+            return data
 
 
 # Add OJS and ScholarOne
