@@ -23,7 +23,7 @@ for j in query:
     else:
         print(j['issn_scielo'] + "sem email")
 
-    worksheet.write(row, 3, 'http://static.scielo.org/fapesp_evaluation/avaliacao_scielo_'+j['issn_scielo']+'.xlsx')
+    # worksheet.write(row, 3, 'http://static.scielo.org/fapesp_evaluation/avaliacao_scielo_'+j['issn_scielo']+'.xlsx')
 
     row += 1
 
