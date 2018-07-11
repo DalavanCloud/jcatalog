@@ -83,7 +83,7 @@ def journal(query, filename, sheetname, issn, atfile):
         worksheet.write(0, col, h['rotulo_portugues'], wrap_header)
         col += 1
 
-    extraction_date = models.Scielo.objects.first().extraction_date
+    extraction_date = models.Scielofapesp.objects.first().extraction_date
 
     # SciELO
     scielo = query
@@ -1069,7 +1069,7 @@ def onejournal():
     for j in scielo:
         counter += 1
         issn = j['issn_scielo']
-        queryj = models.Scielo.objects.filter(issn_list=issn)
+        queryj = models.Scielofapesp.objects.filter(issn_list=issn)
         short_title = accent_remover(j['short_title_scielo'])
         title = re.sub(r'[\[\]:*?/\\]', "", short_title)
         # acronym = j['api']['acronym']
@@ -1087,7 +1087,7 @@ def onejournal():
     print(counter)
 
     # teste MIOC
-    # queryj = models.Scielo.objects.filter(issn_list='0074-0276')
+    # queryj = models.Scielofapesp.objects.filter(issn_list='0074-0276')
     # issn = '0074-0276'
     # filename = 'avaliacao_scielo_'+issn+'.xlsx'
     # sheetname = 'Mem. Inst. Oswaldo Cruz'
