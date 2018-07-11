@@ -19,7 +19,7 @@ EM TESTE
 # from extractors.scimago import downloader_scimago
 
 # from transform import scielo_loader
-from transform import scielo_update
+# from transform import scielo_update
 # from transform import scielo_access_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
@@ -70,6 +70,8 @@ from transform import scielo_update
 # from reports import jcatalog
 # from reports import jcatalog_small
 
+from reports import journal_date_list
+
 # Abel
 # from reports import scopus_list2
 # from transform import oecd_loader
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     # downloader_scimago.main()
 
     # scielo_loader.main()
-    scielo_update.main()
+    # scielo_update.main()
     # scielo_access_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
@@ -158,6 +160,7 @@ if __name__ == "__main__":
     # Denise
     # capes_loader.main()
     # capes_update.main()
+    journal_date_list.main()
 
     # sender
     # files_renamer.main()
