@@ -1016,7 +1016,7 @@ def journal(query, filename, sheetname, issn, atfile):
 
 
 def alljournals():
-    scielo = models.Scielo.objects.filter(fapesp_evaluation__2018__fullset=1)
+    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__fullset=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'Fapesp-avaliação-SciELO-todos-'+today+'.xlsx'
     sheetname = 'SciELO-todos'
@@ -1030,7 +1030,7 @@ def alljournals():
 
 
 def activethisyear():
-    scielo = models.Scielo.objects.filter(
+    scielo = models.Scielofapesp.objects.filter(
         fapesp_evaluation__2018__activethisyear=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'Fapesp-avaliação-SciELO-ativos2018-'+today+'.xlsx'
@@ -1049,7 +1049,7 @@ def activethisyear_inclusion_before():
     # já considera:
     # title_current_status='current'
     # collection='scl'
-    scielo = models.Scielo.objects.filter(fapesp_evaluation__2018__evaluated=1)
+    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__evaluated=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015-'+today+'.xlsx'
     sheetname = 'SciELO-ativos2018-ate2015'
@@ -1063,7 +1063,7 @@ def activethisyear_inclusion_before():
 
 
 def onejournal():
-    scielo = models.Scielo.objects.filter(fapesp_evaluation__2018__evaluated=1)
+    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__evaluated=1)
     counter = 0
 
     for j in scielo:
