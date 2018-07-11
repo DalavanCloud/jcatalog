@@ -164,6 +164,7 @@ submission_scielo_brasil_columns_names = [
 # Scimago
 scimago_columns_names = [
  'rank',
+ 'sourceid',
  'title',
  'type',
  'issn',
@@ -178,6 +179,7 @@ scimago_columns_names = [
  'cites_by_doc_2years',
  'ref_by_doc',
  'country',
+ 'publisher',
  'categories']
 
 

@@ -29,7 +29,7 @@ def downloader(scielo):
         'Pacific Region',
         'Western Europe']
 
-    download_dir = 'data/scimago/xlsx'
+    download_dir = 'data/scimago/csv'
 
     if scielo == 'true':
         if not os.path.exists(download_dir + '/inscielo'):
@@ -46,13 +46,13 @@ def downloader(scielo):
 
     for region in regions:
 
-        initial_year = 1999
+        initial_year = 2017
 
         last_year = 2017
 
         while (initial_year <= last_year):
 
-            url = 'http://www.scimagojr.com/journalrank.php'
+            url = 'https://www.scimagojr.com/journalrank.php'
 
             link = '%s?year=%s&country=%s&scielo=%s&out=xls' % (
                 url,
@@ -63,9 +63,9 @@ def downloader(scielo):
             filename = wget.download(link)
 
             if scielo == 'true':
-                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '_scielo' +'.xlsx'
+                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '_scielo' +'.csv'
             else:
-                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '.xlsx'
+                newfile = 'scimago_' + region.replace(' ', '_') + '_' + str(initial_year) + '.csv'
 
             os.rename(filename, newfile)
 
@@ -80,8 +80,8 @@ def downloader(scielo):
 
 def main():
     downloader('false')
-    os.chdir(PROJECT_PATH)
-    downloader('true')
+    # os.chdir(PROJECT_PATH)
+    # downloader('true')
 
 
 if __name__ == "__main__":

@@ -40,7 +40,7 @@ EM TESTE
 
 # from transform import scielo_inclusion_beforer_year_update
 
-from transform import scopus_loader
+# from transform import scopus_loader
 # from transform import scopus_update
 
 # from transform import scimago_loader
@@ -77,7 +77,7 @@ from transform import scopus_loader
 # from reports import orcid_list
 # from reports import scopus_scimago_check
 # from reports import fapesp_evaluation
-# from reports import fapesp_evaluation_line
+from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 
 # from reports import list_send
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     # scielo_ga_access_update.main()
     # scielo_fapesp_evaluation_update.main()
 
-    scopus_loader.main()
+    # scopus_loader.main()
     # scopus_update.main()
     # scopus_oecd_codes
 
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     # orcid_list.main()
     # scopus_scimago_check
     # fapesp_evaluation
-    # fapesp_evaluation_line.main()
+    fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # list_send
 
