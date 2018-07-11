@@ -27,7 +27,7 @@ def manus(filename):
     for rec in sheet_json:
         print(rec['issn_scielo'])
 
-        query = models.Scielo.objects.filter(issn_scielo=rec['issn_scielo'])
+        query = models.Scielofapesp.objects.filter(issn_scielo=rec['issn_scielo'])
 
         if len(query) == 1 and 'manuscritos' not in query[0]:
 
