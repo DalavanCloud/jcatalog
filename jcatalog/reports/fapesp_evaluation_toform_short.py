@@ -39,27 +39,27 @@ def journal(query, filename, sheetname):
         '3-e01 e 3-f0',
         '3-e02',
         '3-e03',
-        '3-e1',
-        '3-e2',
-        '3-e3',
-        '3-e4',
-        '3-f1',
-        '3-f2',
-        '3-g1',
-        '3-g2',
-        '3-g3',
-        '3-g4',
+        # '3-e1',
+        # '3-e2',
+        # '3-e3',
+        # '3-e4',
+        # '3-f1',
+        # '3-f2',
+        # '3-g1',
+        # '3-g2',
+        # '3-g3',
+        # '3-g4',
         '3-h01',
         '3-h02',
-        '3-j0',
-        '3-j1',
-        '3-j2',
-        '3-j3',
-        '4-d',
-        '4-f1',
-        '4-f2',
-        '4-f3',
-        '4-f4'
+        # '3-j0',
+        # '3-j1',
+        # '3-j2',
+        # '3-j3',
+        # '4-d',
+        # '4-f1',
+        # '4-f2',
+        # '4-f3',
+        # '4-f4'
     ]:
 
         worksheet.write(0, col, h, wrap_header)
@@ -131,34 +131,34 @@ def journal(query, filename, sheetname):
             col += 3
 
         # 3-e1 a 4, 3-f1 a 2 - 2015
-        if 'form' in doc:
-            for criterio in [
-                '3-e1',
-                '3-e2',
-                '3-e3',
-                '3-e4',
-                '3-f1',
-                '3-f2'
-            ]:
-                if criterio in doc['form']['2015']:
-                    worksheet.write(row, col, doc['form']['2015'][criterio])
-                col += 1
-        else:
-            col += 6
+        # if 'form' in doc:
+        #     for criterio in [
+        #         '3-e1',
+        #         '3-e2',
+        #         '3-e3',
+        #         '3-e4',
+        #         '3-f1',
+        #         '3-f2'
+        #     ]:
+        #         if criterio in doc['form']['2015']:
+        #             worksheet.write(row, col, doc['form']['2015'][criterio])
+        #         col += 1
+        # else:
+        #     col += 6
 
         # 3-g - 2017
-        if 'form' in doc:
-            for criterio in [
-                '3-g1',
-                '3-g2',
-                '3-g3',
-                '3-g4'
-            ]:
-                if criterio in doc['form']['2017']:
-                    worksheet.write(row, col, doc['form']['2017'][criterio])
-                col += 1
-        else:
-            col += 4
+        # if 'form' in doc:
+        #     for criterio in [
+        #         '3-g1',
+        #         '3-g2',
+        #         '3-g3',
+        #         '3-g4'
+        #     ]:
+        #         if criterio in doc['form']['2017']:
+        #             worksheet.write(row, col, doc['form']['2017'][criterio])
+        #         col += 1
+        # else:
+        #     col += 4
 
         # 3-h
         if 'docs' in doc:
@@ -172,37 +172,37 @@ def journal(query, filename, sheetname):
             col += 2
 
         # 3-j, 4-d, 4-f1 a 2
-        if 'form' in doc:
-            for criterio in [
-                '3-j0',
-                '3-j1',
-                '3-j2',
-                '3-j3',
-                '4-d',
-                '4-f1',
-                '4-f2'
-            ]:
-                if criterio in doc['form']['2017']:
-                    worksheet.write(row, col, doc['form']['2017'][criterio])
-                col += 1
-        else:
-            col += 7
+        # if 'form' in doc:
+        #     for criterio in [
+        #         '3-j0',
+        #         '3-j1',
+        #         '3-j2',
+        #         '3-j3',
+        #         '4-d',
+        #         '4-f1',
+        #         '4-f2'
+        #     ]:
+        #         if criterio in doc['form']['2017']:
+        #             worksheet.write(row, col, doc['form']['2017'][criterio])
+        #         col += 1
+        # else:
+        #     col += 7
 
         # 4-f3 e 4-f4
-        if 'times' in doc:
-            # sub_aprov
-            if 'media_meses_sub_aprov_2017' in doc['times']:
-                times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
-                worksheet.write(row, col, times)
-            col += 1
-            # aprov_pub_scielo
-            if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
-                times = timesfmt(
-                    doc['times']['media_meses_aprov_pub_scielo_2017'])
-                worksheet.write(row, col, times)
-            col += 1
-        else:
-            col += 2
+        # if 'times' in doc:
+        #     # sub_aprov
+        #     if 'media_meses_sub_aprov_2017' in doc['times']:
+        #         times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
+        #         worksheet.write(row, col, times)
+        #     col += 1
+        #     # aprov_pub_scielo
+        #     if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
+        #         times = timesfmt(
+        #             doc['times']['media_meses_aprov_pub_scielo_2017'])
+        #         worksheet.write(row, col, times)
+        #     col += 1
+        # else:
+        #     col += 2
 
         # Avança journal
         row += 1

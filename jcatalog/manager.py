@@ -70,7 +70,7 @@ EM TESTE
 # from reports import jcatalog
 # from reports import jcatalog_small
 
-from reports import journal_date_list
+# from reports import journal_date_list
 
 # Abel
 # from reports import scopus_list2
@@ -81,6 +81,7 @@ from reports import journal_date_list
 # from reports import fapesp_evaluation
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
+from reports import fapesp_evaluation_toform_short
 
 # from reports import list_send
 
@@ -155,12 +156,13 @@ if __name__ == "__main__":
     # fapesp_evaluation
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
+    fapesp_evaluation_toform_short.main()
     # list_send
 
     # Denise
     # capes_loader.main()
     # capes_update.main()
-    journal_date_list.main()
+    # journal_date_list.main()  # Spinak
 
     # sender
     # files_renamer.main()
