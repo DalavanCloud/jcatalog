@@ -2,7 +2,7 @@
 import os
 import sys
 from sender import sender_config
-from sender import sender_msg_atualizacao
+from sender import sender_msg_formlink
 import models
 
 import logging
@@ -23,8 +23,8 @@ senha = sender_config.senha
 
 # prepara a lista de editores com base na filtragem 2016 e envia
 # Somente periódicos que entraram antes de 2016
-#query = models.Scielo.objects.filter(fapesp_evaluation__2018__evaluated=1)
-query = models.Scielo.objects.filter(issn_list='0074-0276')
+query = models.Scielo.objects.filter(fapesp_evaluation__2018__evaluated=1)
+# query = models.Scielo.objects.filter(issn_list='0101-4714')
 
 for journal in query:
 
@@ -35,28 +35,30 @@ for journal in query:
     texto = None
     destinatario = None
 
-    assunto = 'atualização - FAPESP - Avaliação dos periódicos SciELO Brasil'
+    assunto = 'FAPESP - Avaliação dos periódicos SciELO Brasil - atualização'
     issn = journal['issn_scielo']
-    file = "Fapesp-avaliacao-SciELO-"+issn+"-20180627.xlsx"
-    form = "Formulario-avaliacao-Fapesp-SciELO-"+issn+"-20180627.pdf"
+    file = "Fapesp-avaliacao-SciELO-" + issn + "-20180713.xlsx"
+    form = "Formulario-avaliacao-Fapesp-SciELO-" + issn + "-20180713.pdf"
     title = journal['title']
 
     # carrega o texto e renderiza com str.format()
-    texto = (sender_msg_atualizacao.body_msg % (title, file, form, file, file))
+    texto = (sender_msg_formlink.body_msg % (title, form, file))
 
     # lista de emails destinatario
     if 'avaliacao' in journal:
         if 'contatos' in journal['avaliacao']:
 
-            destinatario = [e['email_address'] for e in journal['avaliacao']['contatos']]
+            destinatario = [e['email_address']
+                            for e in journal['avaliacao']['contatos']]
             if destinatario:
                 msg = [('ok: ' + dest) for dest in destinatario]
                 logger.info(msg)
                 print(msg)
 
                 # ativar para TESTES - adicionar o email manualmente
-                destinatario = []
-                destinatario = ['@gmail.com']
+                # destinatario = []
+                # destinatario = ['abel.packer@scielo.org',
+                #                 'ednilson.gesseff@scielo.org']
             else:
                 msg = 'sem destinatario:' + issn
                 logger.info(msg)

@@ -8,7 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
-# from sender import sender
+from sender import sender
 # from sender import files_renamer
 
 # from tools import capes_loader
@@ -81,7 +81,7 @@ EM TESTE
 # from reports import fapesp_evaluation
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
-from reports import fapesp_evaluation_toform_short
+# from reports import fapesp_evaluation_toform_short
 
 # from reports import list_send
 
@@ -156,7 +156,7 @@ if __name__ == "__main__":
     # fapesp_evaluation
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
-    fapesp_evaluation_toform_short.main()
+    # fapesp_evaluation_toform_short.main()
     # list_send
 
     # Denise
@@ -164,5 +164,5 @@ if __name__ == "__main__":
     # capes_update.main()
     # journal_date_list.main()  # Spinak
 
-    # sender
+    sender
     # files_renamer.main()
