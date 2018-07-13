@@ -57,10 +57,10 @@ def timesfmt(data):
 def journal(query, filename, sheetname, issn, atfile):
     # Creates the Excel folder and add a worksheet
     if issn:
-        workbook = xlsxwriter.Workbook('output/journals/'+filename)
+        workbook = xlsxwriter.Workbook('output/journals/' + filename)
         worksheet = workbook.add_worksheet(sheetname)
     else:
-        workbook = xlsxwriter.Workbook('output/'+filename)
+        workbook = xlsxwriter.Workbook('output/' + filename)
         worksheet = workbook.add_worksheet(sheetname)
 
     worksheet.freeze_panes(1, 0)
@@ -74,9 +74,9 @@ def journal(query, filename, sheetname, issn, atfile):
     format_date_iso = workbook.add_format({'num_format': 'yyyymmdd'})
 
     sheet_header = pyexcel.get_sheet(
-            file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
-            sheet_name='rotulos_dados_periodicos',
-            name_columns_by_row=0)
+        file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
+        sheet_name='rotulos_dados_periodicos',
+        name_columns_by_row=0)
 
     headers = sheet_header.to_records()
     for h in headers:
@@ -104,8 +104,8 @@ def journal(query, filename, sheetname, issn, atfile):
             '2016',
             '2017',
             '2018'
-                ]:
-            print(doc.issn_scielo+'_'+str(h))
+        ]:
+            print(doc.issn_scielo + '_' + str(h))
 
             col = 0
 
@@ -122,11 +122,11 @@ def journal(query, filename, sheetname, issn, atfile):
             # ativo no ano
             ativo_y = 0
             if 'docs' in doc:
-                if 'docs_'+h in doc['docs']:
+                if 'docs_' + h in doc['docs']:
                     # print(doc['docs']['docs_'+h])
-                    if doc['docs']['docs_'+h] == '':
+                    if doc['docs']['docs_' + h] == '':
                         ativo_y = 0
-                    elif int(doc['docs']['docs_'+h]) > 0:
+                    elif int(doc['docs']['docs_' + h]) > 0:
                         ativo_y = 1
             worksheet.write(row, col, ativo_y)
             col += 1
@@ -153,7 +153,8 @@ def journal(query, filename, sheetname, issn, atfile):
             worksheet.write(row, col, doc.crossref['doi_provider']['prefix'])
             col += 1
 
-            worksheet.write(row, col, doc.crossref['doi_provider']['publisher'])
+            worksheet.write(row, col, doc.crossref[
+                            'doi_provider']['publisher'])
             col += 1
 
             if 'url' in doc['api']:
@@ -164,7 +165,8 @@ def journal(query, filename, sheetname, issn, atfile):
             doajapi = models.Doajapi.objects.filter(issn_list=doc.issn_scielo)
             if doajapi:
                 if 'editorial_review' in doajapi[0]['results'][0]['bibjson']:
-                    url_journal = doajapi[0]['results'][0]['bibjson']['editorial_review']['url']
+                    url_journal = doajapi[0]['results'][0][
+                        'bibjson']['editorial_review']['url']
                     worksheet.write(row, col, url_journal)
             col += 1
 
@@ -192,7 +194,8 @@ def journal(query, filename, sheetname, issn, atfile):
 
             # Submissions - Manager System
             col = 16
-            submiss = models.Submissions.objects.filter(issn_list=doc.issn_scielo)
+            submiss = models.Submissions.objects.filter(
+                issn_list=doc.issn_scielo)
             if submiss:
                 # descricao sist. gestao
                 sist = 'ND'
@@ -296,7 +299,9 @@ def journal(query, filename, sheetname, issn, atfile):
                 if 'contatos' in doc['avaliacao']:
                     count = 0
                     for c in doc['avaliacao']['contatos']:
-                        name = None; lattes = None; orcid = None
+                        name = None
+                        lattes = None
+                        orcid = None
                         if c['cargo'] == 'Editor-chefe' or c['cargo'] == 'Editor':
                             count += 1
                             name = c['first_name'] + ' ' + c['last_name']
@@ -329,7 +334,7 @@ def journal(query, filename, sheetname, issn, atfile):
                 'title_is_human_sciences',
                 'title_is_linguistics_letters_and_arts',
                 'title_is_multidisciplinary'
-                    ]:
+            ]:
                 if k in doc:
                     worksheet.write(row, col, doc[k])
                 col += 1
@@ -337,7 +342,8 @@ def journal(query, filename, sheetname, issn, atfile):
             # Wos Categories
             col = 50
             if 'wos_subject_areas' in doc['api']:
-                worksheet.write(row, col, '; '.join(doc['api']['wos_subject_areas']))
+                worksheet.write(row, col, '; '.join(
+                    doc['api']['wos_subject_areas']))
             col += 1
 
             # Historico
@@ -355,10 +361,12 @@ def journal(query, filename, sheetname, issn, atfile):
                 worksheet.write(row, col, doc.stopping_year_at_scielo)
             col += 1
 
-            worksheet.write(row, col, doc.date_of_the_first_document, format_date_iso)
+            worksheet.write(
+                row, col, doc.date_of_the_first_document, format_date_iso)
             col += 1
 
-            worksheet.write(row, col, doc.date_of_the_last_document, format_date_iso)
+            worksheet.write(
+                row, col, doc.date_of_the_last_document, format_date_iso)
             col += 1
 
             # APC
@@ -383,12 +391,13 @@ def journal(query, filename, sheetname, issn, atfile):
                     coin = None
                     value = None
                     concept = None
-                    if 'apc'+str(f)+'_value_coin':
-                        coin = doc['apc']['apc'+str(f)+'_value_coin']
-                        value = doc['apc']['apc'+str(f)+'_value']
-                        concept = doc['apc']['apc'+str(f)+'_concept']
+                    if 'apc' + str(f) + '_value_coin':
+                        coin = doc['apc']['apc' + str(f) + '_value_coin']
+                        value = doc['apc']['apc' + str(f) + '_value']
+                        concept = doc['apc']['apc' + str(f) + '_concept']
                     if coin or value or concept:
-                        apc_list.append('[%s) value: %s %s - concept: %s]' % (str(f), coin, value, concept))
+                        apc_list.append('[%s) value: %s %s - concept: %s]' %
+                                        (str(f), coin, value, concept))
                 if apc_list:
                     worksheet.write(row, col, '; '.join(apc_list))
                 col += 1
@@ -475,69 +484,81 @@ def journal(query, filename, sheetname, issn, atfile):
 
             # Documentos
             if 'docs' in doc:
-                if 'docs_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['docs_'+h] or 0)
+                if 'docs_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs']['docs_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'document_en_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['document_en_'+h] or 0)
+                if 'document_en_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'document_en_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'document_pt_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['document_pt_'+h] or 0)
+                if 'document_pt_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'document_pt_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'document_es_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['document_es_'+h] or 0)
+                if 'document_es_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'document_es_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'doc_2_more_lang_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['doc_2_more_lang_'+h] or 0)
+                if 'doc_2_more_lang_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'doc_2_more_lang_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'document_other_languages_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['document_other_languages_'+h] or 0)
+                if 'document_other_languages_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'document_other_languages_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
                 # CITABLES
-                if 'is_citable_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['is_citable_'+h] or 0)
+                if 'is_citable_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'is_citable_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'tipo_review_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['tipo_review_'+h] or 0)
+                if 'tipo_review_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'tipo_review_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'citable_en_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['citable_en_'+h] or 0)
+                if 'citable_en_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'citable_en_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'citable_pt_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['citable_pt_'+h] or 0)
+                if 'citable_pt_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'citable_pt_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'citable_es_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['citable_es_'+h] or 0)
+                if 'citable_es_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'citable_es_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'citable_doc_2_more_lang_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['citable_doc_2_more_lang_'+h] or 0)
+                if 'citable_doc_2_more_lang_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'citable_doc_2_more_lang_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
-                if 'citable_other_lang_'+h in doc['docs']:
-                    worksheet.write(row, col, doc['docs']['citable_other_lang_'+h] or 0)
+                if 'citable_other_lang_' + h in doc['docs']:
+                    worksheet.write(row, col, doc['docs'][
+                                    'citable_other_lang_' + h] or 0)
                 else:
                     worksheet.write(row, col, 0)
                 col += 1
@@ -560,9 +581,10 @@ def journal(query, filename, sheetname, issn, atfile):
                         '2016',
                         '2017',
                         '2018'
-                            ]:
-                        if 'pub_'+hy+'_acc_anterior' in doc['access']:
-                            worksheet.write(row, col, doc['access']['pub_'+hy+'_acc_'+yacc])
+                    ]:
+                        if 'pub_' + hy + '_acc_anterior' in doc['access']:
+                            worksheet.write(row, col, doc['access'][
+                                            'pub_' + hy + '_acc_' + yacc])
                         else:
                             worksheet.write(row, col, 0)
                         col += 1
@@ -576,9 +598,10 @@ def journal(query, filename, sheetname, issn, atfile):
                         '2016',
                         '2017',
                         '2018'
-                            ]:
-                        if 'pub_'+h+'_acc_'+yacc in doc['access']:
-                            worksheet.write(row, col, doc['access']['pub_'+h+'_acc_'+yacc] or 0)
+                    ]:
+                        if 'pub_' + h + '_acc_' + yacc in doc['access']:
+                            worksheet.write(row, col, doc['access'][
+                                            'pub_' + h + '_acc_' + yacc] or 0)
                         else:
                             worksheet.write(row, col, 0)
                         col += 1
@@ -593,23 +616,29 @@ def journal(query, filename, sheetname, issn, atfile):
                 else:
                     year = str(h)
 
-                    if 'docs_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['docs_'+year])
+                    if 'docs_' + year in doc['scieloci']:
+                        worksheet.write(
+                            row, col, doc['scieloci']['docs_' + year])
                     col += 1
-                    if 'is_citable_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['is_citable_'+year])
+                    if 'is_citable_' + year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci'][
+                                        'is_citable_' + year])
                     col += 1
-                    if 'scieloci_cited_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['scieloci_cited_'+year])
+                    if 'scieloci_cited_' + year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci'][
+                                        'scieloci_cited_' + year])
                     col += 1
-                    if 'scieloci_wos_cited_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['scieloci_wos_cited_'+year])
+                    if 'scieloci_wos_cited_' + year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci'][
+                                        'scieloci_wos_cited_' + year])
                     col += 1
-                    if 'one_o_more_scielo_cited_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['one_o_more_scielo_cited_'+year])
+                    if 'one_o_more_scielo_cited_' + year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci'][
+                                        'one_o_more_scielo_cited_' + year])
                     col += 1
-                    if 'one_o_more_wos_cited_'+year in doc['scieloci']:
-                        worksheet.write(row, col, doc['scieloci']['one_o_more_wos_cited_'+year])
+                    if 'one_o_more_wos_cited_' + year in doc['scieloci']:
+                        worksheet.write(row, col, doc['scieloci'][
+                                        'one_o_more_wos_cited_' + year])
                     col += 1
             else:
                 col += 6
@@ -620,18 +649,19 @@ def journal(query, filename, sheetname, issn, atfile):
                 pass
             else:
                 year = str(h)
-                if 'google_scholar_h5_'+year in doc:
-                    worksheet.write(row, col, doc['google_scholar_h5_'+year])
+                if 'google_scholar_h5_' + year in doc:
+                    worksheet.write(row, col, doc['google_scholar_h5_' + year])
                 col += 1
-                if 'google_scholar_m5_'+year in doc:
-                    worksheet.write(row, col, doc['google_scholar_m5_'+year])
+                if 'google_scholar_m5_' + year in doc:
+                    worksheet.write(row, col, doc['google_scholar_m5_' + year])
                 col += 1
 
             # SCOPUS - CiteScore
             col = 99
             if doc['is_scopus'] == 1:
                 if h in scopus and 'citescore' in scopus[h]:
-                    worksheet.write(row, col, formatindicator(scopus[h]['citescore']))
+                    worksheet.write(row, col, formatindicator(
+                        scopus[h]['citescore']))
                 col += 1
 
             # Scopus - SNIP - APLICAR PARA 2007 (SEM ACUMULAR MESMO)
@@ -644,7 +674,8 @@ def journal(query, filename, sheetname, issn, atfile):
             snip = 0
             if doc['is_scopus'] == 1:
                 if h2 in scopus and 'snip' in scopus[h2]:
-                    worksheet.write(row, col, formatindicator(scopus[h2]['snip']))
+                    worksheet.write(
+                        row, col, formatindicator(scopus[h2]['snip']))
                     snip = 1
                 else:
                     snip = 0
@@ -652,7 +683,8 @@ def journal(query, filename, sheetname, issn, atfile):
                 if doc['is_cwts'] == 1:
                     cwts = models.Cwts.objects.filter(id=str(doc.cwts_id))[0]
                     if h2 in cwts and 'snip' in cwts[h2]:
-                        worksheet.write(row, col, formatindicator(cwts[h2]['snip']))
+                        worksheet.write(
+                            row, col, formatindicator(cwts[h2]['snip']))
                         snip = 1
             col += 1
 
@@ -664,16 +696,18 @@ def journal(query, filename, sheetname, issn, atfile):
             else:
                 h2 = h
             if doc['is_scimago'] == 1:
-                scimago = models.Scimago.objects.filter(id=str(doc.scimago_id))[0]
+                scimago = models.Scimago.objects.filter(
+                    id=str(doc.scimago_id))[0]
                 for i in [
                     'sjr',
                     'total_docs_3years',
                     'total_cites_3years',
                     'cites_by_doc_2years',
                     'h_index'
-                       ]:
+                ]:
                     if h2 in scimago and i in scimago[h2]:
-                        worksheet.write(row, col, formatindicator(scimago[h2][i]))
+                        worksheet.write(
+                            row, col, formatindicator(scimago[h2][i]))
                     col += 1
 
             # JCR
@@ -698,7 +732,7 @@ def journal(query, filename, sheetname, issn, atfile):
                     'percentage_articles_in_citable_items',
                     'average_journal_impact_factor_percentile',
                     'normalized_eigenfactor'
-                        ]:
+                ]:
                     if h2 in jcr and i in jcr[h2]:
                         worksheet.write(row, col, formatjcr(jcr[h2][i]))
                     col += 1
@@ -710,39 +744,47 @@ def journal(query, filename, sheetname, issn, atfile):
             if 'aff' in doc:
                 if h == 'anterior':
                     if 'br_ate_2007' in doc['aff']:
-                        worksheet.write(row, col, doc['aff']['br_ate_2007'] or 0)
+                        worksheet.write(row, col, doc['aff'][
+                                        'br_ate_2007'] or 0)
                     col += 1
                     if 'estrang_ate_2007' in doc['aff']:
-                        worksheet.write(row, col, doc['aff']['estrang_ate_2007'] or 0)
+                        worksheet.write(row, col, doc['aff'][
+                                        'estrang_ate_2007'] or 0)
                     col += 1
                     if 'nao_ident_ate_2007' in doc['aff']:
-                        worksheet.write(row, col, doc['aff']['nao_ident_ate_2007'] or 0)
+                        worksheet.write(row, col, doc['aff'][
+                                        'nao_ident_ate_2007'] or 0)
                     col += 1
                     if 'br_estrang_ate_2007' in doc['aff']:
-                        worksheet.write(row, col, doc['aff']['br_estrang_ate_2007'] or 0)
+                        worksheet.write(row, col, doc['aff'][
+                                        'br_estrang_ate_2007'] or 0)
                     col += 1
                     if 'nao_ident_todos_ate_2007' in doc['aff']:
-                        worksheet.write(row, col, doc['aff']['nao_ident_todos_ate_2007'] or 0)
+                        worksheet.write(row, col, doc['aff'][
+                                        'nao_ident_todos_ate_2007'] or 0)
                     col += 1
 
-                if 'br_'+h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['br_'+h] or 0)
+                if 'br_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['br_' + h] or 0)
                 col += 1
 
-                if 'estrang_'+h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['estrang_'+h] or 0)
+                if 'estrang_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['estrang_' + h] or 0)
 
                 col += 1
-                if 'nao_ident_'+h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['nao_ident_'+h] or 0)
+                if 'nao_ident_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff'][
+                                    'nao_ident_' + h] or 0)
                 col += 1
 
-                if 'br_estrang_'+h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['br_estrang_'+h] or 0)
+                if 'br_estrang_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff'][
+                                    'br_estrang_' + h] or 0)
                 col += 1
 
-                if 'nao_ident_todos_'+h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['nao_ident_todos_'+h] or 0)
+                if 'nao_ident_todos_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff'][
+                                    'nao_ident_todos_' + h] or 0)
                 col += 1
             else:
                 col += 5
@@ -754,24 +796,30 @@ def journal(query, filename, sheetname, issn, atfile):
 
                     col += 4
                     if 'recebidos_2014' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['recebidos_2014']))
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['recebidos_2014']))
                     col += 1
                     if 'aprovados_2014' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['aprovados_2014']))
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['aprovados_2014']))
                     col += 1
                 else:
-                    if 'recebidos_'+h+'_1sem' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['recebidos_'+h+'_1sem']))
+                    if 'recebidos_' + h + '_1sem' in doc['manuscritos']:
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['recebidos_' + h + '_1sem']))
                     col += 1
-                    if 'aprovados_'+h+'_1sem' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['aprovados_'+h+'_1sem']))
+                    if 'aprovados_' + h + '_1sem' in doc['manuscritos']:
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['aprovados_' + h + '_1sem']))
                     col += 1
 
-                    if 'recebidos_'+h+'_2sem' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['recebidos_'+h+'_2sem']))
+                    if 'recebidos_' + h + '_2sem' in doc['manuscritos']:
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['recebidos_' + h + '_2sem']))
                     col += 1
-                    if 'aprovados_'+h+'_2sem' in doc['manuscritos']:
-                        worksheet.write(row, col, formatman(doc['manuscritos']['aprovados_'+h+'_2sem']))
+                    if 'aprovados_' + h + '_2sem' in doc['manuscritos']:
+                        worksheet.write(row, col, formatman(
+                            doc['manuscritos']['aprovados_' + h + '_2sem']))
                     col += 1
 
             # Tempos entre submissao, aprovacao e publicacao
@@ -781,112 +829,132 @@ def journal(query, filename, sheetname, issn, atfile):
 
                     # sub_aprov
                     if 'media_meses_sub_aprov_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_aprov_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_aprov_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     if 'desvp_meses_sub_aprov_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_aprov_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_aprov_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # sub_pub
                     if 'media_meses_sub_pub_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_pub_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_pub_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     if 'desvp_meses_sub_pub_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_pub_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_pub_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # sub_pub_scielo
                     if 'media_meses_sub_pub_scielo_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_pub_scielo_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_pub_scielo_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     if 'desvp_meses_sub_pub_scielo_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_pub_scielo_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # aprov_pub
                     if 'media_meses_aprov_pub_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_aprov_pub_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['media_meses_aprov_pub_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     if 'desvp_meses_aprov_pub_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_aprov_pub_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['desvp_meses_aprov_pub_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # aprov_pub_scielo
                     if 'media_meses_aprov_pub_scielo_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['media_meses_aprov_pub_scielo_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                     if 'desvp_meses_aprov_pub_scielo_ate_2007' in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_aprov_pub_scielo_ate_2007'])
+                        times = timesfmt(
+                            doc['times']['desvp_meses_aprov_pub_scielo_ate_2007'])
                         worksheet.write(row, col, times)
                     col += 1
 
                 else:
                     # sub_aprov
-                    if 'media_meses_sub_aprov_'+h in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_aprov_'+h])
+                    if 'media_meses_sub_aprov_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_aprov_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
-                    if 'desvp_meses_sub_aprov_'+h in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_aprov_'+h])
+                    if 'desvp_meses_sub_aprov_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_aprov_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # sub_pub
-                    if 'media_meses_sub_pub_'+h in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_pub_'+h])
+                    if 'media_meses_sub_pub_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_pub_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
-                    if 'desvp_meses_sub_pub_'+h in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_pub_'+h])
+                    if 'desvp_meses_sub_pub_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_pub_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # sub_pub_scielo
-                    if 'media_meses_sub_pub_scielo_'+h in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_sub_pub_scielo_'+h])
+                    if 'media_meses_sub_pub_scielo_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['media_meses_sub_pub_scielo_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
-                    if 'desvp_meses_sub_pub_scielo_'+h in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_sub_pub_scielo_'+h])
+                    if 'desvp_meses_sub_pub_scielo_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['desvp_meses_sub_pub_scielo_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # aprov_pub
-                    if 'media_meses_aprov_pub_'+h in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_aprov_pub_'+h])
+                    if 'media_meses_aprov_pub_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['media_meses_aprov_pub_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
-                    if 'desvp_meses_aprov_pub_'+h in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_aprov_pub_'+h])
+                    if 'desvp_meses_aprov_pub_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['desvp_meses_aprov_pub_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
                     # aprov_pub_scielo
-                    if 'media_meses_aprov_pub_scielo_'+h in doc['times']:
-                        times = timesfmt(doc['times']['media_meses_aprov_pub_scielo_'+h])
+                    if 'media_meses_aprov_pub_scielo_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['media_meses_aprov_pub_scielo_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
-                    if 'desvp_meses_aprov_pub_scielo_'+h in doc['times']:
-                        times = timesfmt(doc['times']['desvp_meses_aprov_pub_scielo_'+h])
+                    if 'desvp_meses_aprov_pub_scielo_' + h in doc['times']:
+                        times = timesfmt(
+                            doc['times']['desvp_meses_aprov_pub_scielo_' + h])
                         worksheet.write(row, col, times)
                     col += 1
 
@@ -966,9 +1034,9 @@ def journal(query, filename, sheetname, issn, atfile):
     worksheet3.set_row(0, 60)
 
     sheet3 = pyexcel.get_sheet(
-            file_name=atfile,
-            sheet_name='import',
-            name_columns_by_row=0)
+        file_name=atfile,
+        sheet_name='import',
+        name_columns_by_row=0)
 
     sheet3_json = sheet3.to_records()
 
@@ -995,9 +1063,9 @@ def journal(query, filename, sheetname, issn, atfile):
     worksheet2.set_column(1, 1, 70)
 
     sheet2 = pyexcel.get_sheet(
-            file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
-            sheet_name='rotulos_dados_periodicos',
-            name_columns_by_row=0)
+        file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
+        sheet_name='rotulos_dados_periodicos',
+        name_columns_by_row=0)
 
     sheet2_json = sheet2.to_records()
 
@@ -1016,9 +1084,10 @@ def journal(query, filename, sheetname, issn, atfile):
 
 
 def alljournals():
-    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__fullset=1)
+    scielo = models.Scielofapesp.objects.filter(
+        fapesp_evaluation__2018__fullset=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
-    filename = 'Fapesp-avaliação-SciELO-todos-'+today+'.xlsx'
+    filename = 'Fapesp-avaliação-SciELO-todos-' + today + '.xlsx'
     sheetname = 'SciELO-todos'
     atfile = 'data/scielo/Fapesp-avaliação-SciELO-todos-AT.xlsx'
     journal(
@@ -1033,7 +1102,7 @@ def activethisyear():
     scielo = models.Scielofapesp.objects.filter(
         fapesp_evaluation__2018__activethisyear=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
-    filename = 'Fapesp-avaliação-SciELO-ativos2018-'+today+'.xlsx'
+    filename = 'Fapesp-avaliação-SciELO-ativos2018-' + today + '.xlsx'
     sheetname = 'SciELO-ativos2018'
     atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-AT.xlsx'
     journal(
@@ -1049,9 +1118,10 @@ def activethisyear_inclusion_before():
     # já considera:
     # title_current_status='current'
     # collection='scl'
-    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__evaluated=1)
+    scielo = models.Scielofapesp.objects.filter(
+        fapesp_evaluation__2018__evaluated=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
-    filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015-'+today+'.xlsx'
+    filename = 'Fapesp-avaliação-SciELO-ativos2018-até2015-' + today + '.xlsx'
     sheetname = 'SciELO-ativos2018-ate2015'
     atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
     journal(
@@ -1063,7 +1133,8 @@ def activethisyear_inclusion_before():
 
 
 def onejournal():
-    scielo = models.Scielofapesp.objects.filter(fapesp_evaluation__2018__evaluated=1)
+    scielo = models.Scielofapesp.objects.filter(
+        fapesp_evaluation__2018__evaluated=1)
     counter = 0
 
     for j in scielo:
@@ -1075,8 +1146,8 @@ def onejournal():
         # acronym = j['api']['acronym']
         print(title.lower())
         today = datetime.datetime.now().strftime('%Y%m%d')
-        filename = 'Fapesp-avaliacao-SciELO-'+issn+'-'+today+'.xlsx'
-        atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
+        filename = 'Fapesp-avaliacao-SciELO-' + issn + '-' + today + '.xlsx'
+        atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT-import.xlsx'
         journal(
             query=queryj,
             filename=filename,
@@ -1098,16 +1169,16 @@ def onejournal():
 
 def main():
     # Todos os periodicos da colecao scielo (fullset)
-    alljournals()
+    # alljournals()
 
     # Ativos em 2018 (activethisyear)
-    activethisyear()
+    # activethisyear()
 
     # Antes de 2016 (evaluated)
-    activethisyear_inclusion_before()
+    # activethisyear_inclusion_before()
 
     # Antes de 2016 (evaluated) - 1 planilha por periódico
-    # onejournal()
+    onejournal()
 
 
 if __name__ == "__main__":
