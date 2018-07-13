@@ -8,6 +8,7 @@ import logging
 import json
 import requests
 
+
 import keycorrection
 from transform import collections_scielo
 import models
@@ -21,7 +22,7 @@ logger = logging.getLogger(__name__)
 client = ThriftClient()
 
 
-def scieloupdate():    
+def scieloupdate():
     scielo_sheet = pyexcel.get_sheet(
         file_name='data/scielo/journals_net.csv',
         name_columns_by_row=0)
@@ -37,7 +38,7 @@ def scieloupdate():
             replace("'", "").
             replace("(", "").
             replace(")", "")
-            )
+        )
 
     for i, k in enumerate(labels):
         scielo_sheet.colnames[i] = k
@@ -69,9 +70,11 @@ def scieloupdate():
 
         # transform data in datetime type
         if 'date_of_the_first_document' in rec:
-            rec['date_of_the_first_document'] = Dates().data2datetime(rec['date_of_the_first_document'])
+            rec['date_of_the_first_document'] = Dates().data2datetime(
+                rec['date_of_the_first_document'])
         if 'date_of_the_last_document' in rec:
-            rec['date_of_the_last_document'] = Dates().data2datetime(rec['date_of_the_last_document'])
+            rec['date_of_the_last_document'] = Dates().data2datetime(
+                rec['date_of_the_last_document'])
 
         rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
@@ -90,14 +93,17 @@ def scieloupdate():
             else:
                 if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt']:
 
-                    rec['country'] = collections_scielo.collection[rec['collection']]
+                    rec['country'] = collections_scielo.collection[
+                        rec['collection']]
 
                     if 'region' not in rec and 'country' in rec:
 
-                        rec['region'] = collections_scielo.region[rec['country']]
+                        rec['region'] = collections_scielo.region[
+                            rec['country']]
 
                     rec['title_country'] = '%s-%s' % (
-                        accent_remover(rec['title']).lower().replace(' & ', ' and ').replace('&', ' and '),
+                        accent_remover(rec['title']).lower().replace(
+                            ' & ', ' and ').replace('&', ' and '),
                         rec['country'].lower())
 
                     rec['collections'] = []
@@ -191,7 +197,8 @@ def crossref():
                         prefix = doi['message']['items'][0]['prefix']
                         publisher = doi['message']['items'][0]['publisher']
                         jdata['crossref']['doi_provider']['prefix'] = prefix
-                        jdata['crossref']['doi_provider']['publisher'] = publisher
+                        jdata['crossref']['doi_provider'][
+                            'publisher'] = publisher
 
                         for i in doi['message']['items'][0]['ISSN']:
 
