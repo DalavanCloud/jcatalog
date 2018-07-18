@@ -17,7 +17,7 @@ EM TESTE
 # from tools import scielo_rename_pdfs <-----
 
 # from extractors.scimago import downloader_scimago
-from extractors.wos import scrap_wos_indexes
+# from extractors.wos import scrap_wos_indexes
 
 # from transform import scielo_loader
 # from transform import scielo_update
@@ -83,6 +83,7 @@ from extractors.wos import scrap_wos_indexes
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 # from reports import fapesp_evaluation_toform_short
+from reports import fapesp_evaluation_links_download
 
 # from reports import list_send
 
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     # data_corrections.scimago()
 
     # downloader_scimago.main()
-    scrap_wos_indexes.main()
+    # scrap_wos_indexes.main()
 
     # scielo_loader.main()
     # scielo_update.main()
@@ -159,6 +160,7 @@ if __name__ == "__main__":
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # fapesp_evaluation_toform_short.main()
+    fapesp_evaluation_links_download.main()
     # list_send
 
     # Denise
