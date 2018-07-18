@@ -8,7 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
-from sender import sender
+# from sender import sender
 # from sender import files_renamer
 
 # from tools import capes_loader
@@ -17,6 +17,7 @@ from sender import sender
 # from tools import scielo_rename_pdfs <-----
 
 # from extractors.scimago import downloader_scimago
+from extractors.wos import scrap_wos_indexes
 
 # from transform import scielo_loader
 # from transform import scielo_update
@@ -95,6 +96,7 @@ if __name__ == "__main__":
     # data_corrections.scimago()
 
     # downloader_scimago.main()
+    scrap_wos_indexes.main()
 
     # scielo_loader.main()
     # scielo_update.main()
@@ -164,5 +166,5 @@ if __name__ == "__main__":
     # capes_update.main()
     # journal_date_list.main()  # Spinak
 
-    sender
+    # sender
     # files_renamer.main()

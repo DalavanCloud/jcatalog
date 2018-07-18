@@ -35,7 +35,8 @@ def scrapmjl(preurl, index, filewriter):
             print(e)
             break
 
-if __name__ == '__main__':
+
+def main():
 
     ci_tuple_list = [
         # Arts & Humanities Citation Index
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     found in the Science Citation Index Expanded. Journals in SCI are typically
     the most consistently high impact titles in many scientific disciplines.
     '''
-    with open('master_journal_list.csv', 'w') as csvfile:
+    with open('data/wos/master_journal_list.csv', 'w') as csvfile:
         filewriter = csv.writer(csvfile, delimiter='\t',
                                 quoting=csv.QUOTE_MINIMAL)
         filewriter.writerow(
@@ -72,3 +73,6 @@ if __name__ == '__main__':
             preurl = "http://mjl.clarivate.com/cgi-bin/jrnlst/jlresults.cgi?PC=" + code + "&mode=print"
             print(index)
             scrapmjl(preurl, index, filewriter)
+
+if __name__ == '__main__':
+    main()
