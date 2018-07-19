@@ -10,6 +10,7 @@ EM TESTE
 # from tools import scopus_oecd_codes <-----
 # from sender import sender
 # from sender import files_renamer
+# from sender import files_renamer_pdes
 
 # from tools import capes_loader
 # from tools import capes_update
@@ -83,7 +84,8 @@ EM TESTE
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 # from reports import fapesp_evaluation_toform_short
-from reports import fapesp_evaluation_links_download
+# from reports import fapesp_evaluation_links_download
+from reports import fapesp_evaluation_scopus
 
 # from reports import list_send
 
@@ -160,7 +162,8 @@ if __name__ == "__main__":
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # fapesp_evaluation_toform_short.main()
-    fapesp_evaluation_links_download.main()
+    # fapesp_evaluation_links_download.main()
+    fapesp_evaluation_scopus
     # list_send
 
     # Denise
@@ -170,3 +173,4 @@ if __name__ == "__main__":
 
     # sender
     # files_renamer.main()
+    # files_renamer_pdes.main()
