@@ -60,6 +60,7 @@ def journal(query, filename, sheetname):
         # '4-f2',
         # '4-f3',
         # '4-f4'
+        'corpo_editorial'
     ]:
 
         worksheet.write(0, col, h, wrap_header)
@@ -171,40 +172,45 @@ def journal(query, filename, sheetname):
         else:
             col += 2
 
-        # 3-j, 4-d, 4-f1 a 2
-        # if 'form' in doc:
-        #     for criterio in [
-        #         '3-j0',
-        #         '3-j1',
-        #         '3-j2',
-        #         '3-j3',
-        #         '4-d',
-        #         '4-f1',
-        #         '4-f2'
-        #     ]:
-        #         if criterio in doc['form']['2017']:
-        #             worksheet.write(row, col, doc['form']['2017'][criterio])
-        #         col += 1
-        # else:
-        #     col += 7
+        if 'api' in doc:
+            acron = doc['api']['acronym']
+            url = 'http://www.scielo.br/revistas/' + acron + '/iedboard.htm'
+            worksheet.write(row, col, url)
 
-        # 4-f3 e 4-f4
-        # if 'times' in doc:
-        #     # sub_aprov
-        #     if 'media_meses_sub_aprov_2017' in doc['times']:
-        #         times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
-        #         worksheet.write(row, col, times)
-        #     col += 1
-        #     # aprov_pub_scielo
-        #     if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
-        #         times = timesfmt(
-        #             doc['times']['media_meses_aprov_pub_scielo_2017'])
-        #         worksheet.write(row, col, times)
-        #     col += 1
-        # else:
-        #     col += 2
+            # 3-j, 4-d, 4-f1 a 2
+            # if 'form' in doc:
+            #     for criterio in [
+            #         '3-j0',
+            #         '3-j1',
+            #         '3-j2',
+            #         '3-j3',
+            #         '4-d',
+            #         '4-f1',
+            #         '4-f2'
+            #     ]:
+            #         if criterio in doc['form']['2017']:
+            #             worksheet.write(row, col, doc['form']['2017'][criterio])
+            #         col += 1
+            # else:
+            #     col += 7
 
-        # Avança journal
+            # 4-f3 e 4-f4
+            # if 'times' in doc:
+            #     # sub_aprov
+            #     if 'media_meses_sub_aprov_2017' in doc['times']:
+            #         times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
+            #         worksheet.write(row, col, times)
+            #     col += 1
+            #     # aprov_pub_scielo
+            #     if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
+            #         times = timesfmt(
+            #             doc['times']['media_meses_aprov_pub_scielo_2017'])
+            #         worksheet.write(row, col, times)
+            #     col += 1
+            # else:
+            #     col += 2
+
+            # Avança journal
         row += 1
 
 
