@@ -60,7 +60,9 @@ def journal(query, filename, sheetname):
         # '4-f2',
         # '4-f3',
         # '4-f4'
-        'corpo_editorial'
+        'corpo_editorial',
+        'jcr_average_journal_impact_factor_percentile',
+        'scimago_best_quartile'
     ]:
 
         worksheet.write(0, col, h, wrap_header)
@@ -176,41 +178,55 @@ def journal(query, filename, sheetname):
             acron = doc['api']['acronym']
             url = 'http://www.scielo.br/revistas/' + acron + '/iedboard.htm'
             worksheet.write(row, col, url)
+        col += 1
 
-            # 3-j, 4-d, 4-f1 a 2
-            # if 'form' in doc:
-            #     for criterio in [
-            #         '3-j0',
-            #         '3-j1',
-            #         '3-j2',
-            #         '3-j3',
-            #         '4-d',
-            #         '4-f1',
-            #         '4-f2'
-            #     ]:
-            #         if criterio in doc['form']['2017']:
-            #             worksheet.write(row, col, doc['form']['2017'][criterio])
-            #         col += 1
-            # else:
-            #     col += 7
+        if doc['is_jcr'] == 1:
+            jcr = models.Jcr.objects.filter(id=str(doc.jcr_id))[0]
+            if '2017' in jcr:
+                worksheet.write(row, col, jcr['2017'][
+                                'average_journal_impact_factor_percentile'])
+        col += 1
 
-            # 4-f3 e 4-f4
-            # if 'times' in doc:
-            #     # sub_aprov
-            #     if 'media_meses_sub_aprov_2017' in doc['times']:
-            #         times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
-            #         worksheet.write(row, col, times)
-            #     col += 1
-            #     # aprov_pub_scielo
-            #     if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
-            #         times = timesfmt(
-            #             doc['times']['media_meses_aprov_pub_scielo_2017'])
-            #         worksheet.write(row, col, times)
-            #     col += 1
-            # else:
-            #     col += 2
+        if doc['is_scimago'] == 1:
+            scimago = models.Scimago.objects.filter(id=str(doc.scimago_id))[0]
+            if '2017' in scimago:
+                worksheet.write(row, col, scimago['2017']['sjr_best_quartile'])
 
-            # Avança journal
+        col += 1
+        # 3-j, 4-d, 4-f1 a 2
+        # if 'form' in doc:
+        #     for criterio in [
+        #         '3-j0',
+        #         '3-j1',
+        #         '3-j2',
+        #         '3-j3',
+        #         '4-d',
+        #         '4-f1',
+        #         '4-f2'
+        #     ]:
+        #         if criterio in doc['form']['2017']:
+        #             worksheet.write(row, col, doc['form']['2017'][criterio])
+        #         col += 1
+        # else:
+        #     col += 7
+
+        # 4-f3 e 4-f4
+        # if 'times' in doc:
+        #     # sub_aprov
+        #     if 'media_meses_sub_aprov_2017' in doc['times']:
+        #         times = timesfmt(doc['times']['media_meses_sub_aprov_2017'])
+        #         worksheet.write(row, col, times)
+        #     col += 1
+        #     # aprov_pub_scielo
+        #     if 'media_meses_aprov_pub_scielo_2017' in doc['times']:
+        #         times = timesfmt(
+        #             doc['times']['media_meses_aprov_pub_scielo_2017'])
+        #         worksheet.write(row, col, times)
+        #     col += 1
+        # else:
+        #     col += 2
+
+        # Avança journal
         row += 1
 
 

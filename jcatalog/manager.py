@@ -58,7 +58,7 @@ EM TESTE
 
 # from transform import cwts_country
 
-from match import matches
+# from match import matches
 
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
@@ -83,7 +83,7 @@ from match import matches
 # from reports import fapesp_evaluation
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
-# from reports import fapesp_evaluation_toform_short
+from reports import fapesp_evaluation_toform_short
 # from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     # cwts_country.main()
 
-    matches.main()
+    # matches.main()
 
     # jcr_export_indicators
 
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     # fapesp_evaluation
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
-    # fapesp_evaluation_toform_short.main()
+    fapesp_evaluation_toform_short.main()
     # fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
