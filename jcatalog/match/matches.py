@@ -34,7 +34,7 @@ def match(dbcol1, dbcol2, country=None):
 
                 if flag == 0:
 
-                    query_issn = ''
+                    query_issn = None
 
                     query_issn = dbcol2.objects.filter(issn_list=issn)
 
@@ -56,7 +56,7 @@ def match(dbcol1, dbcol2, country=None):
                             'country_' + col: countrycol}
 
                         doc.modify(**data_modify)
-                        doc.save()  # save in dbcol1 collection
+                        # doc.save()  # save in dbcol1 collection
 
                         msg = '%s : ISSN %s is %s' % (db1, issn, db2)
                         logger.info(msg)
@@ -71,13 +71,15 @@ def match(dbcol1, dbcol2, country=None):
                     '''
                     if len(query_issn) > 1 and flag == 0:
 
-                        query_issn_title = ''
+                        query_issn_title = None
 
-                        query_issn_title = dbcol2.objects.filter(issn_list=issn, title__iexact=doc.title)
+                        query_issn_title = dbcol2.objects.filter(
+                            issn_list=issn, title__iexact=doc.title)
 
                         if len(query_issn_title) == 1:
 
-                            countrycol = ''
+                            countrycol = None
+
                             if 'country' in query_issn[0]:
                                 if country == 1:
                                     countrycol = query_issn[0].country
@@ -90,9 +92,10 @@ def match(dbcol1, dbcol2, country=None):
                                 'updated_at': datetime.datetime.now,
                                 'country_' + col: countrycol}
                             doc.modify(**data_modify)
-                            doc.save()  # save in dbcol1 collection
+                            # doc.save()  # save in dbcol1 collection
 
-                            msg = '%s : ISSN and title : %s : %s is %s' % (db1, issn, doc.title, db2)
+                            msg = '%s : ISSN and title : %s : %s is %s' % (
+                                db1, issn, doc.title, db2)
                             logger.info(msg)
                             print(msg)
 
@@ -110,7 +113,8 @@ def match(dbcol1, dbcol2, country=None):
                             knum = {}
 
                             for i, d in enumerate(query_issn):
-                                knum[str(d.id)] = len([k for k in query_issn[i]])
+                                knum[str(d.id)] = len(
+                                    [k for k in query_issn[i]])
 
                             countrycol = ''
                             if 'country' in query_issn[0]:
@@ -125,9 +129,10 @@ def match(dbcol1, dbcol2, country=None):
                                     'updated_at': datetime.datetime.now,
                                     'country_' + col: countrycol}
                                 doc.modify(**data_modify)
-                                doc.save()  # save in dbcol1 collection
+                                # doc.save()  # save in dbcol1 collection
 
-                            msg = '%s : ISSN %s is %s with %s fields)' % (db1, issn, db2, str(max(knum, key=knum.get)))
+                            msg = '%s : ISSN %s is %s with %s fields)' % (
+                                db1, issn, db2, str(max(knum, key=knum.get)))
                             logger.info(msg)
                             print(msg)
 
@@ -139,11 +144,12 @@ def match(dbcol1, dbcol2, country=None):
             if flag == 0:
 
                 if 'title_country' in doc:
-                    query_title_pais = dbcol2.objects.filter(title_country__iexact=doc.title_country)
+                    query_title_pais = dbcol2.objects.filter(
+                        title_country__iexact=doc.title_country)
 
                     if len(query_title_pais) > 0:
 
-                        countrycol = ''
+                        countrycol = None
                         if 'country' in query_title_pais[0]:
                             if country == 1:
                                 countrycol = query_title_pais[0].country
@@ -156,9 +162,10 @@ def match(dbcol1, dbcol2, country=None):
                             'updated_at': datetime.datetime.now,
                             'country_' + col: countrycol}
                         doc.modify(**data_modify)
-                        doc.save()  # save in dbcol1 collection
+                        # doc.save()  # save in dbcol1 collection
 
-                        msg = '%s : title and country : %s is %s' % (db1, doc.title_country, db2)
+                        msg = '%s : title and country : %s is %s' % (
+                            db1, doc.title_country, db2)
                         logger.info(msg)
                         print(msg)
 
@@ -167,7 +174,8 @@ def match(dbcol1, dbcol2, country=None):
             # 3) If flag is still zero, filter didn't find documents
             if flag == 0:
 
-                msg = '%s : %s  %s : not found' % (db1, doc.issn_list, doc.title)
+                msg = '%s : %s  %s : not found' % (
+                    db1, doc.issn_list, doc.title)
                 logger.info(msg)
                 print(msg)
 
@@ -177,14 +185,14 @@ def match(dbcol1, dbcol2, country=None):
 def main():
     '''
     match(collection1, collection2, country)
-    contry = 1 to get country of DataSet2
+    country = 1 to get country of collection2
     '''
 
     # SciELO
     # match(models.Scielo, models.Jcr, 1)
-    match(models.Scielobk1, models.Wos, 1)
-    # match(models.Scielo, models.Scopus, 1)
-    # match(models.Scielo, models.Scimago, 1)
+    match(models.Scielo, models.Wos, 1)
+    match(models.Scielo, models.Scopus, 1)
+    match(models.Scielo, models.Scimago, 1)
     # match(models.Scielo, models.Cwts, 1)
     # match(models.Scielo, models.Submissions)
 
