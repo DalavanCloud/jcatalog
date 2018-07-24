@@ -57,50 +57,62 @@ def main():
     # query = models.Scielo.objects.filter(issn_list='0101-4714')
 
     for doc in query:
-        col = 0
+        at = []
 
-        issn = doc['issn_scielo']
+        if doc['title_is_multidisciplinary'] == 1:
+            at.append("Multidisciplinary")
+        else:
+            ats = doc['title_thematic_areas'].replace(
+                " ", "_").replace(",", "")
+        at = [a for a in ats.split(';')]
 
-        worksheet.write(row, col, today, format_date)
-        col += 1
-        worksheet.write(row, col, issn)
-        col += 1
-        worksheet.write(row, col, doc['title'])
-        col += 1
-        worksheet.write(row, col, doc['publisher_name'])
-        col += 1
+        for a in at:
 
-        form = prelink + 'Formulario-avaliacao-Fapesp-SciELO-' + issn + '-20180713.pdf'
-        worksheet.write(row, col, form)
-        col += 1
+            col = 0
 
-        file = prelink + 'Fapesp-avaliacao-SciELO-' + issn + '-20180713.xlsx'
-        worksheet.write(row, col, file)
-        col += 1
+            issn = doc['issn_scielo']
 
-        if 'url' in doc['api']:
-            worksheet.write(row, col, doc.api['url'])
-        col += 1
-
-        # Thematic Areas
-        col = 7
-        for k in [
-            'title_thematic_areas',
-            'title_is_agricultural_sciences',
-            'title_is_applied_social_sciences',
-            'title_is_biological_sciences',
-            'title_is_engineering',
-            'title_is_exact_and_earth_sciences',
-            'title_is_health_sciences',
-            'title_is_human_sciences',
-            'title_is_linguistics_letters_and_arts',
-            'title_is_multidisciplinary'
-        ]:
-            if k in doc:
-                worksheet.write(row, col, doc[k])
+            worksheet.write(row, col, today, format_date)
+            col += 1
+            worksheet.write(row, col, issn)
+            col += 1
+            worksheet.write(row, col, doc['title'])
+            col += 1
+            worksheet.write(row, col, doc['publisher_name'])
             col += 1
 
-        row += 1
+            form = prelink + 'Formulario-avaliacao-Fapesp-SciELO-' + \
+                a + '-' + issn + '-20180723.docx'
+            worksheet.write(row, col, form)
+            col += 1
+
+            file = prelink + 'Fapesp-avaliacao-SciELO-' + issn + '-20180713.xlsx'
+            worksheet.write(row, col, file)
+            col += 1
+
+            if 'url' in doc['api']:
+                worksheet.write(row, col, doc.api['url'])
+            col += 1
+
+            # Thematic Areas
+            col = 7
+            for k in [
+                'title_thematic_areas',
+                'title_is_agricultural_sciences',
+                'title_is_applied_social_sciences',
+                'title_is_biological_sciences',
+                'title_is_engineering',
+                'title_is_exact_and_earth_sciences',
+                'title_is_health_sciences',
+                'title_is_human_sciences',
+                'title_is_linguistics_letters_and_arts',
+                'title_is_multidisciplinary'
+            ]:
+                if k in doc:
+                    worksheet.write(row, col, doc[k])
+                col += 1
+
+            row += 1
 
 
 if __name__ == '__main__':

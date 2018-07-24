@@ -83,8 +83,8 @@ EM TESTE
 # from reports import fapesp_evaluation
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
-from reports import fapesp_evaluation_toform_short
-# from reports import fapesp_evaluation_links_download
+# from reports import fapesp_evaluation_toform_short
+from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
 
 # from reports import list_send
@@ -161,8 +161,8 @@ if __name__ == "__main__":
     # fapesp_evaluation
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
-    fapesp_evaluation_toform_short.main()
-    # fapesp_evaluation_links_download.main()
+    # fapesp_evaluation_toform_short.main()
+    fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
 

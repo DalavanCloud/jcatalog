@@ -1,6 +1,8 @@
 # coding: utf-8
 import os
 import pyexcel
+import models
+from shutil import copyfile
 
 
 def renamer(filename):
@@ -14,16 +16,29 @@ def renamer(filename):
     os.chdir('output/journals/forms')
 
     for l in sheet_json:
-        for f in os.listdir('.'):
-            if str(l['pdf']) + '.pdf' == f:
-                print(str(l['pdf']) + '.pdf --> ' +
-                      'Formulario-avaliacao-Fapesp-SciELO-' + l['issn'] + '-20180713.pdf')
-                os.rename(f, 'Formulario-avaliacao-Fapesp-SciELO-' +
-                          l['issn'] + '-20180713.pdf')
+        # consulta issn para obter area tematica
+        query = models.Scielofapesp.objects.filter(issn_list=l['issn'])
+        if query:
+
+            at = []
+
+            if query[0]['title_is_multidisciplinary'] == 1:
+                at.append("Multidisciplinary")
+            else:
+                ats = query[0]['title_thematic_areas'].replace(
+                    " ", "_").replace(",", "")
+                at = [a for a in ats.split(';')]
+
+            for a in at:
+                origem = str(l['file_name']) + '.docx'
+                destino = 'Formulario-avaliacao-Fapesp-SciELO-' + \
+                    a + '-' + l['issn'] + '-20180723.docx'
+                print(origem + ' -->  ' + destino)
+                copyfile(origem, 'renomeado/' + destino)
 
 
 def main():
-    filename = 'data/scielo/data_to_form_texto_20180712.xlsx'
+    filename = 'data/scielo/data_to_form_texto_20180720.xlsx'
     renamer(filename)
 
 if __name__ == "__main__":
