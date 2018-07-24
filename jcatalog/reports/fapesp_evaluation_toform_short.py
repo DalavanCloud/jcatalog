@@ -238,7 +238,7 @@ def datatoform():
     scielo = models.Scielofapesp.objects.filter(
         fapesp_evaluation__2018__evaluated=1)
     today = datetime.datetime.now().strftime('%Y%m%d')
-    filename = 'data_to_form_' + today + '.xlsx'
+    filename = 'data_to_form_' + today + 'short.xlsx'
     sheetname = 'toform'
 
     journal(query=scielo, filename=filename, sheetname=sheetname)
