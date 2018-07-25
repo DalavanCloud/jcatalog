@@ -9,7 +9,7 @@ EM TESTE
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
 # from sender import sender
-from sender import files_renamer
+# from sender import files_renamer
 # from sender import files_renamer_pdes
 
 # from tools import capes_loader
@@ -84,7 +84,7 @@ from sender import files_renamer
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 # from reports import fapesp_evaluation_toform_short
-# from reports import fapesp_evaluation_links_download
+from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
 
 # from reports import list_send
@@ -162,7 +162,7 @@ if __name__ == "__main__":
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # fapesp_evaluation_toform_short.main()
-    # fapesp_evaluation_links_download.main()
+    fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
 
@@ -172,5 +172,5 @@ if __name__ == "__main__":
     # journal_date_list.main()  # Spinak
 
     # sender
-    files_renamer.main()
+    # files_renamer.main()
     # files_renamer_pdes.main()

@@ -30,11 +30,12 @@ def renamer_docx(filename):
                 at = [a for a in ats.split(';')]
 
             for a in at:
+                # print(a)
                 origem = str(l['file_name']) + '.docx'
                 destino = 'Formulario-avaliacao-Fapesp-SciELO-' + \
                     a + '-' + l['issn'] + '-20180723.docx'
                 print(origem + ' -->  ' + destino)
-                copyfile(origem, 'renomeado/' + destino)
+                #  copyfile(origem, 'renomeado/' + destino)
 
 
 def renamer_pdf(filename):
@@ -59,9 +60,9 @@ def renamer_pdf(filename):
 def main():
     filename = 'data/scielo/data_to_form_texto_20180720.xlsx'
 
-    # renamer_docx(filename)
+    renamer_docx(filename)
 
-    renamer_pdf(filename)
+    # renamer_pdf(filename)
 
 if __name__ == "__main__":
     main()

@@ -35,7 +35,7 @@ def main():
         'linguistics letters and arts',
         'multidisciplinary']
 
-    workbook = xlsxwriter.Workbook('output/links_download.xlsx')
+    workbook = xlsxwriter.Workbook('output/links_download_' + today + '.xlsx')
     worksheet = workbook.add_worksheet('Fapesp Avaliação SciELO')
 
     format_date = workbook.add_format({'num_format': 'yyyy-mm-dd'})
@@ -64,7 +64,7 @@ def main():
         else:
             ats = doc['title_thematic_areas'].replace(
                 " ", "_").replace(",", "")
-        at = [a for a in ats.split(';')]
+            at = [a for a in ats.split(';')]
 
         for a in at:
 
