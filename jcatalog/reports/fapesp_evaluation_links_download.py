@@ -10,7 +10,7 @@ import models
 PROJECT_PATH = os.path.abspath(os.path.dirname(''))
 sys.path.append(PROJECT_PATH)
 
-today = datetime.datetime.now()
+today = datetime.datetime.now().strftime('%Y%m%d')
 
 prelink = 'http://static.scielo.org/fapesp_evaluation/'
 
@@ -82,7 +82,7 @@ def main():
             col += 1
 
             form = prelink + 'Formulario-avaliacao-Fapesp-SciELO-' + \
-                a + '-' + issn + '-20180723.docx'
+                a + '-' + issn + '-20180725.docx'
             worksheet.write(row, col, form)
             col += 1
 

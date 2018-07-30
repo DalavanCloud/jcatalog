@@ -33,9 +33,9 @@ def renamer_docx(filename):
                 # print(a)
                 origem = str(l['file_name']) + '.docx'
                 destino = 'Formulario-avaliacao-Fapesp-SciELO-' + \
-                    a + '-' + l['issn'] + '-20180723.docx'
+                    a + '-' + l['issn'] + '-20180725.docx'
                 print(origem + ' -->  ' + destino)
-                #  copyfile(origem, 'renomeado/' + destino)
+                copyfile(origem, 'renomeado/' + destino)
 
 
 def renamer_pdf(filename):
