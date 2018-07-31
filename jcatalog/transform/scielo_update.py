@@ -8,12 +8,13 @@ import logging
 import json
 import requests
 
-
+import re
 import keycorrection
 from transform import collections_scielo
 import models
 from transform_date import *
 from accent_remover import *
+from cleaner import *
 from articlemeta.client import ThriftClient
 
 logging.basicConfig(filename='logs/scielo_update.info.txt', level=logging.INFO)
@@ -50,8 +51,23 @@ def scieloupdate():
         rec = {k: v for k, v in rec.items() if v or v == 0}
         print(rec['issn_scielo'])
 
+        # Title
         rec['title'] = rec['title_at_scielo']
 
+        rec['title_lower'] = accent_remover(
+            rec['title_at_scielo'].lower().replace(
+                ' & ', ' and ').replace('&', ' and '))
+
+        rec['title_clean'] = cleaner(rec['title_at_scielo'])
+
+        # Sem dados entre Parenteses - title
+        # dp = data in parentheses
+        dp = None
+        dp = re.search(r"\(.+?\)", rec['title'])
+        if dp:
+            rec['title_clean_ndp'] = cleaner(rec['title'].replace(dp[0], ""))
+
+        # ISSNs
         if 'issns' in rec:
             # convert issn int type to str type
             if type(rec['issns']) != str:
@@ -81,9 +97,23 @@ def scieloupdate():
         rec['updated_at'] = datetime.datetime.now()
 
         # UPDATE or SAVE
-        if rec['collection'] not in ['sss', 'rve', 'psi', 'rvt']:
+        # SPA will be loaded
+        if rec['collection'] not in [
+                'sss',
+                'rve',
+                'psi',
+                'rvt']:
+
             query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
+
             if query:
+                # Collection Type
+                col_type = collections_scielo.collections[
+                    rec['collection']][2]
+                if col_type not in query[0]['collection_type']:
+                    col_types = list(query[0]['collection_type'])
+                    col_types.append(col_type)
+                    rec['collection_type'] = list(set(col_types))
 
                 del rec['collection']
 
@@ -91,20 +121,38 @@ def scieloupdate():
 
                 doc.modify(**rec)
             else:
-                if rec['collection'] not in ['spa', 'sss', 'rve', 'psi', 'rvt']:
+                # SPA will not load
+                if rec['collection'] not in [
+                        'spa',
+                        'sss',
+                        'rve',
+                        'psi',
+                        'rvt']:
 
+                    # Collection Type
+                    rec['collection_type'] = []
+                    rec['collection_type'].append(collections_scielo.collections[
+                        rec['collection']][2])
+
+                    # Country, Region and Titles
                     rec['country'] = collections_scielo.collection[
                         rec['collection']]
 
                     if 'region' not in rec and 'country' in rec:
-
                         rec['region'] = collections_scielo.region[
                             rec['country']]
 
                     rec['title_country'] = '%s-%s' % (
-                        accent_remover(rec['title']).lower().replace(
-                            ' & ', ' and ').replace('&', ' and '),
-                        rec['country'].lower())
+                        rec['title_lower'],
+                        accent_remover(rec['country'].lower()))
+
+                    rec['title_clean_country'] = '%s-%s' % (
+                        rec['title_clean'],
+                        accent_remover(rec['country'].lower()))
+
+                    rec['title_clean_ndp_country'] = '%s-%s' % (
+                        rec['title_clean_ndp'],
+                        accent_remover(rec['country'].lower()))
 
                     rec['collections'] = []
                     rec['collections'].append(rec['collection'])

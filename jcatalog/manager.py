@@ -9,7 +9,7 @@ EM TESTE
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
 # from sender import sender
-from sender import files_renamer
+# from sender import files_renamer
 # from sender import files_renamer_pdes
 
 # from tools import capes_loader
@@ -21,7 +21,7 @@ from sender import files_renamer
 # from extractors.wos import scrap_wos_indexes
 
 # from transform import scielo_loader
-# from transform import scielo_update
+from transform import scielo_update
 # from transform import scielo_access_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     # scrap_wos_indexes.main()
 
     # scielo_loader.main()
-    # scielo_update.main()
+    scielo_update.main()
     # scielo_access_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
@@ -172,5 +172,5 @@ if __name__ == "__main__":
     # journal_date_list.main()  # Spinak
 
     # sender
-    files_renamer.main()
+    # files_renamer.main()
     # files_renamer_pdes.main()

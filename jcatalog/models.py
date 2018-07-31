@@ -30,7 +30,9 @@ class Scielo(DynamicDocument):
     meta = {
         'indexes': [
             'issn_list',
-            'title_country'
+            'title_country',
+            'title_clean_country',
+            'title_clean_ndp_country'
         ]
     }
 
@@ -91,6 +93,7 @@ class Scielotest(DynamicDocument):
             'title_country'
         ]
     }
+
 
 class Scimago(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
