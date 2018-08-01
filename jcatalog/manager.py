@@ -21,7 +21,7 @@ EM TESTE
 # from extractors.wos import scrap_wos_indexes
 
 # from transform import scielo_loader
-from transform import scielo_update
+# from transform import scielo_update
 # from transform import scielo_access_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
@@ -49,7 +49,7 @@ from transform import scielo_update
 # from transform import scimago_inscielo_loader
 
 # from transform import wos_loader
-# from transform import wos_update
+from transform import wos_update
 # from transform import wos_oecd_codes
 
 # from transform import jcr_loader
@@ -86,6 +86,7 @@ from transform import scielo_update
 # from reports import fapesp_evaluation_toform_short
 # from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
+# from reports import scielo_network_journal
 
 # from reports import list_send
 
@@ -102,7 +103,7 @@ if __name__ == "__main__":
     # scrap_wos_indexes.main()
 
     # scielo_loader.main()
-    scielo_update.main()
+    # scielo_update.main()
     # scielo_access_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
@@ -130,7 +131,7 @@ if __name__ == "__main__":
     # scimago_inscielo_loader.main()
 
     # wos_loader.main()
-    # wos_update.main()
+    wos_update.main()
     # wos_oecd_codes
 
     # jcr_loader
@@ -165,6 +166,7 @@ if __name__ == "__main__":
     # fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
+    # scielo_network_journal.main()
 
     # Denise
     # capes_loader.main()
