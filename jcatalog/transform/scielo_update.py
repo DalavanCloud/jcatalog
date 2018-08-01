@@ -223,7 +223,8 @@ def submissions():
 # Crossref
 def crossref():
 
-    query = models.Scielo.objects.filter()
+    query = models.Scielo.objects().batch_size(5)
+
     if query:
         for journal in query:
             doc = journal
@@ -260,16 +261,13 @@ def crossref():
             # Save data in Mongo DB
             if jdata:
                 doc.modify(**jdata)
-                doc.save()
+                # doc.save()
                 print(jdata)
 
 
 def main():
     # SciELO Network csv
-    scieloupdate()
-
-    # # SciELO Articlemeta API
-    # scieloapi()
+    # scieloupdate()
 
     # # DOAJ - xlsx
     # doajproc()
@@ -278,7 +276,7 @@ def main():
     # submissions()
 
     # Crossref
-    # crossref()
+    crossref()
 
 
 if __name__ == "__main__":
