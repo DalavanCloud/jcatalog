@@ -31,8 +31,6 @@ EM TESTE
 # from transform import scielo_aff_update
 # from transform import scielo_manuscripts_update
 # from transform import scielo_times_update
-# from transform import scielo_wos_indexes_update
-# from transform import wos_indexes_loader
 # from transform import scielo_orcid_update
 # from transform import scielo_citations_update
 # from transform import scielo_dates_loader
@@ -49,7 +47,7 @@ EM TESTE
 # from transform import scimago_inscielo_loader
 
 # from transform import wos_loader
-from transform import wos_update
+# from transform import wos_update
 # from transform import wos_oecd_codes
 
 # from transform import jcr_loader
@@ -80,13 +78,13 @@ from transform import wos_update
 # from reports import invite_scielo_20
 # from reports import orcid_list
 # from reports import scopus_scimago_check
-# from reports import fapesp_evaluation
+
 # from reports import fapesp_evaluation_line
 # from reports import fapesp_evaluation_toform
 # from reports import fapesp_evaluation_toform_short
 # from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
-# from reports import scielo_network_journal
+from reports import scielo_network_journal
 
 # from reports import list_send
 
@@ -113,8 +111,6 @@ if __name__ == "__main__":
     # scielo_aff_update.main()
     # scielo_manuscripts_update.main()
     # scielo_times_update.main()
-    # scielo_wos_indexes_update.main()
-    # wos_indexes_loader.main()
     # scielo_orcid_update.main()
     # scielo_citations_update.main()
     # scielo_dates_loader.main()
@@ -131,7 +127,7 @@ if __name__ == "__main__":
     # scimago_inscielo_loader.main()
 
     # wos_loader.main()
-    wos_update.main()
+    # wos_update.main()
     # wos_oecd_codes
 
     # jcr_loader
@@ -159,14 +155,14 @@ if __name__ == "__main__":
     # invite_scielo_20
     # orcid_list.main()
     # scopus_scimago_check
-    # fapesp_evaluation
+
     # fapesp_evaluation_line.main()
     # fapesp_evaluation_toform.main()
     # fapesp_evaluation_toform_short.main()
     # fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
-    # scielo_network_journal.main()
+    scielo_network_journal.main()
 
     # Denise
     # capes_loader.main()

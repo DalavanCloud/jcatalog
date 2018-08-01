@@ -146,8 +146,8 @@ def journal(query, filename, sheetname, issn, atfile):
             col += 1
 
             if doc['is_wos'] == 1:
-                # wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
-                worksheet.write(row, col, doc['wos_indexes'][0]['title'])
+                wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
+                worksheet.write(row, col, wos['title'])
             col += 1
 
             # DOI Prefix e publisher
@@ -185,12 +185,9 @@ def journal(query, filename, sheetname, issn, atfile):
             col += 1
 
             if doc['is_wos'] == 1:
-                for i in doc['issn_list']:
-                    wos = models.Wos.objects.filter(issn_list=i)
-                    if len(wos) > 0:
-                        worksheet.write(row, col, wos[0].country)
-                    else:
-                        worksheet.write(row, col, doc.country)
+                wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
+
+                worksheet.write(row, col, wos.country)
             col += 1
 
             # Submissions - Manager System
@@ -418,45 +415,48 @@ def journal(query, filename, sheetname, issn, atfile):
             worksheet.write(row, col, doc.is_wos)
             col += 1
 
-            # SCIE
-            scie = 0
-            if 'wos_indexes' in doc:
-                for i in doc['wos_indexes']:
-                    if 'scie' in i['index']:
-                        scie = 1
-                        break
-            worksheet.write(row, col, scie)
-            col += 1
+            # WoS Indexes
+            if doc['is_wos'] == 1:
+                wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
+                # SCIE
+                scie = 0
+                if 'indexes' in wos:
+                    for i in wos['indexes']:
+                        if 'scie' in i:
+                            scie = 1
+                            break
+                worksheet.write(row, col, scie)
+                col += 1
 
-            # SSCI
-            ssci = 0
-            if 'wos_indexes' in doc:
-                for i in doc['wos_indexes']:
-                    if 'ssci' in i['index']:
-                        ssci = 1
-                        break
-            worksheet.write(row, col, ssci)
-            col += 1
+                # SSCI
+                ssci = 0
+                if 'indexes' in wos:
+                    for i in wos['indexes']:
+                        if 'ssci' in i:
+                            ssci = 1
+                            break
+                worksheet.write(row, col, ssci)
+                col += 1
 
-            # A&HCI
-            ahci = 0
-            if 'wos_indexes' in doc:
-                for i in doc['wos_indexes']:
-                    if 'ahci' in i['index']:
-                        ahci = 1
-                        break
-            worksheet.write(row, col, ahci)
-            col += 1
+                # # A&HCI
+                ahci = 0
+                if 'indexes' in wos:
+                    for i in wos['indexes']:
+                        if 'ahci' in i:
+                            ahci = 1
+                            break
+                worksheet.write(row, col, ahci)
+                col += 1
 
-            # ESCI
-            esci = 0
-            if 'wos_indexes' in doc:
-                for i in doc['wos_indexes']:
-                    if 'esci' in i['index']:
-                        esci = 1
-                        break
-            worksheet.write(row, col, esci)
-            col += 1
+                # # ESCI
+                esci = 0
+                if 'indexes' in wos:
+                    for i in wos['indexes']:
+                        if 'esci' in i:
+                            esci = 1
+                            break
+                worksheet.write(row, col, esci)
+                col += 1
 
             # Pubmed, PMC
             col = 67
@@ -1028,7 +1028,7 @@ def journal(query, filename, sheetname, issn, atfile):
     row += 1
 
     # Creates 'areas tematicas' worksheet
-    # formatline = workbook.add_format({'text_wrap': False, 'size': 9})
+    formatline = workbook.add_format({'text_wrap': False, 'size': 9})
 
     # worksheet3 = workbook.add_worksheet('dados agregados - AT')
     # worksheet3.freeze_panes(1, 0)
@@ -1085,7 +1085,7 @@ def journal(query, filename, sheetname, issn, atfile):
 
 
 def alljournals():
-    scielo = models.Scielo.objects()
+    scielo = models.Scielo.objects().batch_size(5)
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'periodicos-rede-scielo-' + today + '.xlsx'
     sheetname = 'SciELO-network'

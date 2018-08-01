@@ -253,12 +253,6 @@ class Pubmedapi(DynamicDocument):
     issn_list = ListField()
 
 
-class Noscielo(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    issn_list = ListField()
-
-
 class Capes(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()
@@ -268,21 +262,6 @@ class Capes(DynamicDocument):
             'issn',
             'title',
             'area_avaliacao'
-        ]
-    }
-
-
-class Wosindexes(DynamicDocument):
-    creation_date = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField()
-    issn_list = ListField()
-    is_scielo = IntField(required=True, min_value=0, default=0)
-    is_wos = IntField(required=True, min_value=0, default=0)
-    # Indexes
-    meta = {
-        'indexes': [
-            'issn_list',
-            'title_country'
         ]
     }
 
