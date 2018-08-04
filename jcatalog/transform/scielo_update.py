@@ -92,7 +92,7 @@ def scieloupdate():
             rec['date_of_the_last_document'] = Dates().data2datetime(
                 rec['date_of_the_last_document'])
 
-        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+        # rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
 
@@ -107,19 +107,23 @@ def scieloupdate():
             query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
 
             if query:
-                # Collection Type
-                col_type = collections_scielo.collections[
-                    rec['collection']][2]
-                if col_type not in query[0]['collection_type']:
-                    col_types = list(query[0]['collection_type'])
-                    col_types.append(col_type)
-                    rec['collection_type'] = list(set(col_types))
+                if rec['collection'] == 'spa' and len(query[0]['collections']) > 1:
+                    pass
+                else:
+                    # Collection Type
+                    col_type = collections_scielo.collections[
+                        rec['collection']][2]
+                    if col_type not in query[0]['collection_type']:
+                        col_types = list(query[0]['collection_type'])
+                        col_types.append(col_type)
+                        l_col_types = list(set(col_types))
+                        rec['collection_type'] = sorted(l_col_types)
 
-                del rec['collection']
+                    del rec['collection']
 
-                doc = query[0]
+                    doc = query[0]
 
-                doc.modify(**rec)
+                    doc.modify(**rec)
             else:
                 # SPA will not load
                 if rec['collection'] not in [
@@ -267,7 +271,7 @@ def crossref():
 
 def main():
     # SciELO Network csv
-    # scieloupdate()
+    scieloupdate()
 
     # # DOAJ - xlsx
     # doajproc()
@@ -276,7 +280,7 @@ def main():
     # submissions()
 
     # Crossref
-    crossref()
+    # crossref()
 
 
 if __name__ == "__main__":

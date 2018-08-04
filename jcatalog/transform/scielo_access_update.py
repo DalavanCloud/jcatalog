@@ -2,10 +2,10 @@
 '''
 This script reads data from various sources to process and store in MongoDB.
 '''
-import pyexcel
 import logging
-
 import models
+
+import pyexcel
 
 
 logging.basicConfig(filename='logs/access.info.txt', level=logging.INFO)
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def scieloaccess(filename):
     access = pyexcel.get_sheet(
         file_name=filename,
-        sheet_name='access_count',
+        sheet_name='import',
         name_columns_by_row=0)
 
     access_json = access.to_records()
@@ -39,7 +39,9 @@ def scieloaccess(filename):
 
 def main():
     # SciELO access counts xlsx
-    scieloaccess('data/scielo/accesses_by_journals_network_180317.xlsx')
+    # scieloaccess('data/scielo/accesses_by_journals_network_180317.xlsx')
+    scieloaccess(
+        'data/scielo/scielo20-network/td_accesses_by_journals-network.xlsx')
 
 
 if __name__ == "__main__":

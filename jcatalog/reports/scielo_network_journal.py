@@ -339,9 +339,14 @@ def journal(query, filename, sheetname, issn, atfile):
 
             # Wos Categories
             col = 50
-            if 'wos_subject_areas' in doc['api']:
-                worksheet.write(row, col, '; '.join(
-                    doc['api']['wos_subject_areas']))
+            if doc['is_wos'] == 1:
+                wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
+                if 'thematic_areas' in wos:
+                    worksheet.write(row, col, '; '.join(wos['thematic_areas']))
+            else:
+                if 'wos_subject_areas' in doc['api']:
+                    worksheet.write(row, col, '; '.join(
+                        doc['api']['wos_subject_areas']))
             col += 1
 
             # Historico
@@ -416,63 +421,61 @@ def journal(query, filename, sheetname, issn, atfile):
             col += 1
 
             # WoS Indexes
+            scie = 0
+            ssci = 0
+            ahci = 0
+            esci = 0
+
             if doc['is_wos'] == 1:
+
                 wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
-                # SCIE
-                scie = 0
+
                 if 'indexes' in wos:
+                    # SCIE
                     for i in wos['indexes']:
                         if 'scie' in i:
                             scie = 1
                             break
-                worksheet.write(row, col, scie)
-                col += 1
-
-                # SSCI
-                ssci = 0
-                if 'indexes' in wos:
+                    # SSCI
                     for i in wos['indexes']:
                         if 'ssci' in i:
                             ssci = 1
                             break
-                worksheet.write(row, col, ssci)
-                col += 1
-
-                # # A&HCI
-                ahci = 0
-                if 'indexes' in wos:
+                    # A&HCI
                     for i in wos['indexes']:
                         if 'ahci' in i:
                             ahci = 1
                             break
-                worksheet.write(row, col, ahci)
-                col += 1
-
-                # # ESCI
-                esci = 0
-                if 'indexes' in wos:
+                    # ESCI
                     for i in wos['indexes']:
                         if 'esci' in i:
                             esci = 1
                             break
-                worksheet.write(row, col, esci)
-                col += 1
+
+            worksheet.write(row, col, scie)
+            col += 1
+            worksheet.write(row, col, ssci)
+            col += 1
+            worksheet.write(row, col, ahci)
+            col += 1
+            worksheet.write(row, col, esci)
+            col += 1
 
             # Pubmed, PMC
             col = 67
+            ispubmed = 0
+            ispmc = 0
             pubmed = models.Pubmedapi.objects.filter(issn_list=doc.issn_scielo)
             if pubmed:
                 if 'pubmed' in pubmed[0]['db_name']:
-                    worksheet.write(row, col, 1 or 0)
-                col += 1
+                    ispubmed = 1
                 if 'pmc' in pubmed[0]['db_name']:
-                    worksheet.write(row, col, 1 or 0)
-                col += 1
-            else:
-                worksheet.write(row, col, 0)
-                col += 1
-                worksheet.write(row, col, 0)
-                col += 1
+                    ispmc = 1
+
+            worksheet.write(row, col, ispubmed)
+            col += 1
+            worksheet.write(row, col, ispmc)
+            col += 1
 
             # ANO DE PUBLICACAO
             col = 69
@@ -1021,6 +1024,10 @@ def journal(query, filename, sheetname, issn, atfile):
             else:
                 col += 15
 
+            # Collection
+            col = 177
+            worksheet.write(row, col, doc['collection'])
+
             # Avança ano
             row += 1
 
@@ -1085,7 +1092,7 @@ def journal(query, filename, sheetname, issn, atfile):
 
 
 def alljournals():
-    scielo = models.Scielo.objects().batch_size(5)
+    scielo = models.Scielo.objects()
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'periodicos-rede-scielo-' + today + '.xlsx'
     sheetname = 'SciELO-network'
