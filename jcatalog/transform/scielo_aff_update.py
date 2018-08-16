@@ -15,14 +15,14 @@ logger = logging.getLogger(__name__)
 
 # Add Access count for journals
 def aff(filename):
-    access = pyexcel.get_sheet(
+    aff = pyexcel.get_sheet(
         file_name=filename,
         sheet_name='import',
         name_columns_by_row=0)
 
-    access_json = access.to_records()
+    aff_json = aff.to_records()
 
-    for rec in access_json:
+    for rec in aff_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
         print(rec['issn_scielo'])
@@ -36,13 +36,12 @@ def aff(filename):
 
             if data:
                 doc.modify(**data)
-                doc.save()
 
 
 def main():
     # SciELO docs counts Network xlsx
-    aff('data/scielo/td_documents_affiliations_180310_excel.xlsx')
-
+    # aff('data/scielo/td_documents_affiliations_180310_excel.xlsx')
+    aff('data/scielo/td_affi_network.xlsx')
 
 if __name__ == "__main__":
     main()
