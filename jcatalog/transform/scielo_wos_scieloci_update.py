@@ -15,14 +15,14 @@ logger = logging.getLogger(__name__)
 
 # Add SciELO CI indicators for journals
 def scieloci(filename):
-    access = pyexcel.get_sheet(
+    sheet = pyexcel.get_sheet(
         file_name=filename,
         sheet_name='import',
         name_columns_by_row=0)
 
-    access_json = access.to_records()
+    sheet_json = sheet.to_records()
 
-    for rec in access_json:
+    for rec in sheet_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
         print('\n')
@@ -42,7 +42,8 @@ def scieloci(filename):
 
 def main():
     # SciELO docs counts Network xlsx
-    scieloci('data/scielo/td_wos_all_downloads.xlsx')
+    # scieloci('data/scielo/td_wos_all_downloads.xlsx')
+    scieloci('data/wos/td_wos_all.xlsx')
 
 
 if __name__ == "__main__":
