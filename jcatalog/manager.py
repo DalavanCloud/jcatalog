@@ -23,12 +23,12 @@ EM TESTE
 # from transform import scielo_loader
 # from transform import scielo_update
 # from transform import scielo_access_update
+# from transform import scielo_aff_update
+# from transform import scielo_apc_update
+# from transform import scielo_avaliacao_tipo_inst_update
+# from transform import scielo_avaliacao_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
-# from transform import scielo_avaliacao_update
-# from transform import scielo_avaliacao_tipo_inst_update
-# from transform import scielo_apc_update
-# from transform import scielo_aff_update
 # from transform import scielo_manuscripts_update
 # from transform import scielo_times_update
 # from transform import scielo_orcid_update
@@ -88,6 +88,7 @@ from reports import scielo_network_journal
 
 # from reports import list_send
 
+# from reports import collection_issn_list_ga
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -103,12 +104,12 @@ if __name__ == "__main__":
     # scielo_loader.main()
     # scielo_update.main()
     # scielo_access_update.main()
+    # scielo_aff_update.main()
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
     # scielo_avaliacao_update.main()
     # scielo_avaliacao_tipo_inst_update.main()
     # scielo_apc_update.main()
-    # scielo_aff_update.main()
     # scielo_manuscripts_update.main()
     # scielo_times_update.main()
     # scielo_orcid_update.main()
@@ -172,3 +173,5 @@ if __name__ == "__main__":
     # sender
     # files_renamer.main()
     # files_renamer_pdes.main()
+
+    # collection_issn_list_ga

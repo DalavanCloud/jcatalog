@@ -83,17 +83,17 @@ def journal(query, filename, sheetname, issn, atfile):
         worksheet.write(0, col, h['rotulo_portugues'], wrap_header)
         col += 1
 
-    extraction_date = models.Scielofapesp.objects.first().extraction_date
+    extraction_date = models.Scielo.objects.first().extraction_date
 
     # SciELO
     scielo = query
 
     row = 1
 
-    # COBRIR 10 ANOS
+    # acumulado ate 2007 + 10 ANOS + 2018
     for doc in scielo:
         for h in [
-            # 'anterior',
+            'anterior',
             '2008',
             '2009',
             '2010',
@@ -104,7 +104,7 @@ def journal(query, filename, sheetname, issn, atfile):
             '2015',
             '2016',
             '2017',
-            # '2018'
+            '2018'
         ]:
             print(doc.issn_scielo + '_' + str(h))
 
@@ -343,7 +343,7 @@ def journal(query, filename, sheetname, issn, atfile):
                 wos = models.Wos.objects.filter(id=str(doc.wos_id))[0]
                 if 'thematic_areas' in wos:
                     worksheet.write(row, col, '; '.join(wos['thematic_areas']))
-            else:
+            else:  # wos scielo
                 if 'wos_subject_areas' in doc['api']:
                     worksheet.write(row, col, '; '.join(
                         doc['api']['wos_subject_areas']))
@@ -747,9 +747,9 @@ def journal(query, filename, sheetname, issn, atfile):
             col = 119
             if 'aff' in doc:
                 if h == 'anterior':
-                    if 'br_ate_2007' in doc['aff']:
+                    if 'pais_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
-                                        'br_ate_2007'] or 0)
+                                        'pais_ate_2007'] or 0)
                     col += 1
                     if 'estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
@@ -759,17 +759,17 @@ def journal(query, filename, sheetname, issn, atfile):
                         worksheet.write(row, col, doc['aff'][
                                         'nao_ident_ate_2007'] or 0)
                     col += 1
-                    if 'br_estrang_ate_2007' in doc['aff']:
+                    if 'pais_estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
-                                        'br_estrang_ate_2007'] or 0)
+                                        'pais_estrang_ate_2007'] or 0)
                     col += 1
                     if 'nao_ident_todos_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'nao_ident_todos_ate_2007'] or 0)
                     col += 1
 
-                if 'br_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['br_' + h] or 0)
+                if 'pais_' + h in doc['aff']:
+                    worksheet.write(row, col, doc['aff']['pais_' + h] or 0)
                 col += 1
 
                 if 'estrang_' + h in doc['aff']:
@@ -781,9 +781,9 @@ def journal(query, filename, sheetname, issn, atfile):
                                     'nao_ident_' + h] or 0)
                 col += 1
 
-                if 'br_estrang_' + h in doc['aff']:
+                if 'pais_estrang_' + h in doc['aff']:
                     worksheet.write(row, col, doc['aff'][
-                                    'br_estrang_' + h] or 0)
+                                    'pais_estrang_' + h] or 0)
                 col += 1
 
                 if 'nao_ident_todos_' + h in doc['aff']:
@@ -999,28 +999,31 @@ def journal(query, filename, sheetname, issn, atfile):
             # Access - Google Analytics
             col = 160
             if 'ga_access' in doc:
-                if h == '2017':
-                    for label in [
-                        'total_access',
-                        'porcent_americas',
-                        'porcent_brazil',
-                        'porcent_united_states',
-                        'porcent_asia',
-                        'porcent_china',
-                        'porcent_india',
-                        'porcent_europe',
-                        'porcent_spain',
-                        'porcent_portugal',
-                        'porcent_africa',
-                        'porcent_south_africa',
-                        'porcent_palop',
-                        'porcent_oceania',
-                        'porcent_others'
-                    ]:
-                        if label in doc['ga_access']:
-                            ga_access = doc['ga_access'][label]
-                            worksheet.write(row, col, ga_access)
-                            col += 1
+                if h == 'anterior':
+                    pass
+                else:
+                    h2 = h
+                for label in [
+                    'total_access',
+                    'porcent_americas',
+                    'porcent_brazil',
+                    'porcent_united_states',
+                    'porcent_asia',
+                    'porcent_china',
+                    'porcent_india',
+                    'porcent_europe',
+                    'porcent_spain',
+                    'porcent_portugal',
+                    'porcent_africa',
+                    'porcent_south_africa',
+                    'porcent_palop',
+                    'porcent_oceania',
+                    'porcent_others'
+                ]:
+                    if h2 in doc['ga_access'] and label in doc['ga_access'][h2]:
+                        ga_access = doc['ga_access'][h2][label]
+                        worksheet.write(row, col, ga_access)
+                    col += 1
             else:
                 col += 15
 
