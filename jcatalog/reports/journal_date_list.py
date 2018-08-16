@@ -9,18 +9,19 @@ from articlemeta.client import ThriftClient
 
 import models
 
+
 def journal_date_list():
     scielo_fields = [
-     'ISSN SciELO',
-     'SciELO collection',
-     'Publisher country',
-     'Title',
-     'Status',
-     'Creation year',
-     'Inclusion year at SciELO',
-     'Stopping year at SciELO',
-     'Publisher Name',
-     'URL']
+        'ISSN SciELO',
+        'SciELO collection',
+        'Publisher country',
+        'Title',
+        'Status',
+        'Creation year',
+        'Inclusion year at SciELO',
+        'Stopping year at SciELO',
+        'Publisher Name',
+        'URL']
 
     workbook = xlsxwriter.Workbook('output/journal_dates_list.xlsx')
     worksheet = workbook.add_worksheet('SciELO')
@@ -41,7 +42,7 @@ def journal_date_list():
     query = models.Scielo.objects
 
     for doc in query:
-        col =0
+        col = 0
 
         worksheet.write(row, col, doc.issn_scielo)
         col += 1
@@ -73,7 +74,6 @@ def journal_date_list():
 
         worksheet.write(row, col, doc.publisher_name)
         col += 1
-
 
         if 'api' in doc:
             if 'url' in doc['api']:
