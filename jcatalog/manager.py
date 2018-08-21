@@ -37,6 +37,7 @@ EM TESTE
 # from transform import scielo_toform_loader
 # from transform import scielo_ga_access_update
 # from transform import scielo_fapesp_evaluation_update
+# from transform import scielo_google_scholar_update
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -118,6 +119,7 @@ if __name__ == "__main__":
     # scielo_inclusion_beforer_year_update.main()
     # scielo_toform_loader.main()
     # scielo_ga_access_update.main()
+    # scielo_google_scholar_update.main()
     # scielo_fapesp_evaluation_update.main()
 
     # scopus_loader.main()
