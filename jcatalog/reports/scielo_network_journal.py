@@ -74,7 +74,7 @@ def journal(query, filename, sheetname, issn, atfile):
     format_date_iso = workbook.add_format({'num_format': 'yyyymmdd'})
 
     sheet_header = pyexcel.get_sheet(
-        file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
+        file_name='data/scielo/rotulos_periodicos_rede_scielo.xlsx',
         sheet_name='rotulos_dados_periodicos',
         name_columns_by_row=0)
 
@@ -1069,25 +1069,34 @@ def journal(query, filename, sheetname, issn, atfile):
     #     row += 1
 
     # Creates 'descricao rotulos' worksheet
-    worksheet2 = workbook.add_worksheet('rótulos-dados-periódicos')
+    worksheet2 = workbook.add_worksheet('rótulo-etiqueta-label')
     worksheet2.set_column(0, 0, 30)
     worksheet2.set_column(1, 1, 70)
+    worksheet2.set_column(1, 2, 70)
+    worksheet2.set_column(1, 3, 70)
 
     sheet2 = pyexcel.get_sheet(
-        file_name='data/scielo/rotulos_avaliacao_fapesp_abel.xlsx',
+        file_name='data/scielo/rotulos_periodicos_rede_scielo.xlsx',
         sheet_name='rotulos_dados_periodicos',
         name_columns_by_row=0)
 
     sheet2_json = sheet2.to_records()
 
-    worksheet2.write(0, 0, 'Rótulo', formatline)
+    worksheet2.write(0, 0, 'Rótulo/Etiqueta/Label', formatline)
     worksheet2.write(0, 1, 'Descrição', formatline)
+    worksheet2.write(0, 2, 'Descripción', formatline)
+    worksheet2.write(0, 3, 'Description', formatline)
+
     row = 1
     for line in sheet2_json:
         col = 0
         worksheet2.write(row, col, line['rotulo_portugues'], formatline)
         col += 1
         worksheet2.write(row, col, line['descricao'], formatline)
+        col += 1
+        worksheet2.write(row, col, line['descripcion'], formatline)
+        col += 1
+        worksheet2.write(row, col, line['description'], formatline)
         row += 1
 
     # Grava planilha Excel
