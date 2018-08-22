@@ -6,16 +6,13 @@ __pycache__/
 # Directories
 data/
 docs/
+logs/
 tools/
 output/
 extractors/jcr/download/
+extractors/jcr/download_all/
 
 config.py
 sender_config.py
-
-# Logs
-logs/
-
-*.xlsx
 
 *.csv
