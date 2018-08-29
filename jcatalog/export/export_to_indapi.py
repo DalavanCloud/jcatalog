@@ -60,10 +60,9 @@ class Googlescholar(Indicators):
 
 
 # Query in journals-catalog database - collection: Scielo
-list_issn = ["0074-0276", "0044-5967"]
+scielo = models.Scielo.objects().batch_size(5)
 
-for i in list_issn:
-    qscielo = models.Scielo.objects.filter(issn_scielo=i)[0]
+for qscielo in scielo:
 
     print(qscielo.issn_scielo)
 
@@ -75,9 +74,10 @@ for i in list_issn:
     journal.title = qscielo.title
     journal.issn_scielo = qscielo.issn_scielo
     journal.collection = qscielo.collection
+    journal.collections = qscielo.collections
 
     journal.save()
-    # Insere na coleção
+    # Insert data in collection
     if journal:
         journal_api.insert_one(journal.to_mongo())
 
@@ -103,6 +103,7 @@ for i in list_issn:
                 {"$set": {"indicators": indicators}})
 
             # query to db collection with the indicator in jornals catalog
+            # i.e.: models.Scopus.objects.filter(id=str(qscielo.scopus.id))[0]
             q_ind = dbcol.objects.filter(
                 id=str(
                     getattr(qscielo, col + '_id')
@@ -111,6 +112,7 @@ for i in list_issn:
 
             # instance to class <col>
             # i.e. ind = Jcr()
+            ind = None
             ind = class_name
 
             ind.journal_id = journal
@@ -126,8 +128,8 @@ for i in list_issn:
 
             ind.save()
 
-        # save to indicator collection
-        # i.e. jcr_api.insert_one(jcr.to_mongo())
-        if ind:
-            getattr(sys.modules[__name__], col +
-                    '_api').insert_one(ind.to_mongo())
+            # save to indicator collection
+            # i.e. jcr_api.insert_one(jcr.to_mongo())
+            if ind:
+                getattr(sys.modules[__name__], col +
+                        '_api').insert_one(ind.to_mongo())
