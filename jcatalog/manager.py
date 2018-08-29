@@ -85,11 +85,14 @@ EM TESTE
 # from reports import fapesp_evaluation_toform_short
 # from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
-from reports import scielo_network_journal
+# from reports import scielo_network_journal
 
 # from reports import list_send
 
 # from reports import collection_issn_list_ga
+
+
+from export import export_to_indapi
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -165,7 +168,7 @@ if __name__ == "__main__":
     # fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
-    scielo_network_journal.main()
+    # scielo_network_journal.main()
 
     # Denise
     # capes_loader.main()
@@ -177,3 +180,5 @@ if __name__ == "__main__":
     # files_renamer_pdes.main()
 
     # collection_issn_list_ga
+
+    export_to_indapi
