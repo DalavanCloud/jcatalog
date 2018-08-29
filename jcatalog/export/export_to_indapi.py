@@ -109,9 +109,8 @@ for i in list_issn:
                 )
             )[0]
 
-            # instaciar a classe JCR
-
-            # jcr = Jcr()
+            # instance to class <col>
+            # i.e. ind = Jcr()
             ind = class_name
 
             ind.journal_id = journal
@@ -127,34 +126,8 @@ for i in list_issn:
 
             ind.save()
 
-        # # inserir dados de SCOPUS
-        # if qscielo.is_scopus == 1:
-
-        #     journal.indicators.append('scopus')
-
-        #     journal.save()
-
-        # scopusind = models.Scopus.objects.filter(id=str(qscielo.scopus_id))[0]
-
-        #     # instaciar a classe SCOPUS
-        #     scopus = Scopus()
-
-        #     scopus.journal_id = journal
-        #     scopus.issn_scielo = qscielo.issn_scielo
-        #     scopus.indicators = {}
-        #     for k in scopusind.__dict__.keys():
-        #         for y in range(1999, datetime.now().year + 1):
-        #             if str(y) == k:
-        #                 print(k)
-        #                 scopus.years.append(y)
-        #                 scopus.years.sort()
-        #                 scopus.indicators[str(y)] = scopusind[str(y)]
-
-        #     scopus.save()
-
+        # save to indicator collection
+        # i.e. jcr_api.insert_one(jcr.to_mongo())
         if ind:
             getattr(sys.modules[__name__], col +
                     '_api').insert_one(ind.to_mongo())
-
-    # if scopus:
-    #     scopus_api.insert_one(scopus.to_mongo())
