@@ -27,7 +27,8 @@ def manus(filename):
     for rec in sheet_json:
         print(rec['issn_scielo'])
 
-        query = models.Scielofapesp.objects.filter(issn_scielo=rec['issn_scielo'])
+        query = models.Scielo.objects.filter(
+            issn_scielo=rec['issn_scielo'])
 
         if len(query) == 1 and 'manuscritos' not in query[0]:
 
@@ -43,7 +44,8 @@ def manus(filename):
             if len(query) == 1:
                 doc = query[0]
                 data = {'manuscritos': ''}
-                data['manuscritos'] = json.loads(query[0].to_json())['manuscritos']
+                data['manuscritos'] = json.loads(
+                    query[0].to_json())['manuscritos']
                 for k, v in rec.items():
                     if k not in data['manuscritos']:
                         data['manuscritos'][k] = rec[k]
@@ -53,13 +55,14 @@ def manus(filename):
 
 def main():
     # SciELO docs counts Network xlsx
-    filelist = [f for f in os.listdir('data/scielo/manuscritos/') if 'xlsx' in f]
+    filelist = [f for f in os.listdir(
+        'data/scielo/manuscritos/') if 'xlsx' in f]
 
     filelist.sort()
 
     for f in filelist:
         print(f)
-        manus('data/scielo/manuscritos/'+f)
+        manus('data/scielo/manuscritos/' + f)
 
 
 if __name__ == "__main__":
