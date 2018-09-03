@@ -11,11 +11,10 @@ tools/
 output/
 extractors/jcr/download/
 extractors/jcr/download_all/
-extractors/doapi/*.xlsx
+extractors/doajapi/*.xlsx
 extractors/scielo/*xlsx
 
 config.py
 sender_config.py
 
 *.csv
-
