@@ -1,9 +1,12 @@
 # coding: utf-8
-import pyexcel
-import xlsxwriter
-import models
 import re
 import datetime
+
+import pyexcel
+import xlsxwriter
+from xlsxwriter.utility import xl_rowcol_to_cell
+
+import models
 from accent_remover import *
 
 
@@ -527,8 +530,12 @@ def journal(query, filename, sheetname, issn, atfile):
                 if 'is_citable_' + h in doc['docs']:
                     worksheet.write(row, col, doc['docs'][
                                     'is_citable_' + h] or 0)
+                    # define objeto para uso no
+                    # para calculo de afiliações
+                    cell_docs_cit = xl_rowcol_to_cell(row, col)
                 else:
                     worksheet.write(row, col, 0)
+                    cell_docs_cit = xl_rowcol_to_cell(row, col)
                 col += 1
                 if 'tipo_review_' + h in doc['docs']:
                     worksheet.write(row, col, doc['docs'][
@@ -750,10 +757,12 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'pais_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'pais_ate_2007'] or 0)
+                        cell_pais = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'estrang_ate_2007'] or 0)
+                        cell_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'nao_ident_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
@@ -762,39 +771,76 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'pais_estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'pais_estrang_ate_2007'] or 0)
+                        cell_pais_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'nao_ident_todos_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'nao_ident_todos_ate_2007'] or 0)
+                        cell_nao_id_todos = xl_rowcol_to_cell(row, col)
+                    col += 1
+                else:
+                    if 'pais_' + h in doc['aff']:
+                        worksheet.write(row, col, doc['aff']['pais_' + h] or 0)
+                        cell_pais = xl_rowcol_to_cell(row, col)
                     col += 1
 
-                if 'pais_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['pais_' + h] or 0)
+                    if 'estrang_' + h in doc['aff']:
+                        worksheet.write(row, col, doc['aff'][
+                                        'estrang_' + h] or 0)
+                        cell_estrang = xl_rowcol_to_cell(row, col)
+                    col += 1
+                    if 'nao_ident_' + h in doc['aff']:
+                        worksheet.write(row, col, doc['aff'][
+                                        'nao_ident_' + h] or 0)
+                    col += 1
+
+                    if 'pais_estrang_' + h in doc['aff']:
+                        worksheet.write(row, col, doc['aff'][
+                                        'pais_estrang_' + h] or 0)
+                        cell_pais_estrang = xl_rowcol_to_cell(row, col)
+                    col += 1
+
+                    if 'nao_ident_todos_' + h in doc['aff']:
+                        worksheet.write(row, col, doc['aff'][
+                                        'nao_ident_todos_' + h] or 0)
+                        cell_nao_id_todos = xl_rowcol_to_cell(row, col)
+                    col += 1
+
+                # formula 1 - soma_docs_citáveis_afiliação
+                formula1 = ('=(%s+%s+%s)-%s' %
+                            (cell_pais,
+                             cell_estrang,
+                             cell_nao_id_todos,
+                             cell_pais_estrang))
+                worksheet.write_formula(row, col, formula1)
+                # define celula para verificação posterior
+                cell_soma_docs_cit_aff = xl_rowcol_to_cell(row, col)
                 col += 1
 
-                if 'estrang_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff']['estrang_' + h] or 0)
-
-                col += 1
-                if 'nao_ident_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff'][
-                                    'nao_ident_' + h] or 0)
-                col += 1
-
-                if 'pais_estrang_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff'][
-                                    'pais_estrang_' + h] or 0)
-                col += 1
-
-                if 'nao_ident_todos_' + h in doc['aff']:
-                    worksheet.write(row, col, doc['aff'][
-                                    'nao_ident_todos_' + h] or 0)
+                # formula 2 - verifica soma_docs_citáveis_afiliação
+                formula2 = '=%s-%s' % (cell_soma_docs_cit_aff, cell_docs_cit)
+                worksheet.write_formula(row, col, formula2)
                 col += 1
             else:
                 col += 5
+                # formula 1 - soma_docs_citáveis_afiliação
+                formula1 = ('=(%s+%s+%s)-%s' %
+                            (cell_pais,
+                             cell_estrang,
+                             cell_nao_id_todos,
+                             cell_pais_estrang))
+                worksheet.write_formula(row, col, formula1)
+                # define celula para verificação posterior
+                cell_soma_docs_cit_aff = xl_rowcol_to_cell(row, col)
+                col += 1
+
+                # formula 2 - verifica soma_docs_citáveis_afiliação
+                formula2 = '=%s-%s' % (cell_soma_docs_cit_aff, cell_docs_cit)
+                worksheet.write_formula(row, col, formula2)
+                col += 1
 
             # Manuscritos
-            col = 124
+            col = 126
             if 'manuscritos' in doc:
                 if h == '2014':
 
@@ -827,7 +873,7 @@ def journal(query, filename, sheetname, issn, atfile):
                     col += 1
 
             # Tempos entre submissao, aprovacao e publicacao
-            col = 130
+            col = 132
             if 'times' in doc:
                 if h == 'anterior':
 
@@ -963,7 +1009,7 @@ def journal(query, filename, sheetname, issn, atfile):
                     col += 1
 
             # SciELO - Citações Concedidass
-            col = 140
+            col = 142
             if 'citations' in doc:
                 for cit in doc['citations']:
                     if h in cit:
@@ -997,7 +1043,7 @@ def journal(query, filename, sheetname, issn, atfile):
                 col += 20
 
             # Access - Google Analytics
-            col = 160
+            col = 162
             if 'ga_access' in doc:
                 if h == 'anterior':
                     pass
@@ -1027,8 +1073,8 @@ def journal(query, filename, sheetname, issn, atfile):
             else:
                 col += 15
 
-            # Collection
-            col = 177
+            # Collection - acronimo da coleção
+            col = 179
             worksheet.write(row, col, doc['collection'])
 
             # Avança ano
@@ -1183,7 +1229,8 @@ def onejournal():
     # sheetname = 'Mem. Inst. Oswaldo Cruz'
     # atfile = 'data/scielo/Fapesp-avaliação-SciELO-ativos2018-até2015-AT.xlsx'
 
-    # journal(query=queryj, filename=filename, sheetname=sheetname, issn=issn, atfile=atfile)
+    # journal(query=queryj, filename=filename, sheetname=sheetname, issn=issn,
+    # atfile=atfile)
 
 
 def main():
