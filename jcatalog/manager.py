@@ -20,6 +20,7 @@ EM TESTE
 # from extractors.scimago import downloader_scimago
 # from extractors.wos import scrap_wos_indexes
 
+
 # from transform import scielo_loader
 # from transform import scielo_update
 # from transform import scielo_access_update
