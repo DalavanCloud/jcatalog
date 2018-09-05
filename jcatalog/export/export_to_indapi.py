@@ -1,14 +1,15 @@
 import sys
+import time
 from datetime import datetime
 
-from mongoengine import DynamicDocument, fields
+from mongoengine import DynamicDocument, fields, connect
 
 # import models from Journals-Catalog
 import models
 
 
 # Get the indapi database
-indapi = models.connect('indapi').get_database('indapi')
+indapi = connect('indapi', alias='indapi').get_database('indapi')
 
 # Get the indapi collections
 journal_api = indapi.get_collection('journal')
@@ -19,11 +20,12 @@ googlescholar_api = indapi.get_collection('googlescholar')
 
 
 class Journal(DynamicDocument):
-    created_at = fields.DateTimeField(default=datetime.now)
+    # created_at = fields.DateTimeField(default=datetime.now)
     issn_scielo = fields.StringField(required=True)
     title = fields.StringField(required=True)
-    indicators = fields.ListField()
     meta = {
+        'db_alias': 'indapi',
+        'collection': 'journal',
         'indexes': [
             'issn_scielo',
             'title'
@@ -36,6 +38,7 @@ class Indicators(DynamicDocument):
     years = fields.ListField()
     indicators = fields.DictField()
     meta = {
+        'db_alias': 'indapi',
         'abstract': True,
         'indexes': [
             'issn_scielo',
@@ -43,21 +46,33 @@ class Indicators(DynamicDocument):
         ]}
 
 
-class Jcr(Indicators):
+class Jcr_api(Indicators):
+    meta = {'collection': 'jcr'}
     pass
 
 
-class Scopus(Indicators):
+class Scopus_api(Indicators):
+    meta = {'collection': 'scopus'}
     pass
 
 
-class Scimago(Indicators):
+class Scimago_api(Indicators):
+    meta = {'collection': 'scimago'}
     pass
 
 
-class Googlescholar(Indicators):
+class Google_api(Indicators):
+    meta = {'collection': 'google'}
     pass
 
+# drop
+Journal.drop_collection()
+Jcr_api.drop_collection()
+Scopus_api.drop_collection()
+Scimago_api.drop_collection()
+Google_api.drop_collection()
+
+time.sleep(3)
 
 # Query in journals-catalog database - collection: Scielo
 scielo = models.Scielo.objects().batch_size(5)
@@ -70,66 +85,100 @@ for qscielo in scielo:
     journal = Journal()
 
     # inserir dados de journal
-    journal.created_at = datetime.now()
+    journal.switch_db(db_alias='indapi')
+    # journal.created_at = datetime.now()
     journal.title = qscielo.title
     journal.issn_scielo = qscielo.issn_scielo
     journal.collection = qscielo.collection
     journal.collections = qscielo.collections
 
     journal.save()
-    # Insert data in collection
-    if journal:
-        journal_api.insert_one(journal.to_mongo())
 
     # Inserts indicators to the list collections below
-    for col in ['jcr',
+    indicators = []
+
+    mdata = journal.to_mongo()
+
+    # Insert data in collection
+    # i.e col = 'jcr'
+    for col in ['google',
+                'jcr',
                 'scopus',
-                'scimago']:
+                'scimago'
+                ]:
 
-        # i.e col = 'jcr'
+        if col == 'google':
 
-        # i.e models.Jcr
-        dbcol = getattr(models, col.capitalize())
+            gind = Google_api()
+            flag = 0
 
-        # i.e. Jcr() - instances the class Jcr
-        class_name = getattr(sys.modules[__name__], col.capitalize())()
+            for y in range(2012, datetime.now().year + 1):
+                if any(k in qscielo for k in [
+                        'google_scholar_h5_' + str(y),
+                        'google_scholar_m5_' + str(y)]):
+                    indicators.append('google')
+                    gind.journal_id = journal
+                    gind.issn_scielo = qscielo.issn_scielo
+                    flag = 1
 
-        if getattr(qscielo, 'is_' + col) == 1:
-            indicators = journal.indicators
-            indicators.append(col)
-            # print(indicators)
-            journal_api.update_one(
-                {"_id": journal.id},
-                {"$set": {"indicators": indicators}})
+                if 'google_scholar_h5_' + str(y) in qscielo:
+                    gind.years.append(y)
+                    gind.indicators[str(y)] = {'google_scholar_h5': qscielo[
+                        'google_scholar_h5_' + str(y)]}
 
-            # query to db collection with the indicator in jornals catalog
-            # i.e.: models.Scopus.objects.filter(id=str(qscielo.scopus.id))[0]
-            q_ind = dbcol.objects.filter(
-                id=str(
-                    getattr(qscielo, col + '_id')
-                )
-            )[0]
+                if 'google_scholar_m5_' + str(y) in qscielo:
+                    gind.years.append(y)
+                    gind.indicators = gind.indicators
+                    gind.indicators[str(y)]['google_scholar_m5'] = qscielo[
+                        'google_scholar_m5_' + str(y)]
 
-            # instance to class <col>
-            # i.e. ind = Jcr()
-            ind = None
-            ind = class_name
+            if flag > 0:
+                gind.years = list(set(gind.years))
+                gind.years.sort()
+                gind.save()
 
-            ind.journal_id = journal
-            ind.issn_scielo = qscielo.issn_scielo
-            ind.indicators = {}
+            indicators = list(set(indicators))
+            mdata['indicators'] = indicators
+            journal.modify(**mdata)
 
-            for k in q_ind.__dict__.keys():
-                for y in range(1999, datetime.now().year + 1):
-                    if str(y) == k:
-                        ind.years.append(y)
-                        ind.years.sort()
-                        ind.indicators[str(y)] = q_ind[str(y)]
+        else:
+            # i.e models.Jcr
+            dbcol = getattr(models, col.capitalize())
+            # i.e. Jcr_api() - instances the class Jcr_api
+            class_name = getattr(
+                sys.modules[__name__], col.capitalize() + '_api')
 
-            ind.save()
+            if getattr(qscielo, 'is_' + col) == 1:
 
-            # save to indicator collection
-            # i.e. jcr_api.insert_one(jcr.to_mongo())
-            if ind:
-                getattr(sys.modules[__name__], col +
-                        '_api').insert_one(ind.to_mongo())
+                indicators.append(col)
+
+                if indicators:
+                    mdata = journal.to_mongo()
+                    indicators.sort()
+                    indicators = list(set(indicators))
+                    mdata['indicators'] = indicators
+
+                    journal.modify(**mdata)
+
+                # query to db collection with the indicator in jornals catalog
+                # i.e.:
+                # models.Scopus.objects.filter(id=str(qscielo.scopus.id))[0]
+                q_ind = dbcol.objects.filter(
+                    id=str(getattr(qscielo, col + '_id')))[0]
+
+                # instance to class <col>
+                # i.e. ind = Jcr()
+                ind = class_name()
+
+                ind.journal_id = journal
+                ind.issn_scielo = qscielo.issn_scielo
+
+                for k in q_ind.__dict__.keys():
+                    for y in range(1998, datetime.now().year + 1):
+                        if str(y) == k:
+                            ind.years.append(y)
+                            ind.years.sort()
+                            ind.indicators[str(y)] = q_ind[str(y)]
+
+                # save to indicator collection
+                ind.save()
