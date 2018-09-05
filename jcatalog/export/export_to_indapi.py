@@ -94,8 +94,8 @@ for qscielo in scielo:
 
     journal.save()
 
-    # Inserts indicators to the list collections below
-    indicators = []
+    # Insert sources to the list collections below
+    sources = []
 
     mdata = journal.to_mongo()
 
@@ -116,7 +116,7 @@ for qscielo in scielo:
                 if any(k in qscielo for k in [
                         'google_scholar_h5_' + str(y),
                         'google_scholar_m5_' + str(y)]):
-                    indicators.append('google')
+                    sources.append('google')
                     gind.journal_id = journal
                     gind.issn_scielo = qscielo.issn_scielo
                     flag = 1
@@ -137,8 +137,8 @@ for qscielo in scielo:
                 gind.years.sort()
                 gind.save()
 
-            indicators = list(set(indicators))
-            mdata['indicators'] = indicators
+            sources = list(set(sources))
+            mdata['sources'] = sources
             journal.modify(**mdata)
 
         else:
@@ -150,13 +150,13 @@ for qscielo in scielo:
 
             if getattr(qscielo, 'is_' + col) == 1:
 
-                indicators.append(col)
+                sources.append(col)
 
-                if indicators:
+                if sources:
                     mdata = journal.to_mongo()
-                    indicators.sort()
-                    indicators = list(set(indicators))
-                    mdata['indicators'] = indicators
+                    sources.sort()
+                    sources = list(set(sources))
+                    mdata['sources'] = sources
 
                     journal.modify(**mdata)
 
