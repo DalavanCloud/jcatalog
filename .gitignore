@@ -12,8 +12,8 @@ output/
 extractors/
 extractors/jcr/download/
 extractors/jcr/download_all/
-extractors/doajapi/*.xlsx
-extractors/scielo/a.xlsx
+extractors/doajapi/output/
+extractors/scielo/output/
 
 config.py
 sender_config.py
