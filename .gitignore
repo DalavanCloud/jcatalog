@@ -9,10 +9,11 @@ docs/
 logs/
 tools/
 output/
+extractors/
 extractors/jcr/download/
 extractors/jcr/download_all/
 extractors/doajapi/*.xlsx
-extractors/scielo/*xlsx
+extractors/scielo/a.xlsx
 
 config.py
 sender_config.py

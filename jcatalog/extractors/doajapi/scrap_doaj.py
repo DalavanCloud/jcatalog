@@ -28,6 +28,7 @@ for h in [
         'acronym',
         'issn',
         'title_scielo',
+        'status',
         'result',
         'title_doaj',
         'provider',
@@ -101,6 +102,9 @@ for collection in collections.json():
             col += 1
 
             worksheet.write(row, col, journal.title)
+            col += 1
+
+            worksheet.write(row, col, journal.current_status)
             col += 1
 
             worksheet.write(row, col, result)
