@@ -26,6 +26,7 @@ class Scielo(DynamicDocument):
     is_pubmed = IntField(required=True, min_value=0, default=0)
     is_pmc = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    is_latindex = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [
@@ -216,6 +217,21 @@ class Cwts(DynamicDocument):
     is_scopus = IntField(required=True, min_value=0, default=0)
     is_jcr = IntField(required=True, min_value=0, default=0)
     is_wos = IntField(required=True, min_value=0, default=0)
+    # Indexes
+    meta = {
+        'indexes': [
+            'issn_list',
+            'title_country'
+        ]
+    }
+
+
+class Latindex(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    issn_list = ListField()
+    is_latindex = IntField(required=True, min_value=1, default=1)
+    is_scielo = IntField(required=True, min_value=0, default=0)
     # Indexes
     meta = {
         'indexes': [

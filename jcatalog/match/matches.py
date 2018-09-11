@@ -190,11 +190,12 @@ def main():
 
     # SciELO
     # match(models.Scielo, models.Jcr, 1)
-    match(models.Scielo, models.Wos, 1)
+    # match(models.Scielo, models.Wos, 1)
     # match(models.Scielo, models.Scopus, 1)
     # match(models.Scielo, models.Scimago, 1)
     # match(models.Scielo, models.Cwts, 1)
     # match(models.Scielo, models.Submissions)
+    match(models.Scielo, models.Latindex)
 
     # JCR
     # match(models.Jcr, models.Scielo, 1)
@@ -230,6 +231,13 @@ def main():
     # match(models.Cwts, models.Scielo, 1)
     # match(models.Cwts, models.Scopus, 1)
     # match(models.Cwts, models.Scimago, 1)
+
+    # Latindex
+    # match(models.Latindex, models.Jcr, 1)
+    # match(models.Latindex, models.Wos, 1)
+    # match(models.Latindex, models.Scielo, 1)
+    # match(models.Latindex, models.Scopus, 1)
+    # match(models.Latindex, models.Scimago, 1)
 
 
 if __name__ == "__main__":

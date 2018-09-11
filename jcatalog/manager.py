@@ -39,6 +39,7 @@ EM TESTE
 # from transform import scielo_ga_access_update
 # from transform import scielo_fapesp_evaluation_update
 # from transform import scielo_google_scholar_update
+# from transform import latindex_update
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -58,7 +59,7 @@ EM TESTE
 
 # from transform import cwts_country
 
-# from match import matches
+from match import matches
 
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
@@ -93,7 +94,7 @@ EM TESTE
 # from reports import collection_issn_list_ga
 
 
-from export import export_to_indapi
+# from export import export_to_indapi
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -125,6 +126,7 @@ if __name__ == "__main__":
     # scielo_ga_access_update.main()
     # scielo_google_scholar_update.main()
     # scielo_fapesp_evaluation_update.main()
+    # latindex_update.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -143,7 +145,7 @@ if __name__ == "__main__":
 
     # cwts_country.main()
 
-    # matches.main()
+    matches.main()
 
     # jcr_export_indicators
 
@@ -182,4 +184,4 @@ if __name__ == "__main__":
 
     # collection_issn_list_ga
 
-    export_to_indapi
+    # export_to_indapi
