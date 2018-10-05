@@ -16,7 +16,7 @@ def scrapmjl(preurl, index, filewriter):
             print(url)
 
             r = requests.get(url)
-            time.sleep(2)
+            time.sleep(1)
 
             r_html = r.text.replace('\r', '')
             soup = BeautifulSoup(r_html, 'html.parser')
@@ -25,9 +25,20 @@ def scrapmjl(preurl, index, filewriter):
             if soupdt:
                 for l in soup.findAll('dt'):
                     filewriter.writerow([
+                        # issn
                         l.next_sibling.split(' ISSN: ')[1].strip(),
+                        # journal
                         l.text.split('. ')[1],
+                        # frequency
                         l.next_sibling.split(' ISSN: ')[0].strip(),
+                        # publisher
+                        l.next_sibling.next_sibling.next_sibling.contents[0].split(',')[
+                            0],
+                        # city - country
+                        l.next_sibling.next_sibling.next_sibling.contents[0].split(',')[-2] + " - " +
+                        l.next_sibling.next_sibling.next_sibling.contents[
+                            0].split(',')[-3],
+                        # index
                         index])
             else:
                 break
@@ -42,15 +53,19 @@ def main():
         # Arts & Humanities Citation Index
         # PC = 'H'
         ('H', 'ahci'),
+
         # Science Citation Index Expanded
         # PC = 'D'
         ('D', 'scie'),
+
         # Social Sciences Citation Index
         # PC = 'SS'
         ('SS', 'ssci'),
+
         # Emerging Sources Citation Index
         # PC = 'EX'
         ('EX', 'esci'),
+
         # Science Citation Index
         # PC = 'K'
         ('K', 'sci')]
@@ -59,7 +74,7 @@ def main():
     found in the Science Citation Index Expanded. Journals in SCI are typically
     the most consistently high impact titles in many scientific disciplines.
     '''
-    with open('data/wos/master_journal_list.csv', 'w') as csvfile:
+    with open('data/wos/master_journal_list_181003_02.csv', 'w') as csvfile:
         filewriter = csv.writer(csvfile, delimiter='\t',
                                 quoting=csv.QUOTE_MINIMAL)
         filewriter.writerow(
@@ -67,6 +82,8 @@ def main():
                 'issn',
                 'journal',
                 'frequency',
+                'publisher',
+                'city - country',
                 'index'])
 
         for code, index in ci_tuple_list:

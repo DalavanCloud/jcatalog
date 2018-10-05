@@ -25,7 +25,7 @@ client = ThriftClient()
 
 def scieloupdate():
     scielo_sheet = pyexcel.get_sheet(
-        file_name='data/scielo/journals_net.csv',
+        file_name='data/scielo/journals_net_181004.csv',
         name_columns_by_row=0)
 
     # Edit labels
@@ -92,7 +92,8 @@ def scieloupdate():
             rec['date_of_the_last_document'] = Dates().data2datetime(
                 rec['date_of_the_last_document'])
 
-        # rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+        # API SciELO
+        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
 
@@ -102,7 +103,8 @@ def scieloupdate():
                 'sss',
                 'rve',
                 'psi',
-                'rvt']:
+                'rvt',
+                'ecu']:
 
             query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
 
@@ -131,7 +133,8 @@ def scieloupdate():
                         'sss',
                         'rve',
                         'psi',
-                        'rvt']:
+                        'rvt',
+                        'ecu']:
 
                     # Collection Type
                     rec['collection_type'] = []
@@ -154,9 +157,10 @@ def scieloupdate():
                         rec['title_clean'],
                         accent_remover(rec['country'].lower()))
 
-                    rec['title_clean_ndp_country'] = '%s-%s' % (
-                        rec['title_clean_ndp'],
-                        accent_remover(rec['country'].lower()))
+                    if 'title_clean_ndp' in rec:
+                        rec['title_clean_ndp_country'] = '%s-%s' % (
+                            rec['title_clean_ndp'],
+                            accent_remover(rec['country'].lower()))
 
                     rec['collections'] = []
                     rec['collections'].append(rec['collection'])

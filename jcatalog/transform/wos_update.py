@@ -4,11 +4,9 @@ WOS Update
 '''
 import datetime
 import logging
-
+import pyexcel
 import models
 from accent_remover import *
-
-import pyexcel
 
 
 logging.basicConfig(
@@ -31,13 +29,16 @@ def wos_update():
 
         title_low = accent_remover(rec['title'].replace(
             " & ", " and ").replace("&", "and").lower())
-
         rec['title_lower'] = title_low
-
         rec['title_country'] = '%s-%s' % (title_low,
                                           rec['country'].lower())
 
-        query = models.Wos.objects.filter(title_lower=title_low)
+        title_low_2mjl = accent_remover(rec['title'].lower())
+        rec['title_low_2mjl'] = title_low_2mjl
+        rec['title_country_2mjl'] = '%s-%s' % (title_low_2mjl,
+                                               rec['country'].lower())
+
+        query = models.Wos.objects.filter(title_low_2mjl=title_low_2mjl)
 
         if query:
 
@@ -76,7 +77,9 @@ def wos_update():
 def wos_indexes():
     # Add indexes and ISSN List
     sheet = pyexcel.get_sheet(
-        file_name='data/wos/master_journal_list.xlsx',
+        # file_name='data/wos/master_journal_list_181003_02_import.xlsx',
+        file_name='data/wos/master_journal_list_181003_02_import.xlsx',
+        sheet_name='import',
         name_columns_by_row=0)
 
     wos_json = sheet.to_records()
@@ -85,12 +88,25 @@ def wos_indexes():
 
         print(rec['journal'])
 
-        title_low = accent_remover(rec['journal'].replace(
-            " & ", " and ").replace("&", "and").lower())
+        title_low_2mjl = accent_remover(rec['journal'].lower())
+        rec['title_low_2mjl'] = title_low_2mjl
 
-        query = models.Wos.objects.filter(title_lower=title_low)
+        query = models.Wos.objects.filter(title_low_2mjl=title_low_2mjl)
 
         if query:
+            if 'country' in rec and rec['country'] != 'BRAZIL':
+                del rec['country']
+
+            # title_low = accent_remover(rec['journal'].replace(
+            #     " & ", " and ").replace("&", "and").lower())
+            # rec['title_lower'] = title_low
+
+            # if 'country' in rec:
+            #     rec['title_country'] = '%s-%s' % (title_low,
+            #                                       rec['country'].lower())
+            # if 'country' in rec:
+            #     rec['title_country_2mjl'] = '%s-%s' % (title_low_2mjl,
+            #                                            rec['country'].lower())
             # ISSN LIST
             if 'issn' in rec:
                 issn = rec['issn']
@@ -117,6 +133,31 @@ def wos_indexes():
 
             # update
             query[0].modify(**rec)
+        else:
+            rec['title'] = rec['journal']
+
+            title_low = accent_remover(rec['journal'].replace(
+                " & ", " and ").replace("&", "and").lower())
+            rec['title_lower'] = title_low
+
+            if 'country' in rec and rec['country'] == 'BRAZIL':
+                rec['title_country'] = '%s-%s' % (title_low,
+                                                  rec['country'].lower())
+
+            # ISSN LIST
+            if 'issn' in rec:
+                rec['issn_list'] = []
+                rec['issn_list'].append(rec['issn'])
+
+            # WOS INDEXES
+            rec['indexes'] = []
+            rec['indexes'].append(rec['index'])
+
+            del rec['index']
+            del rec['journal']
+
+            # save
+            models.Wos(**rec).save()
 
 
 def main():
