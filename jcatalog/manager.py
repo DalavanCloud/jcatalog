@@ -26,8 +26,9 @@ EM TESTE
 # from transform import scielo_access_update
 # from transform import scielo_aff_update
 # from transform import scielo_apc_update
-# from transform import scielo_avaliacao_tipo_inst_update
 # from transform import scielo_avaliacao_update
+# from transform import scielo_avaliacao_contatos_update
+# from transform import scielo_avaliacao_tipo_inst_update
 # from transform import scielo_docs_update
 # from transform import scielo_wos_scieloci_update
 # from transform import scielo_manuscripts_update
@@ -40,6 +41,8 @@ EM TESTE
 # from transform import scielo_fapesp_evaluation_update
 # from transform import scielo_google_scholar_update
 # from transform import latindex_update
+# from transform import scielo_altmetrics_update
+
 
 # from transform import scielo_inclusion_beforer_year_update
 
@@ -59,7 +62,7 @@ EM TESTE
 
 # from transform import cwts_country
 
-from match import matches
+# from match import matches
 
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
@@ -114,6 +117,7 @@ if __name__ == "__main__":
     # scielo_docs_update.main()
     # scielo_wos_scieloci_update.main()
     # scielo_avaliacao_update.main()
+    # scielo_avaliacao_contatos_update.main()
     # scielo_avaliacao_tipo_inst_update.main()
     # scielo_apc_update.main()
     # scielo_manuscripts_update.main()
@@ -127,6 +131,7 @@ if __name__ == "__main__":
     # scielo_google_scholar_update.main()
     # scielo_fapesp_evaluation_update.main()
     # latindex_update.main()
+    # scielo_altmetrics_update.main()
 
     # scopus_loader.main()
     # scopus_update.main()
@@ -145,7 +150,7 @@ if __name__ == "__main__":
 
     # cwts_country.main()
 
-    matches.main()
+    # matches.main()
 
     # jcr_export_indicators
 

@@ -262,28 +262,28 @@ def journal(query, filename, sheetname, issn, atfile):
                 if 'tipo_1' in doc['avaliacao']:
                     worksheet.write(row, col, doc['avaliacao']['tipo_1'])
                 else:
-                    if doc['avaliacao']['tipo_inst'] == 1:
+                    if 'tipo_inst' in doc['avaliacao'] and doc['avaliacao']['tipo_inst'] == 1:
                         worksheet.write(row, col, 1)
                 col += 1
 
                 if 'tipo_2' in doc['avaliacao']:
                     worksheet.write(row, col, doc['avaliacao']['tipo_2'])
                 else:
-                    if doc['avaliacao']['tipo_inst'] == 2:
+                    if 'tipo_inst' in doc['avaliacao'] and doc['avaliacao']['tipo_inst'] == 2:
                         worksheet.write(row, col, 1)
                 col += 1
 
                 if 'tipo_3' in doc['avaliacao']:
                     worksheet.write(row, col, doc['avaliacao']['tipo_3'])
                 else:
-                    if doc['avaliacao']['tipo_inst'] == 3:
+                    if 'tipo_inst' in doc['avaliacao'] and doc['avaliacao']['tipo_inst'] == 3:
                         worksheet.write(row, col, 1)
                 col += 1
 
                 if 'tipo_4' in doc['avaliacao']:
                     worksheet.write(row, col, doc['avaliacao']['tipo_4'])
                 else:
-                    if doc['avaliacao']['tipo_inst'] == 4:
+                    if 'tipo_inst' in doc['avaliacao'] and doc['avaliacao']['tipo_inst'] == 4:
                         worksheet.write(row, col, 1)
                 col += 1
 
@@ -299,11 +299,37 @@ def journal(query, filename, sheetname, issn, atfile):
 
                 if 'contatos' in doc['avaliacao']:
                     count = 0
+                    list_type_editor = [
+                        "Editor-chefe",
+                        "Editor",
+                        "Editor Associado",
+                        "Editor responsável",
+                        "Editora-chefe",
+                        "Editor Científica",
+                        "Editor executivo",
+                        "Editor Geral",
+                        "Editor Responsável",
+                        "Editora",
+                        "Editor Científico",
+                        "Presidente",
+                        "Editor científico",
+                        "Vice editor científico",
+                        "Editor Consultor",
+                        "Editor científico chefe",
+                        "Editor Executivo",
+                        "Editor Assistente",
+                        "Diretor",
+                        "Diretora e Editora",
+                        "Coordenadora",
+                        "Editor-científico",
+                        "Coordenação editorial"]
                     for c in doc['avaliacao']['contatos']:
                         name = None
                         lattes = None
                         orcid = None
-                        if c['cargo'] == 'Editor-chefe' or c['cargo'] == 'Editor':
+                        if any(c['cargo'] == e for e in list_type_editor):
+                            # if c['cargo'] == 'Editor-chefe' or c['cargo'] ==
+                            # 'Editor':
                             count += 1
                             name = c['first_name'] + ' ' + c['last_name']
                             lattes = c['cv_lattes_editor_chefe']
@@ -1077,7 +1103,45 @@ def journal(query, filename, sheetname, issn, atfile):
             col = 179
             worksheet.write(row, col, doc['collection'])
 
-            # Avança ano
+            # Latidex
+            col = 180
+            if doc['is_latindex'] == 1:
+                worksheet.write(row, col, 1)
+            else:
+                worksheet.write(row, col, 0)
+
+            # Altmetrics
+            col = 181
+            if 'altmetrics' in doc:
+                if h == 'anterior':
+                    pass
+                else:
+                    h2 = h
+                for label in [
+                        "number_of_mentioned_outputs",
+                        "total_mentions",
+                        "news_mentions",
+                        "blog_mentions",
+                        "policy_mentions",
+                        "twitter_mentions",
+                        "patent_mentions",
+                        "peer_review_mentions",
+                        "weibo_mentions",
+                        "facebook_mentions",
+                        "wikipedia_mentions",
+                        "google+_mentions",
+                        "linkedin_mentions",
+                        "reddit_mentions",
+                        "pinterest_mentions",
+                        "f1000_mentions",
+                        "q&a_mentions",
+                        "video_mentions",
+                        "syllabi_mentions"]:
+                    if h2 in doc['altmetrics'] and label in doc['altmetrics'][h2]:
+                        altmetric = doc['altmetrics'][h2][label]
+                        worksheet.write(row, col, altmetric)
+                    col += 1
+                    # Avança ano
             row += 1
 
     # Avança journal
