@@ -92,6 +92,10 @@ EM TESTE
 # from reports import fapesp_evaluation_scopus
 # from reports import scielo_network_journal
 
+# from reports import jcatalog_scielo_scopus_wos
+# from reports import jcr_list
+from reports import scopus_list3_rcfapesp
+
 # from reports import list_send
 
 # from reports import collection_issn_list_ga
@@ -177,6 +181,10 @@ if __name__ == "__main__":
     # fapesp_evaluation_scopus
     # list_send
     # scielo_network_journal.main()
+
+    # jcatalog_scielo_scopus_wos.main()
+    # jcr_list.main()
+    scopus_list3_rcfapesp.main()
 
     # Denise
     # capes_loader.main()
