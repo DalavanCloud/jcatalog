@@ -190,10 +190,10 @@ def main():
 
     # SciELO
     match(models.Scielo, models.Jcr, 1)
-    match(models.Scielo, models.Wos, 1)
-    match(models.Scielo, models.Scopus, 1)
+    # match(models.Scielo, models.Wos, 1)
+    # match(models.Scielo, models.Scopus, 1)
     match(models.Scielo, models.Scimago, 1)
-    match(models.Scielo, models.Cwts, 1)
+    # match(models.Scielo, models.Cwts, 1)
     # match(models.Scielo, models.Submissions)
     match(models.Scielo, models.Latindex)
 
