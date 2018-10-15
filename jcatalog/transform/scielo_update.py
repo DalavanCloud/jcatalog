@@ -93,6 +93,7 @@ def scieloupdate():
                 rec['date_of_the_last_document'])
 
         # API SciELO
+        rec['api'] = {}
         rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
@@ -277,10 +278,10 @@ def main():
     # SciELO Network csv
     scieloupdate()
 
-    # # DOAJ - xlsx
+    # DOAJ - xlsx
     # doajproc()
 
-    # # Submissions - xlsx
+    # Submissions - xlsx
     # submissions()
 
     # Crossref
