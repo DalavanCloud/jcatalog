@@ -154,14 +154,17 @@ def journal(query, filename, sheetname, issn, atfile):
             col += 1
 
             # DOI Prefix e publisher
-            worksheet.write(row, col, doc.crossref['doi_provider']['prefix'])
+            if 'crossref' in doc:
+                worksheet.write(row, col, doc.crossref[
+                                'doi_provider']['prefix'])
             col += 1
 
-            worksheet.write(row, col, doc.crossref[
-                            'doi_provider']['publisher'])
+            if 'crossref' in doc:
+                worksheet.write(row, col, doc.crossref[
+                    'doi_provider']['publisher'])
             col += 1
 
-            if 'url' in doc['api']:
+            if 'api' in doc and 'url' in doc['api']:
                 worksheet.write(row, col, doc.api['url'])
             col += 1
 
@@ -373,7 +376,7 @@ def journal(query, filename, sheetname, issn, atfile):
                 if 'thematic_areas' in wos:
                     worksheet.write(row, col, '; '.join(wos['thematic_areas']))
             else:  # wos scielo
-                if 'wos_subject_areas' in doc['api']:
+                if 'api' in doc and 'wos_subject_areas' in doc['api']:
                     worksheet.write(row, col, '; '.join(
                         doc['api']['wos_subject_areas']))
             col += 1
@@ -382,7 +385,7 @@ def journal(query, filename, sheetname, issn, atfile):
             worksheet.write(row, col, doc.title_current_status)
             col += 1
 
-            if 'first_year' in doc['api']:
+            if 'api' in doc and 'first_year' in doc['api']:
                 worksheet.write(row, col, int(doc['api']['first_year']))
             col += 1
 
@@ -1110,38 +1113,38 @@ def journal(query, filename, sheetname, issn, atfile):
             else:
                 worksheet.write(row, col, 0)
 
-            # Altmetrics
-            col = 181
-            if 'altmetrics' in doc:
-                if h == 'anterior':
-                    pass
-                else:
-                    h2 = h
-                for label in [
-                        "number_of_mentioned_outputs",
-                        "total_mentions",
-                        "news_mentions",
-                        "blog_mentions",
-                        "policy_mentions",
-                        "twitter_mentions",
-                        "patent_mentions",
-                        "peer_review_mentions",
-                        "weibo_mentions",
-                        "facebook_mentions",
-                        "wikipedia_mentions",
-                        "google+_mentions",
-                        "linkedin_mentions",
-                        "reddit_mentions",
-                        "pinterest_mentions",
-                        "f1000_mentions",
-                        "q&a_mentions",
-                        "video_mentions",
-                        "syllabi_mentions"]:
-                    if h2 in doc['altmetrics'] and label in doc['altmetrics'][h2]:
-                        altmetric = doc['altmetrics'][h2][label]
-                        worksheet.write(row, col, altmetric)
-                    col += 1
-                    # Avança ano
+            # # Altmetrics
+            # col = 181
+            # if 'altmetrics' in doc:
+            #     if h == 'anterior':
+            #         pass
+            #     else:
+            #         h2 = h
+            #     for label in [
+            #             "number_of_mentioned_outputs",
+            #             "total_mentions",
+            #             "news_mentions",
+            #             "blog_mentions",
+            #             "policy_mentions",
+            #             "twitter_mentions",
+            #             "patent_mentions",
+            #             "peer_review_mentions",
+            #             "weibo_mentions",
+            #             "facebook_mentions",
+            #             "wikipedia_mentions",
+            #             "google+_mentions",
+            #             "linkedin_mentions",
+            #             "reddit_mentions",
+            #             "pinterest_mentions",
+            #             "f1000_mentions",
+            #             "q&a_mentions",
+            #             "video_mentions",
+            #             "syllabi_mentions"]:
+            #         if h2 in doc['altmetrics'] and label in doc['altmetrics'][h2]:
+            #             altmetric = doc['altmetrics'][h2][label]
+            #             worksheet.write(row, col, altmetric)
+            #         col += 1
+            # Avança ano
             row += 1
 
     # Avança journal
@@ -1214,7 +1217,7 @@ def journal(query, filename, sheetname, issn, atfile):
 
 
 def alljournals():
-    scielo = models.Scielo.objects()
+    scielo = models.Scielo.objects().batch_size(5)
     today = datetime.datetime.now().strftime('%Y%m%d')
     filename = 'periodicos-rede-scielo-' + today + '.xlsx'
     sheetname = 'SciELO-network'
