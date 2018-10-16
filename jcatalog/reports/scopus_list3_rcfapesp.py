@@ -29,20 +29,10 @@ def jcatalog():
     row = 1
 
     for dbcol in (
-        # SciELO Brazil
-        models.Scielo.objects.filter(collection='scl', is_scopus=1),
-        # Scopus - brazilian journals (not SciELO)
-        models.Scopus.objects.filter(country='Brazil', is_scielo=0),
-        # Scopus - others countries
-        models.Scopus.objects.filter(country='China'),
-        models.Scopus.objects.filter(country='South Korea'),
-        models.Scopus.objects.filter(country='Spain'),
-        models.Scopus.objects.filter(country='South Africa'),
-        models.Scopus.objects.filter(country='India'),
-        models.Scopus.objects.filter(country='Russia'),
-        models.Scopus.objects.filter(country='Russian Federation'),
-        models.Scopus.objects.filter(country='Mexico')
-    ):
+            # SciELO Brazil
+            models.Scielo.objects.filter(is_scopus=1),
+            # Scopus - others countries
+            models.Scopus.objects.filter(is_scielo=0)):
 
         dbname = dbcol._collection.name
 
@@ -70,15 +60,23 @@ def jcatalog():
             worksheet.write(row, col, doc.title)
             col += 1
 
+            # publisher name
+            col = 4
+            if dbname == 'scielo':
+                if 'publisher_name' in doc:
+                    worksheet.write(row, col, doc.publisher_name)
+            else:
+                if 'publishers_name' in doc:
+                    worksheet.write(row, col, doc.publishers_name)
+            col += 1
+
             # Issn SciELO
             if dbname == 'scielo':
                 worksheet.write(row, col, doc.issn_scielo)
-                col += 1
-            else:
-                col += 1
+            col += 1
 
             # ISSNs
-            col = 5
+            col = 6
             issns = []
             for i in doc.issn_list:
                 if issns:
@@ -104,7 +102,7 @@ def jcatalog():
             col += 1
 
             # Scopus
-            col = 8
+            col = 9
             if doc.is_scopus == 1:
 
                 if dbname == 'scopus':
@@ -132,6 +130,56 @@ def jcatalog():
                     url = 'https://www.scopus.com/sourceid/' + \
                         str(docscopus['sourcerecord_id'])
                     worksheet.write(row, col, url)
+                col += 1
+
+            # areas do Scopus
+            col = 13
+            if doc.is_scopus == 1:
+                if dbname == 'scopus':
+                    docscopus = doc
+                else:
+                    docscopus = models.Scopus.objects(id=str(doc.scopus_id))[0]
+
+                for k in [
+                    'sourcerecord_id',
+                    'active_or_inactive',
+                    'all_science_classification_codes_asjc',
+                    'coverage',
+                    'top_level_life_sciences',
+                    'top_level_social_sciences',
+                    'top_level_physical_sciences',
+                    'top_level_health_sciences',
+                    'c1000_general',
+                    'c1100_agricultural_and_biological_sciences',
+                    'c1200_arts_and_humanities',
+                    'c1300_biochemistry_genetics_and_molecular_biology',
+                    'c1400_business_management_and_accounting',
+                    'c1500_chemical_engineering',
+                    'c1600_chemistry',
+                    'c1700_computer_science',
+                    'c1800_decision_sciences',
+                    'c1900_earth_and_planetary_sciences',
+                    'c2000_economics_econometrics_and_finance',
+                    'c2100_energy',
+                    'c2200_engineering',
+                    'c2300_environmental_science',
+                    'c2400_immunology_and_microbiology',
+                    'c2500_materials_science',
+                    'c2600_mathematics',
+                    'c2700_medicine',
+                    'c2800_neuroscience',
+                    'c2900_nursing',
+                    'c3000_pharmacology_toxicology_and_pharmaceutics',
+                    'c3100_physics_and_astronomy',
+                    'c3200_psychology',
+                    'c3300_social_sciences',
+                    'c3400_veterinary',
+                    'c3500_dentistry',
+                    'c3600_health_professions'
+                ]:
+                    if hasattr(docscopus, k):
+                        worksheet.write(row, col, docscopus[k])
+                    col += 1
 
             # Avançar linha - prox. documento
             row += 1
