@@ -269,6 +269,18 @@ class Pubmedapi(DynamicDocument):
     issn_list = ListField()
 
 
+class WosCitations(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    # Indexes
+    meta = {
+        'indexes': [
+            'title',
+            'issn_scielo'
+        ]
+    }
+
+
 class Capes(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()

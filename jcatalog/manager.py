@@ -64,6 +64,8 @@ EM TESTE
 
 # from match import matches
 
+# from transform import wos_citation_scielo
+
 # from reports import jcr_export_indicators
 # from reports import scopus_export_indicators
 
@@ -94,11 +96,15 @@ EM TESTE
 
 # from reports import jcatalog_scielo_scopus_wos
 # from reports import jcr_list
-from reports import scopus_list3_rcfapesp
+# from reports import scopus_list3_rcfapesp
 
 # from reports import list_send
 
 # from reports import collection_issn_list_ga
+
+# from reports import documents_pid_list
+
+# from reports import wos_citations_report
 
 
 # from export import export_to_indapi
@@ -181,10 +187,11 @@ if __name__ == "__main__":
     # fapesp_evaluation_scopus
     # list_send
     # scielo_network_journal.main()
+    # wos_citations_report.main()
 
     # jcatalog_scielo_scopus_wos.main()
     # jcr_list.main()
-    scopus_list3_rcfapesp.main()
+    # scopus_list3_rcfapesp.main()
 
     # Denise
     # capes_loader.main()
@@ -198,3 +205,6 @@ if __name__ == "__main__":
     # collection_issn_list_ga
 
     # export_to_indapi
+
+    # documents_pid_list
+    # wos_citation_scielo
