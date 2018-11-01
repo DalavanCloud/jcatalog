@@ -47,6 +47,9 @@ def scieloupdate():
     scielo_json = scielo_sheet.to_records()
 
     for rec in scielo_json:
+        del rec['google_scholar_h5_2018']
+        del rec['google_scholar_m5_2018']
+
         # remove empty keys
         rec = {k: v for k, v in rec.items() if v or v == 0}
         print(rec['issn_scielo'])
@@ -59,6 +62,10 @@ def scieloupdate():
                 ' & ', ' and ').replace('&', ' and '))
 
         rec['title_clean'] = cleaner(rec['title_at_scielo'])
+
+        rec['title_clean_wos'] = cleaner(accent_remover(
+            rec['title_at_scielo'].lower().replace(
+                ' & ', ' ').replace('&', '')))
 
         # Sem dados entre Parenteses - title
         # dp = data in parentheses
@@ -93,8 +100,8 @@ def scieloupdate():
                 rec['date_of_the_last_document'])
 
         # API SciELO
-        rec['api'] = {}
-        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+        # rec['api'] = {}
+        # rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
 
