@@ -14,7 +14,7 @@ scielo_headers = [
     'SciELO',
     'Scopus',
     'WOS ALL',
-    'WOS1 (AHCI-SCIE-SSCI)',
+    'WOS1 (SCIE-SSCI-AHCI)',
     'WOS2 (ESCI)',
 
     # [Dados de SciELO]
