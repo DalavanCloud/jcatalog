@@ -1,5 +1,6 @@
+articlemetaapi==1.26.2
+ipython==7.1.1
 articlemetaapi==1.26.4
-ipython==6.5.0
 mongoengine==0.15.3
 pyexcel==0.5.9.1
 pyexcel-xlsx==0.5.6
