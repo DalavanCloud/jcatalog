@@ -241,6 +241,18 @@ class Latindex(DynamicDocument):
     }
 
 
+class Issnorg(DynamicDocument):
+    creation_date = DateTimeField(default=datetime.datetime.now)
+    updated_at = DateTimeField()
+    is_scielo = IntField(required=True, min_value=0, default=1)
+    # Indexes
+    meta = {
+        'indexes': [
+            'issn_scielo'
+        ]
+    }
+
+
 class Submissions(DynamicDocument):
     creation_date = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField()

@@ -19,6 +19,7 @@ EM TESTE
 
 # from extractors.scimago import downloader_scimago
 # from extractors.wos import scrap_wos_indexes
+# from extractors.issnorg import issn_org
 
 
 # from transform import scielo_loader
@@ -105,9 +106,11 @@ EM TESTE
 # from reports import documents_pid_list
 
 # from reports import wos_citations_report
-
+# from reports import pde_not_respond
 
 # from export import export_to_indapi
+
+from reports import check_dates
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -208,3 +211,6 @@ if __name__ == "__main__":
 
     # documents_pid_list
     # wos_citation_scielo
+    # issn_org.main()
+    # pde_not_respond.main()
+    check_dates.main()
