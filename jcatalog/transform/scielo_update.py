@@ -25,7 +25,7 @@ client = ThriftClient()
 
 def scieloupdate():
     scielo_sheet = pyexcel.get_sheet(
-        file_name='data/scielo/journals_net_181004.csv',
+        file_name='data/scielo/journals_net_181110.csv',
         name_columns_by_row=0)
 
     # Edit labels
@@ -47,6 +47,7 @@ def scieloupdate():
     scielo_json = scielo_sheet.to_records()
 
     for rec in scielo_json:
+        # Google H5 M5 are imported of others sources
         del rec['google_scholar_h5_2018']
         del rec['google_scholar_m5_2018']
 
@@ -100,8 +101,8 @@ def scieloupdate():
                 rec['date_of_the_last_document'])
 
         # API SciELO
-        # rec['api'] = {}
-        # rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+        rec['api'] = {}
+        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
 
