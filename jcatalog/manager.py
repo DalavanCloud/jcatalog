@@ -42,7 +42,7 @@ EM TESTE
 # from transform import scielo_fapesp_evaluation_update
 # from transform import scielo_google_scholar_update
 # from transform import scielo_google_scholar_manual_update
-from transform import scielo_dates_chl_update
+# from transform import scielo_dates_chl_update
 # from transform import latindex_update
 # from transform import scielo_altmetrics_update
 
@@ -112,7 +112,9 @@ from transform import scielo_dates_chl_update
 
 # from export import export_to_indapi
 
-# from reports import check_dates
+# from reports import check_dates # issnorg
+# from reports import check_dates_scielo # para importar
+
 
 if __name__ == "__main__":
     # scielo_codes_oecd
@@ -145,7 +147,7 @@ if __name__ == "__main__":
     # scielo_ga_access_update.main()
     # scielo_google_scholar_update.main()
     # scielo_google_scholar_manual_update.main()
-    scielo_dates_chl_update.main()
+    # scielo_dates_chl_update.main()
     # scielo_fapesp_evaluation_update.main()
     # latindex_update.main()
     # scielo_altmetrics_update.main()
@@ -218,3 +220,4 @@ if __name__ == "__main__":
     # issn_org.main()
     # pde_not_respond.main()
     # check_dates.main()
+    # check_dates_scielo.main()
