@@ -22,7 +22,7 @@ def jcatalog():
                'issn_scielo',
                'title',
                'check_data 1 or 0',
-               'journal_creation_date',
+               'journal_creation_year',
                'issnorg_startDate',
                'entrada_scielo']
 
@@ -67,8 +67,8 @@ def jcatalog():
         col += 2
 
         # journal creation date
-        if 'journal_creation_date' in doc:
-            worksheet.write(row, col, doc.journal_creation_date)
+        if 'journal_creation_year' in doc:
+            worksheet.write(row, col, doc.journal_creation_year)
         elif 'api' in doc and 'first_year' in doc['api']:
             worksheet.write(row, col, int(doc['api']['first_year']))
         else:
