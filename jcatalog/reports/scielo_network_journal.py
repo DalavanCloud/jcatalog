@@ -385,8 +385,8 @@ def journal(query, filename, sheetname, issn, atfile):
             worksheet.write(row, col, doc.title_current_status)
             col += 1
 
-            if 'api' in doc and 'first_year' in doc['api']:
-                worksheet.write(row, col, int(doc['api']['first_year']))
+            if 'journal_creation_year' in doc:
+                worksheet.write(row, col, doc['journal_creation_year'])
             col += 1
 
             worksheet.write(row, col, doc.inclusion_year_at_scielo)
@@ -1112,6 +1112,34 @@ def journal(query, filename, sheetname, issn, atfile):
                 worksheet.write(row, col, 1)
             else:
                 worksheet.write(row, col, 0)
+
+            # WoS Citations
+            col = 181
+
+            if h == 'anterior':
+                year = None
+                pass
+            else:
+                year = int(h)
+
+            if year and year >= 2014:
+                last_year = year - 1
+                woscitation = models.WosCitations.objects.filter(
+                    issn_scielo=doc.issn_scielo, last_year=last_year)
+
+                if woscitation:
+                    wc = woscitation[0]
+                    if 'total_year' in wc and str(int(year) - 2) in wc['total_year']:
+                        worksheet.write(row, col, wc['total_year'][
+                                        str(int(year) - 2)])
+                    col += 1
+                    if 'total_year' in wc and str(int(year) - 1) in wc['total_year']:
+                        worksheet.write(row, col, wc['total_year'][
+                                        str(int(year) - 1)])
+                    col += 1
+                    if 'citations' in wc and str(year) in wc['citations']:
+                        worksheet.write(row, col, wc['citations'][str(year)])
+                    col += 1
 
             # # Altmetrics
             # col = 181
