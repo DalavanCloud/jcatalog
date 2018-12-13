@@ -23,7 +23,7 @@ EM TESTE
 
 
 # from transform import scielo_loader
-# from transform import scielo_update
+from transform import scielo_update
 # from transform import scielo_access_update
 # from transform import scielo_aff_update
 # from transform import scielo_apc_update
@@ -96,7 +96,7 @@ EM TESTE
 # from reports import fapesp_evaluation_toform_short
 # from reports import fapesp_evaluation_links_download
 # from reports import fapesp_evaluation_scopus
-from reports import scielo_network_journal
+# from reports import scielo_network_journal
 
 # from reports import jcatalog_scielo_scopus_wos
 # from reports import jcr_list
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # scrap_wos_indexes.main()
 
     # scielo_loader.main()
-    # scielo_update.main()
+    scielo_update.main()
     # scielo_access_update.main()
     # scielo_aff_update.main()
     # scielo_docs_update.main()
@@ -197,7 +197,7 @@ if __name__ == "__main__":
     # fapesp_evaluation_links_download.main()
     # fapesp_evaluation_scopus
     # list_send
-    scielo_network_journal.main()
+    # scielo_network_journal.main()
     # wos_citations_report.main()
 
     # jcatalog_scielo_scopus_wos.main()
