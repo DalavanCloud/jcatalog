@@ -23,3 +23,5 @@ sender_config.py
 
 geckodriver
 geckodriver.log
+
+.ipynb_checkpoints
