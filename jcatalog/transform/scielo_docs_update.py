@@ -40,7 +40,8 @@ def docs(filename):
 def main():
     # SciELO docs counts Network xlsx
     # docs('data/scielo/documents_languages_network_180317.xlsx')
-    docs('data/scielo/scielo20-network/td_documents_languages_network.xlsx')
+    # docs('data/scielo/scielo20-network/td_documents_languages_network.xlsx')
+    docs('extractors/scielo/output/td_documents_languages_bra_190123.xlsx')
 
 
 if __name__ == "__main__":
