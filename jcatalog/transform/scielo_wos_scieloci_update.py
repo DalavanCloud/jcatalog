@@ -25,14 +25,15 @@ def scieloci(filename):
     for rec in sheet_json:
         # # remove empty keys
         # rec = {k: v for k, v in rec.items() if v or v == 0}
-        print('\n')
-
         query = models.Scielo.objects.filter(issn_list=rec['issn_scielo'])
+
         if len(query) == 1:
-            doc = query[0]
             print(query[0]['issn_scielo'])
+            doc = query[0]
             data = {'scieloci': {}}
-            data['scieloci'] = dict(rec)
+            if 'scieloci' in doc:
+                data['scieloci'] = doc['scieloci']
+                data['scieloci'].update(dict(rec))
         else:
             print('não encontrou: ' + str(rec['issn_scielo']))
 
@@ -43,7 +44,8 @@ def scieloci(filename):
 def main():
     # SciELO docs counts Network xlsx
     # scieloci('data/scielo/td_wos_all_downloads.xlsx')
-    scieloci('data/wos/td_wos_all.xlsx')
+    # scieloci('data/wos/td_wos_all.xlsx')
+    scieloci('data/wos/td_wos_scieloci_2017_2018.xlsx')
 
 
 if __name__ == "__main__":
