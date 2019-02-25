@@ -8,7 +8,8 @@ import models
 
 def jcatalog():
     # Cria a pasta Excel e adiciona uma planilha
-    workbook = xlsxwriter.Workbook('output/scopus_list_rcfapesp_2017.xlsx')
+    # workbook = xlsxwriter.Workbook('output/scopus_list_rcfapesp_2017.xlsx')
+    workbook = xlsxwriter.Workbook('output/scopus_list_rcfapesp_2018.xlsx')
     worksheet = workbook.add_worksheet('scopus')
 
     format_date = workbook.add_format({'num_format': 'dd/mm/yyyy'})
