@@ -41,7 +41,8 @@ def main():
     # SciELO access counts xlsx
     # scieloaccess('data/scielo/accesses_by_journals_network_180317.xlsx')
     scieloaccess(
-        'data/scielo/scielo20-network/td_accesses_by_journals-network.xlsx')
+        # 'data/scielo/scielo20-network/td_accesses_by_journals-network.xlsx')
+        'data/scielo/td_accesses_bra_190110.xlsx')
 
 
 if __name__ == "__main__":
