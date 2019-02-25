@@ -8,7 +8,8 @@ import models
 
 def jcatalog():
     # Cria a pasta Excel e adiciona uma planilha
-    workbook = xlsxwriter.Workbook('output/jcat_scielo_scopus_wos_v2.xlsx')
+    workbook = xlsxwriter.Workbook(
+        'output/scielo_scopus_wos_20190209.xlsx')
     worksheet = workbook.add_worksheet('all')
 
     format_date = workbook.add_format({'num_format': 'dd/mm/yyyy'})
@@ -131,17 +132,40 @@ def jcatalog():
                 worksheet.write(row, col, 0)
             col += 1
 
-            # status
             col = 15
             if dbname == 'scielo':
+                # Ano de entrada no SciELO
+                worksheet.write(row, col, doc.inclusion_year_at_scielo)
+                col += 1
+
+                # Status current
                 if doc.title_current_status == 'current':
                     worksheet.write(row, col, 1)
                 else:
                     worksheet.write(row, col, 0)
-            else:
-                worksheet.write(row, col, 0)
-            col += 1
+                col += 1
 
+                # ativo em 2018
+                h = '2018'
+                ativo_y = 0
+                if 'docs' in doc:
+                    if 'docs_' + h in doc['docs']:
+                        # print(doc['docs']['docs_'+h])
+                        if doc['docs']['docs_' + h] == '':
+                            ativo_y = 0
+                        elif int(doc['docs']['docs_' + h]) > 0:
+                            ativo_y = 1
+                worksheet.write(row, col, ativo_y)
+                col += 1
+            else:
+                worksheet.write(row, col, None)
+                col += 1
+                worksheet.write(row, col, None)
+                col += 1
+                worksheet.write(row, col, None)
+                col += 1
+
+            col = 18
             # Thematic Areas SciELO
             for k in [
                 'title_thematic_areas',
@@ -160,7 +184,7 @@ def jcatalog():
                 col += 1
 
             # WOS
-            col = 26
+            col = 28
             if doc.is_wos == 1:
                 if dbname == 'wos':
                     docwos = doc
@@ -178,7 +202,7 @@ def jcatalog():
                     col += 1
 
             # Scopus
-            col = 29
+            col = 31
             if doc.is_scopus == 1:
                 if dbname == 'scopus':
                     docscopus = doc

@@ -18,7 +18,9 @@ scielo_headers = [
     'WOS2 (ESCI)',
 
     # [Dados de SciELO]
+    'SciELO ano de entrada na colecao',
     'SciELO Status (current = 1; not current = 0)',
+    'SciELO ativo em 2018',
     'SciELO Thematic areas',
     'SciELO is agricultural sciences',
     'SciELO is applied social sciences',
