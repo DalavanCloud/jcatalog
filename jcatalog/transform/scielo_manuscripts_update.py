@@ -11,7 +11,7 @@ import models
 from transform_date import *
 from accent_remover import *
 
-logging.basicConfig(filename='logs/aff.info.txt', level=logging.INFO)
+logging.basicConfig(filename='logs/manuscritos.info.txt', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
