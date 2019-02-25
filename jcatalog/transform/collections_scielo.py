@@ -64,7 +64,8 @@ region = {
     'Switzerland': 'Western Europe'
 }
 
-# acronym = tuple ([0]name, [1]country, [2]type, [3]region)
+# Tuple
+# acronym : ([0]collection name, [1]country, [2]type, [3]region)
 collections = {
     'arg': ('Argentina', 'Argentina', 'certified', 'Latin America'),
     'bol': ('Bolivia', 'Bolivia', 'certified', 'Latin America'),
