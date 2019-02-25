@@ -32,7 +32,7 @@ def creationdate(filename):
             doc = query[0]
 
             data = {}
-            data['journal_creation_year'] = rec['data_criacao']
+            data['journal_creation_year'] = int(rec['data_criacao'])
             data['journal_creation_year_verified'] = 1
 
             if data:
