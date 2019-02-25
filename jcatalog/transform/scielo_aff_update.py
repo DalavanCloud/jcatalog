@@ -41,7 +41,9 @@ def aff(filename):
 def main():
     # SciELO docs counts Network xlsx
     # aff('data/scielo/td_documents_affiliations_180310_excel.xlsx')
-    aff('data/scielo/td_affi_network.xlsx')
+    # aff('data/scielo/td_affi_network.xlsx')
+    aff('extractors/scielo/output/td_affi_bra_190123.xlsx')
+
 
 if __name__ == "__main__":
     main()
