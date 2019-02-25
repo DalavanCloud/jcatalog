@@ -45,8 +45,10 @@ def scielogaaccess(filename, sheetname, year):
 def main():
     # Google Analytics access counts
     # scielogaaccess('data/scielo/ga_scielo_year2017_20180627.xlsx')
-    scielogaaccess('data/scielo/ga_scielo_year2015-2017.xlsx',
-                   'import_15', '2015')
+    # scielogaaccess('data/scielo/ga_scielo_year2015-2017.xlsx',
+    #                'import_15', '2015')
+    scielogaaccess('data/scielo/ga_scielo_year_2018.xlsx',
+                   'import_18', '2018')
 
 
 if __name__ == "__main__":
