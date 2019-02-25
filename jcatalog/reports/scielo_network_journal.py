@@ -107,7 +107,8 @@ def journal(query, filename, sheetname, issn, atfile):
             '2015',
             '2016',
             '2017',
-            '2018'
+            '2018',
+            '2019'
         ]:
             print(doc.issn_scielo + '_' + str(h))
 
@@ -786,12 +787,12 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'pais_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'pais_ate_2007'] or 0)
-                        cell_pais = xl_rowcol_to_cell(row, col)
+                    cell_pais = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'estrang_ate_2007'] or 0)
-                        cell_estrang = xl_rowcol_to_cell(row, col)
+                    cell_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'nao_ident_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
@@ -800,23 +801,23 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'pais_estrang_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'pais_estrang_ate_2007'] or 0)
-                        cell_pais_estrang = xl_rowcol_to_cell(row, col)
+                    cell_pais_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'nao_ident_todos_ate_2007' in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'nao_ident_todos_ate_2007'] or 0)
-                        cell_nao_id_todos = xl_rowcol_to_cell(row, col)
+                    cell_nao_id_todos = xl_rowcol_to_cell(row, col)
                     col += 1
                 else:
                     if 'pais_' + h in doc['aff']:
                         worksheet.write(row, col, doc['aff']['pais_' + h] or 0)
-                        cell_pais = xl_rowcol_to_cell(row, col)
+                    cell_pais = xl_rowcol_to_cell(row, col)
                     col += 1
 
                     if 'estrang_' + h in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'estrang_' + h] or 0)
-                        cell_estrang = xl_rowcol_to_cell(row, col)
+                    cell_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
                     if 'nao_ident_' + h in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
@@ -826,13 +827,13 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'pais_estrang_' + h in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'pais_estrang_' + h] or 0)
-                        cell_pais_estrang = xl_rowcol_to_cell(row, col)
+                    cell_pais_estrang = xl_rowcol_to_cell(row, col)
                     col += 1
 
                     if 'nao_ident_todos_' + h in doc['aff']:
                         worksheet.write(row, col, doc['aff'][
                                         'nao_ident_todos_' + h] or 0)
-                        cell_nao_id_todos = xl_rowcol_to_cell(row, col)
+                    cell_nao_id_todos = xl_rowcol_to_cell(row, col)
                     col += 1
 
                 # formula 1 - soma_docs_citáveis_afiliação
@@ -842,6 +843,7 @@ def journal(query, filename, sheetname, issn, atfile):
                              cell_nao_id_todos,
                              cell_pais_estrang))
                 worksheet.write_formula(row, col, formula1)
+
                 # define celula para verificação posterior
                 cell_soma_docs_cit_aff = xl_rowcol_to_cell(row, col)
                 col += 1
@@ -851,14 +853,23 @@ def journal(query, filename, sheetname, issn, atfile):
                 worksheet.write_formula(row, col, formula2)
                 col += 1
             else:
-                col += 5
+                # col += 5
                 # formula 1 - soma_docs_citáveis_afiliação
+                cell_pais = xl_rowcol_to_cell(row, col)
+                col += 1
+                cell_estrang = xl_rowcol_to_cell(row, col)
+                col += 2
+                cell_pais_estrang = xl_rowcol_to_cell(row, col)
+                col += 1
+                cell_nao_id_todos = xl_rowcol_to_cell(row, col)
+                col += 1
                 formula1 = ('=(%s+%s+%s)-%s' %
                             (cell_pais,
                              cell_estrang,
                              cell_nao_id_todos,
                              cell_pais_estrang))
                 worksheet.write_formula(row, col, formula1)
+
                 # define celula para verificação posterior
                 cell_soma_docs_cit_aff = xl_rowcol_to_cell(row, col)
                 col += 1
@@ -1140,6 +1151,15 @@ def journal(query, filename, sheetname, issn, atfile):
                     if 'citations' in wc and str(year) in wc['citations']:
                         worksheet.write(row, col, wc['citations'][str(year)])
                     col += 1
+
+            #  Periodicidade
+            col = 184
+            if 'alpha_frequency' in doc:
+                worksheet.write(row, col, doc['alpha_frequency'])
+            col += 1
+            if 'numeric_frequency_in_months' in doc:
+                worksheet.write(row, col, doc['numeric_frequency_in_months'])
+            col += 1
 
             # # Altmetrics
             # col = 181

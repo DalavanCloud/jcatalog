@@ -23,7 +23,7 @@ EM TESTE
 
 
 # from transform import scielo_loader
-from transform import scielo_update
+# from transform import scielo_update
 # from transform import scielo_access_update
 # from transform import scielo_aff_update
 # from transform import scielo_apc_update
@@ -100,7 +100,7 @@ from transform import scielo_update
 
 # from reports import jcatalog_scielo_scopus_wos
 # from reports import jcr_list
-# from reports import scopus_list3_rcfapesp
+from reports import scopus_list3_rcfapesp
 
 # from reports import list_send
 
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # scrap_wos_indexes.main()
 
     # scielo_loader.main()
-    scielo_update.main()
+    # scielo_update.main()
     # scielo_access_update.main()
     # scielo_aff_update.main()
     # scielo_docs_update.main()
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     # jcatalog_scielo_scopus_wos.main()
     # jcr_list.main()
-    # scopus_list3_rcfapesp.main()
+    scopus_list3_rcfapesp.main()
 
     # Denise
     # capes_loader.main()
