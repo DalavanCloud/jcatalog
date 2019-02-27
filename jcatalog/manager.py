@@ -8,6 +8,7 @@ EM TESTE
 # Sempre apos o match scielo x jcr
 # from tools import scielo_codes_oecd <-----
 # from tools import scopus_oecd_codes <-----
+
 # from sender import sender
 # from sender import files_renamer
 # from sender import files_renamer_pdes
@@ -19,7 +20,7 @@ EM TESTE
 
 # from extractors.scimago import downloader_scimago
 # from extractors.wos import scrap_wos_indexes
-from extractors.issnorg import issn_org
+# from extractors.issnorg import issn_org
 
 
 # from transform import scielo_loader
@@ -66,7 +67,7 @@ from extractors.issnorg import issn_org
 
 # from transform import cwts_country
 
-# from match import matches
+from match import matches
 
 # from transform import wos_citation_scielo
 
@@ -171,7 +172,7 @@ if __name__ == "__main__":
 
     # cwts_country.main()
 
-    # matches.main()
+    matches.main()
 
     # jcr_export_indicators
 
@@ -219,7 +220,7 @@ if __name__ == "__main__":
 
     # documents_pid_list
     # wos_citation_scielo
-    issn_org.main()
+    # issn_org.main()
     # pde_not_respond.main()
     # check_dates.main()
     # check_dates_scielo.main()
