@@ -19,7 +19,7 @@ EM TESTE
 
 # from extractors.scimago import downloader_scimago
 # from extractors.wos import scrap_wos_indexes
-# from extractors.issnorg import issn_org
+from extractors.issnorg import issn_org
 
 
 # from transform import scielo_loader
@@ -100,7 +100,7 @@ EM TESTE
 
 # from reports import jcatalog_scielo_scopus_wos
 # from reports import jcr_list
-from reports import scopus_list3_rcfapesp
+# from reports import scopus_list3_rcfapesp
 
 # from reports import list_send
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     # jcatalog_scielo_scopus_wos.main()
     # jcr_list.main()
-    scopus_list3_rcfapesp.main()
+    # scopus_list3_rcfapesp.main()
 
     # Denise
     # capes_loader.main()
@@ -219,7 +219,7 @@ if __name__ == "__main__":
 
     # documents_pid_list
     # wos_citation_scielo
-    # issn_org.main()
+    issn_org.main()
     # pde_not_respond.main()
     # check_dates.main()
     # check_dates_scielo.main()

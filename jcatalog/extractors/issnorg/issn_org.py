@@ -4,7 +4,7 @@ import sys
 import logging
 import configparser
 import json
-import time
+
 from ast import literal_eval as make_tuple
 
 from articlemeta.client import ThriftClient
@@ -40,6 +40,13 @@ def mywebdriver(driver):
     for line in lines:
 
         journal = make_tuple(line)
+        if journal[0] is not None:
+            pass
+        else:
+            lst = list(journal)
+            lst[0] = journal[1]
+            journal = tuple(lst)
+            # journal[0] = journal[1]
 
         # https://portal.issn.org/resource/ISSN/0716-9760?format=json
         url = "%sresource/ISSN/%s?format=json" % (domain, journal[0])
@@ -57,9 +64,9 @@ def mywebdriver(driver):
             print(logs)
             continue
 
-        rec['issn_scielo'] = journal[0]
-        rec['collection'] = journal[1]
-        rec['title'] = journal[2]
+        rec['issn_scielo'] = journal[1]
+        rec['collection'] = journal[2]
+        rec['title'] = journal[3]
 
         if 'continues' in rec['@graph']:
             # 'resource/ISSN/0004-0533'
@@ -109,7 +116,8 @@ def main():
     #                 'rvt',
     #                 'ecu']:
 
-    #             f.write('%s\n' % str((journal.scielo_issn,
+    #             f.write('%s\n' % str((journal.print_issn,
+    #                                   journal.scielo_issn,
     #                                   journal.collection_acronym,
     #                                   journal.title)))
 
