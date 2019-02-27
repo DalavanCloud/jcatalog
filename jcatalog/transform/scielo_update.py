@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 client = ThriftClient()
 
 
-def scieloupdate():
+def scieloupdate(csv_file):
     scielo_sheet = pyexcel.get_sheet(
-        file_name='data/scielo/journals_bra_190123.csv',
+        file_name=csv_file,
         name_columns_by_row=0)
 
     # Edit labels
@@ -104,8 +104,8 @@ def scieloupdate():
                 rec['date_of_the_last_document'])
 
         # API SciELO
-        # rec['api'] = {}
-        # rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
+        rec['api'] = {}
+        rec['api'] = scieloapi(rec['collection'], rec['issn_scielo'])
 
         rec['updated_at'] = datetime.datetime.now()
 
@@ -287,7 +287,7 @@ def crossref():
 
 def main():
     # SciELO Network csv
-    scieloupdate()
+    scieloupdate('data/scielo/journals_net_190210.csv')
 
     # DOAJ - xlsx
     # doajproc()
